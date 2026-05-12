@@ -1,0 +1,36 @@
+Accedere a mysql:  
+    $ docker exec -it [id_database] mysql -u root -p
+
+Accedere al dbmysql 'miosito':
+    USE miosito
+
+Vedere info tabella:
+    DESCRIBE [nome_tabella]
+
+Inserire dati:
+    INSERT INTO [tabella] ([colonna_1], [colonna_2]) VALUES ([valore_1], [valore_2])
+    
+Eliminare tutti i dati di una tabella:
+    TRUNCATE TABLE [nome_tabella];
+
+Modificare una tupla:
+    UPDATE nome_tabella SET colonna = valore WHERE condizione;
+
+Modificare una colonna:
+    ALTER TABLE nome_tabella MODIFY nome_colonna NUOVO_TIPO;
+
+Aggiungere una colonna:
+    ALTER TABLE nome_tabella ADD COLUMN nome_colonna TIPO [vincoli];
+
+    (Se in tabella esistente aggiungere alla fine DEFAULT valore affinchè le tuple esistenti si riempiano)
+
+Eliminare una riga:
+    DELETE FROM nome_tabella WHERE condizione;
+
+    
+
+accedere a server:
+  1. accedere a account laboratorio:        ssh msanguin@sshpaolotti.studenti.math.unipd.it -L 8080:tecweb:80 -L 8022:tecweb:22
+  2. accedere a server tecweb:              ssh msanguin@tecweb.studenti.math.unipd.it
+
+  scp -r /home/1/2023/msanguin/Documents/Progetto_tec_web/ msanguin@tecweb.studenti.math.unipd.it:/home/msanguin/
