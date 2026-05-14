@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard UniFix - Portale Guasti</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <!-- Skip link per accessibilità: permette di saltare il menu con la tastiera -->
@@ -36,7 +36,7 @@
             </form>
 
             <div class="quick-actions">
-                <a href="segnala.html" class="btn-cta">⚠️ Segnala un Guasto</a>
+                <a href="segnala.php" class="btn-cta">⚠️ Segnala un Guasto</a>
             </div>
         </section>
 
