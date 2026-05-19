@@ -26,6 +26,7 @@ spl_autoload_register(function ($class) {
 
 use App\Core\Router;
 use App\Controllers\HomeController;
+use App\Controllers\ReportController;
 use App\Controllers\ErrorController;
 
 
@@ -55,7 +56,7 @@ set_exception_handler(function ($e) {
 
     $router->add('/', HomeController::class, 'visualizza_home');
 
-    //$router->add('/artisti', ArtistaController::class, 'view_all_artisti');
+    $router->add('/nuova_segnalazione', ReportController::class, 'nuova_segnalazione');
 
 
     $router->dispatch($_SERVER['REQUEST_URI']);
