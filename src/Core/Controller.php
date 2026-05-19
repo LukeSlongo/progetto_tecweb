@@ -1,6 +1,7 @@
 <?php
 namespace App\Core;
 use App\Core\Template;
+use App\Helpers\ScriptHelper;
 
 
 abstract class Controller
@@ -30,6 +31,7 @@ abstract class Controller
                 'CLASSE_PAGINA' => strtolower($view),
                 'LINK_UTENTE' => Auth::getHeaderLinks(),
                 'LINKS_FOOTER' => Auth::getFooterLinks(),
+                'IMPORT_SCRIPTS' => ScriptHelper::import_script($this->scriptPathList),
                 'TITOLO_PAGINA' => $this->page_title,
                 'DESCRIZIONE_PAGINA' => $this->page_description,
                 //'BREADCRUMB' => BreadcrumbHelper::render(),

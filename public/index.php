@@ -26,8 +26,9 @@ spl_autoload_register(function ($class) {
 
 use App\Core\Router;
 use App\Controllers\HomeController;
-use App\Controllers\ReportController;
+use App\Controllers\SegnalazioneController;
 use App\Controllers\ErrorController;
+use App\Controllers\DipartimentoController;
 
 
 
@@ -56,7 +57,8 @@ set_exception_handler(function ($e) {
 
     $router->add('/', HomeController::class, 'visualizza_home');
 
-    $router->add('/nuova_segnalazione', ReportController::class, 'nuova_segnalazione');
+    $router->add('/nuova_segnalazione', SegnalazioneController::class, 'nuova_segnalazione');
+    $router->add('/api/segnalazione/dipartimenti', DipartimentoController::class, 'get_all_dipartimenti');
 
 
     $router->dispatch($_SERVER['REQUEST_URI']);
