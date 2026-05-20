@@ -29,6 +29,7 @@ use App\Controllers\HomeController;
 use App\Controllers\SegnalazioneController;
 use App\Controllers\ErrorController;
 use App\Controllers\DipartimentoController;
+use App\Controllers\EdificioController;
 
 
 
@@ -59,6 +60,8 @@ set_exception_handler(function ($e) {
 
     $router->add('/nuova_segnalazione', SegnalazioneController::class, 'nuova_segnalazione');
     $router->add('/api/segnalazione/dipartimenti', DipartimentoController::class, 'get_all_dipartimenti');
+    // Route per ottenere gli edifici (dipartimentoId passato tramite query string)
+    $router->add('/api/segnalazione/edifici', EdificioController::class, 'get_edifici_by_dipartimento');
 
 
     $router->dispatch($_SERVER['REQUEST_URI']);
