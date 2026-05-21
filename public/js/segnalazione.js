@@ -67,14 +67,57 @@ function caricaEdifici() {
         .catch(error => console.error('Errore nel fetch:', error));
 }
 
+function caricaAule() {
+
+    const selectEdificio = document.getElementById('edificio');
+    if (!selectEdificio) {
+        console.error('Elemento #edificio non trovato quando si richiedono aule');
+        return;
+    }
+
+    const edificioId = selectEdificio.value;
+    if (!edificioId) {
+        const selectAula = document.getElementById('aula');
+        if (selectAula) selectAula.innerHTML = '<option value="">Seleziona un aula</option>';
+        return;
+    }
+
+    fetch(`/api/segnalazione/aule?edificioId=${edificioId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Errore nella rete');
+            }
+            return response.json();
+        })
+        .then(aule => {
+            const selectAula = document.getElementById('aula');
+            selectAula.innerHTML = '<option value="">Seleziona un aula</option>';
+
+            aule.forEach(aula => {
+                const option = document.createElement('option');
+                option.value = aula.id;
+                option.textContent = aula.nome;
+                selectAula.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Errore nel fetch:', error));
+}
+
+
+
 // Avvia la funzione quando la pagina è pronta
 document.addEventListener('DOMContentLoaded', () => {
     caricaDipartimenti();
 
     const selectDip = document.getElementById('dipartimento');
-    if (selectDip) {
+    const selectEdificio = document.getElementById('edificio');
+
+    if (selectDip && selectEdificio) {
         selectDip.addEventListener('change', caricaEdifici);
+        selectDip.addEventListener('change', caricaAule);
+        selectEdificio.addEventListener('change', caricaAule);
     } else {
-        console.error('Elemento #dipartimento non trovato al DOMContentLoaded');
+        console.error('Elemento #dipartimento o #edificio non trovato al DOMContentLoaded');
     }
+
 });
