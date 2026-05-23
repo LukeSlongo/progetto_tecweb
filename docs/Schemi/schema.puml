@@ -1,0 +1,78 @@
+@startuml schema
+hide circle
+skinparam linetype ortho
+
+
+entity "dipartimento" as dipartimento {
+  * id : INT <<PK>>
+  --
+  nome : VARCHAR(100) [UNIQUE]
+}
+
+entity "edificio" as edificio {
+  * id : INT <<PK>>
+  --
+  * dipartimento_id : INT <<FK>>
+  nome : VARCHAR(50) [UNIQUE]
+  indirizzo : VARCHAR(255)
+}
+
+entity "aula" as aula {
+  * id : INT <<PK>>
+  --
+  * edificio_id : INT <<FK>>
+  nome : VARCHAR(50)
+  piano : INT
+}
+
+entity "utente" as utente {
+  * id : INT <<PK>>
+  --
+  dipartimento_id : INT <<FK>> [NULLABLE]
+  nome : VARCHAR(50)
+  cognome : VARCHAR(50)
+  email : VARCHAR(100) [UNIQUE]
+  password : VARCHAR(255)
+  ruolo : ENUM('studente', 'tecnico', 'admin')
+}
+
+entity "segnalazione" as segnalazione {
+  * id : INT <<PK>>
+  --
+  * utente_id : INT <<FK>>
+  tecnico_id : INT <<FK>> [NULLABLE]
+  * aula_id : INT <<FK>>
+  titolo : VARCHAR(150)
+  descrizione : TEXT
+  stato : ENUM('aperto', 'in_carico', 'risolto', 'chiuso')
+  priorita : ENUM('bassa', 'media', 'alta')
+  data_apertura : TIMESTAMP
+  data_chiusura : TIMESTAMP [NULLABLE]
+}
+
+entity "preferiti" as preferiti {
+  * utente_id : INT <<PK, FK>>
+  * aula_id : INT <<PK, FK>>
+  --
+}
+
+dipartimento ||--o{ edificio : "ha"
+
+' Un edificio ha molte aule
+edificio ||--o{ aula : "contiene"
+
+' Un dipartimento ha molti utenti (tecnici/admin)
+dipartimento ||--o{ utente : "impiega"
+
+' Un utente (studente) crea molte segnalazioni
+utente ||--o{ segnalazione : "apre"
+
+' Un utente (tecnico) prende in carico molte segnalazioni
+utente |o--o{ segnalazione : "risolve"
+
+aula ||--o{ segnalazione : "riguarda"
+
+utente ||--o{ preferiti
+aula ||--o{ preferiti
+
+@enduml
