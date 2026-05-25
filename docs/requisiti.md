@@ -6,8 +6,8 @@
 # Casi d'uso
 
 ## Utente non autenticato (Ospite)
-1. **registrazione**: creazione di un nuovo account con *nome_utente* e *password*
-2. **login**: accesso al sistema tramite *nome_utente* e *password*
+1. **registrazione**: creazione di un nuovo account con *nome e cognome*, *email* e *password*
+2. **login**: accesso al sistema tramite *email* e *password*
 
 ## Utente autenticato (azioni comuni)
 1. **logout**: uscire dal sistema tramite tasto logout/esci
@@ -63,5 +63,5 @@
 ## Amministratore
 1. **Gestione dipartimenti ed edifici**: operazioni CRUD su dipartimenti ed edifici
 2. **Gestione Aule**: operazione CRUD su aule e mappatura su edifici
-3. **Gestione Utenze**: eliminazione account Tecnico o Stuente
-4. **Supervisione globale**: visualizzazione globala segnalazioni di tutti i dipartimenti
+3. **Gestione Utenze**: gestione account di Tecnici e Studenti
+4. **Supervisione globale**: visualizzazione globale delle segnalazioni
