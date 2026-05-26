@@ -18,9 +18,6 @@
     - dipartimento
     - numero segnalazioni attive
 
-2. **visualizzazione dashboard**: il sistema mostra contenuti personalizzati in base al ruolo
-    - Admin: statistiche del proprio dipartimento (da chiarire)
-
 ## Studente (Utente base)
 1. **aggiunta di una aula ai preferiti**
 2. **rimozione di una aula dai preferiti**
@@ -30,12 +27,12 @@
     - titolo segnalazione
     - descrizione segnalazione
     - priorità segnalazione
-4. **visualizzazione proprie segnalazioni**: il sistema mostra tutte le segnalazioni create dallo studente con
+4. **visualizzazione lista segnalazioni**: il sistema mostra tutte le segnalazioni ancora non chiuse con
    - titolo segnalazione
    - aula segnalazione
    - data di apertura segnalazione
    - stato segnalazione
-5. **visualizzazione dettaglio segnalazione**: lo studente segnala una segnalazione dalla propria lista segnalazioni e il sistema mostra i seguenti dettagli:
+5. **visualizzazione dettaglio segnalazione**: lo studente seleziona una segnalazione e il sistema mostra i seguenti dettagli:
    - titolo segnalazione
    - aula segnalazione
    - data di apertura segnalazione
@@ -44,9 +41,15 @@
    - priorità segnalazione
    - tecnico assegnato (se presente)
    - descrizione segnalazione
-6. **visualizzazione dettaglio aula**:
-   - info dell'aula (nome, piano, edificio)
+6. **visualizzazione dettaglio aula**: il sistema mostra il dettaglio dell'aula con i seguenti dati:
+   - nome aula
+   - piano aula
+   - edificio aula
+   - dipartimento aula
+   - segnalazioni aula@
 7. **visualizzazione dashboard**: il sistema mostra contenuti personalizzati
+   - banner di ricerca
+   - banner di segnalazione guasto 
    - lista aula preferite:
      - nome aula
      - edificio aula

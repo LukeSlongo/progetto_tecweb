@@ -6,3 +6,6 @@ non ci avevo pensato, direi di sì, facciamo una pagina dove ci sono le segnalaz
 vengono eliminate di conseguenza anche aule e edifici ecc. da vedere per le segnalazioni se impostare null al posto di fare delete on cascade stando attenti anche agli utenti
 4. per semplificare farei che utente non abbia nome, cognome e mail ma solo nome.
 va bene, pensavo fosse più completo con tutto ma ok
+
+5. una segnalazione quando viene chiusa viene eliminata o permane nel sistema? per semplicità si può eliminare ma se si ritiene una
+funzionalità valida si può mantenere.
