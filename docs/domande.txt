@@ -1,0 +1,4 @@
+1. uno stuende può vedere segnalazioni di altri studenti?
+2. un tecnico si prende segnalazioni da solo?
+3. che cosa succede se elimino un dipartimento? vengono eliminati anche tutti i suoi edifici? Discorso analogo per edifici con aule
+4. per semplificare farei che utente non abbia nome, cognome e mail ma solo nome.
