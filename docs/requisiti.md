@@ -18,16 +18,16 @@
     - piano
     - dipartimento
     - numero segnalazioni attive
-
-## Studente (Utente base)
-1. **aggiunta di una aula ai preferiti**
-2. **rimozione di una aula dai preferiti**
-3. **apertura segnalazione**: compilazione del form per segnalare un nuovo guasto in un'aula specifica, inserendo:
+4. **apertura segnalazione**: compilazione del form per segnalare un nuovo guasto in un'aula specifica, inserendo:
     - nome aula
     - piano aula
     - titolo segnalazione
     - descrizione segnalazione
     - priorità segnalazione
+
+## Studente (Utente base)
+1. **aggiunta di una aula ai preferiti**
+2. **rimozione di una aula dai preferiti**
 4. **visualizzazione lista segnalazioni**: il sistema mostra tutte le segnalazioni ancora non chiuse con
    - titolo segnalazione
    - aula segnalazione

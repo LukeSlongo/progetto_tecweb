@@ -18,4 +18,8 @@ va bene, pensavo fosse più completo con tutto ma ok
 
 5. una segnalazione quando viene chiusa viene eliminata o permane nel sistema? per semplicità si può eliminare ma se si ritiene una
 funzionalità valida si può mantenere.
+
 la manterrei, dato che poi si possono fare le dashboard con le statistiche per gli admin
+
+6. un tecnico è assegnato ad un dipartimento? se sì deve vedere solo le segnalazioni del proprio dipartimento? se sì quindi un tecnico può vedere solo
+le sengalazioni del suo dipartimento e uno studente le può vedere tutte?
