@@ -1,10 +1,19 @@
 1. uno stuende può vedere segnalazioni di altri studenti?
-la mia idea era che uno studente può cercare un aula e vedere se ci sono segnalazioni così in caso non ci va, poi la cosa dei preferiti è in più quindi a uno studente non interessa avere tutte le segnalazioni ma solo quelle delle aule che gli interessano 
+
+la mia idea era che uno studente può cercare un aula e vedere se ci sono segnalazioni così in caso non ci va, 
+poi la cosa dei preferiti è in più quindi a uno studente non interessa avere tutte le segnalazioni ma solo quelle delle aule che gli interessano 
+
 2. un tecnico si prende segnalazioni da solo?
+
 non ci avevo pensato, direi di sì, facciamo una pagina dove ci sono le segnalazioni non prese in carico e i tecnici se le prendono
-3. che cosa succede se elimino un dipartimento? vengono eliminati anche tutti i suoi edifici? Discorso analogo per edifici con aule
-vengono eliminate di conseguenza anche aule e edifici ecc. da vedere per le segnalazioni se impostare null al posto di fare delete on cascade stando attenti anche agli utenti
+
+3. che cosa succede se elimino un dipartimento? vengono eliminati anche tutti i suoi edifici? Discorso analogo per edifici con aule.
+
+vengono eliminate di conseguenza anche aule e edifici ecc. da vedere per le segnalazioni se impostare null al posto di fare 
+delete on cascade stando attenti anche agli utenti
+
 4. per semplificare farei che utente non abbia nome, cognome e mail ma solo nome.
+
 va bene, pensavo fosse più completo con tutto ma ok
 
 5. una segnalazione quando viene chiusa viene eliminata o permane nel sistema? per semplicità si può eliminare ma se si ritiene una

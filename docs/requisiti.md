@@ -11,7 +11,8 @@
 
 ## Utente autenticato (azioni comuni)
 1. **logout**: uscire dal sistema tramite tasto logout/esci
-2. **ricerca aule**: ricerca testuale di un'aula tramite nome aula. Il sistema mostra una lista di aule con
+2. **ricerca aule**: ricerca testuale di un'aula tramite nome aula, il sistema mostra una lista di aule.
+3. **visualizza lista aule**: Il sistema mostra una lista di aule con
     - nome aula
     - edificio
     - piano
