@@ -23,3 +23,11 @@ la manterrei, dato che poi si possono fare le dashboard con le statistiche per g
 
 6. un tecnico è assegnato ad un dipartimento? se sì deve vedere solo le segnalazioni del proprio dipartimento? se sì quindi un tecnico può vedere solo
 le sengalazioni del suo dipartimento e uno studente le può vedere tutte?
+
+si il tecnico ha un suo dipartimento e quindi avrà una pagina dove prenderà in carico le segnalazioni del suo dipartimento, non le vede tutte. 
+Lo studente non è che vede tutte le segnalazioni, come il tecnico se cerca un aula può vedere se c'è qualcosa che non va
+
+7. nella segnalazione delle aule si segnala anche il piano e l'edifico? perchè il nome dell'aula dovrebbe essere identificativo dell'aula, oppure no?
+
+nel db ho messo solo id aula nella segnalazione poi da frontend va messo tutto ma per una questione che così cercando filtri già praticamente,
+poi viene passato solo id aula

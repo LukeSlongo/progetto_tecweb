@@ -6,8 +6,8 @@
 # Casi d'uso
 
 ## Utente non autenticato (Ospite)
-1. **registrazione**: creazione di un nuovo account con *nome e cognome*, *email* e *password*
-2. **login**: accesso al sistema tramite *email* e *password*
+1. **registrazione**: creazione di un nuovo account con *nome utente* e *password*
+2. **login**: accesso al sistema tramite *nome utente* e *password*
 
 ## Utente autenticato (azioni comuni)
 1. **logout**: uscire dal sistema tramite tasto logout/esci
@@ -18,55 +18,19 @@
     - piano
     - dipartimento
     - numero segnalazioni attive
-4. **apertura segnalazione**: compilazione del form per segnalare un nuovo guasto in un'aula specifica, inserendo:
+4. **visualizzazione dettaglio aula**: il sistema mostra il dettaglio dell'aula con i seguenti dati:
+   - nome aula
+   - piano aula
+   - edificio aula
+   - dipartimento aula
+   - segnalazioni aula (titolo, data apertura, stato segnalazione)
+5. **creazione segnalazione**: compilazione del form per segnalare un nuovo guasto in un'aula specifica, inserendo:
     - nome aula
     - piano aula
     - titolo segnalazione
     - descrizione segnalazione
     - priorità segnalazione
-
-## Studente (Utente base)
-1. **aggiunta di una aula ai preferiti**
-2. **rimozione di una aula dai preferiti**
-4. **visualizzazione lista segnalazioni**: il sistema mostra tutte le segnalazioni ancora non chiuse con
-   - titolo segnalazione
-   - aula segnalazione
-   - data di apertura segnalazione
-   - stato segnalazione
-5. **visualizzazione dettaglio segnalazione**: lo studente seleziona una segnalazione e il sistema mostra i seguenti dettagli:
-   - titolo segnalazione
-   - aula segnalazione
-   - data di apertura segnalazione
-   - data di chiusura segnalazione (se chiusa)
-   - stato segnalazione
-   - priorità segnalazione
-   - tecnico assegnato (se presente)
-   - descrizione segnalazione
-6. **visualizzazione dettaglio aula**: il sistema mostra il dettaglio dell'aula con i seguenti dati:
-   - nome aula
-   - piano aula
-   - edificio aula
-   - dipartimento aula
-   - segnalazioni aula@
-7. **visualizzazione dashboard**: il sistema mostra contenuti personalizzati
-   - banner di ricerca
-   - banner di segnalazione guasto 
-   - lista aula preferite:
-     - nome aula
-     - edificio aula
-     - piano aula
-     - numero di segnalazioni proprie riguardanti quell'aula
-
-## Tecnico
-1.  **Visualizzazione di coda lavoro**: accesso all'elenco di segnalazioni attive relative a edifici del proprio dipartimento di competenza. Per ogni segnalazione mostra:
-    - titolo segnalazione
-    - aula
-    - edificio
-    - priorità
-    - stato
-    - data apertura
-    - tecnico assegnato (se in carico)
-2.  **Visualizza dettaglio segnalazione**: il tecnico seleziona una segnalazione dalla coda e il sistema mostra tutti i dettagli completi e visualizza azioni disponibili in base al suo stato
+6.  **visualizza dettaglio segnalazione**: il tecnico seleziona una segnalazione dalla coda e il sistema mostra tutti i dettagli completi e visualizza azioni disponibili in base al suo stato
     - titolo segnalazione
     - aula
     - edificio
@@ -74,16 +38,23 @@
     - stato
     - data apertura
     - tecnico assegnato (se in carica)
-    - [azione disponibile]
-3.  **Presa in carico**: assegnazione a sé stessi di una segnalazione in stato aperto -> la segnalazione diventa in stato in carico
-4.  **Risoluzione guasto**: chiusura tecnica del ticket una volta completato il lavoro -> la segnalazione diventa risolta
-5.  **Riassegnazione**: rimozione dell'incarico facendolo tornare in stato aperto
-7.  **visualizza dettaglio aula**: l'utente seleziona un aula dall'elenco e il sistema mostra
-    - info dell'aula (nome, piano, edificio)
-    - stato attuale (se ci sono segnalazioni oppure no)
-    - lista di segnalazioni attive riguardanti quell'aula
-8. **visualizzazione dashboard**: il sistema mostra i contenuti personalizzati
-    - segnalazioni del proprio dipartimento (info su segnalatore, aula, titolo, descrizione, stato, priorità, data apertura, data chiusura)
+
+## Studente (Utente base)
+1. **aggiunta di una aula ai preferiti**
+2. **rimozione di una aula dai preferiti**
+
+## Tecnico
+1.  **Visualizzazione lista segnalazioni dipartimento**: accesso all'elenco di segnalazioni attive relative a edifici del proprio dipartimento di competenza. Per ogni segnalazione mostra:
+    - titolo segnalazione
+    - aula
+    - edificio
+    - priorità
+    - stato
+    - data apertura
+    - tecnico assegnato (se in carico)
+2.  **Presa in carico**: assegnazione a sé stessi di una segnalazione in stato aperto -> la segnalazione diventa in stato in carico
+3.  **Risoluzione guasto**: chiusura tecnica del ticket una volta completato il lavoro -> la segnalazione diventa risolta
+4.  **Riassegnazione**: rimozione dell'incarico facendolo tornare in stato aperto
 
 
 ## Amministratore
