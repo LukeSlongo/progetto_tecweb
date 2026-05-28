@@ -9,12 +9,4 @@ figma: https://www.figma.com/site/TJ9UrurdZz45BM1yz13pNW/Untitled?node-id=0-1&p=
 7. modulo segnalazione page
 8. lista segnalazioni page
 9. dettaglio segnalazione page
-
-
-9.  creazione/aggiorna dipartimento page
-10. lista dipartimenti page
-11. creazione/aggiorna edificio page
-12. lista edifici page
-13. creazione/aggiorna aula page
-14. lista aule page
-15. lista utenti page
+10. lista utenti page

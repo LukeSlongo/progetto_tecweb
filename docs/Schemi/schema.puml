@@ -3,12 +3,6 @@ hide circle
 skinparam linetype ortho
 
 
-entity "dipartimento" as dipartimento {
-  * id : INT <<PK>>
-  --
-  nome : VARCHAR(100) [UNIQUE]
-}
-
 entity "edificio" as edificio {
   * id : INT <<PK>>
   --
@@ -40,7 +34,6 @@ entity "segnalazione" as segnalazione {
   * aula_id : INT <<FK>>
   titolo : VARCHAR(150)
   descrizione : TEXT
-  priorita : ENUM('bassa', 'media', 'alta')
   data_apertura : TIMESTAMP
   data_chiusura : TIMESTAMP [NULLABLE]
 }
