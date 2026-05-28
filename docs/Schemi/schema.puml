@@ -28,23 +28,18 @@ entity "aula" as aula {
 entity "utente" as utente {
   * id : INT <<PK>>
   --
-  dipartimento_id : INT <<FK>> [NULLABLE]
-  nome : VARCHAR(50)
-  cognome : VARCHAR(50)
-  email : VARCHAR(100) [UNIQUE]
+  nome_utente : VARCHAR(50)
   password : VARCHAR(255)
-  ruolo : ENUM('studente', 'tecnico', 'admin')
+  ruolo : ENUM('studente', 'admin')
 }
 
 entity "segnalazione" as segnalazione {
   * id : INT <<PK>>
   --
   * utente_id : INT <<FK>>
-  tecnico_id : INT <<FK>> [NULLABLE]
   * aula_id : INT <<FK>>
   titolo : VARCHAR(150)
   descrizione : TEXT
-  stato : ENUM('aperto', 'in_carico', 'risolto', 'chiuso')
   priorita : ENUM('bassa', 'media', 'alta')
   data_apertura : TIMESTAMP
   data_chiusura : TIMESTAMP [NULLABLE]
