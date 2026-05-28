@@ -1,0 +1,12 @@
+Applicazione ibrida: server-side rendering con elementi dinamici gestiti frontend da JS
+
+1. rotte web -> caricamento delle pagine: renderizza il template e restituisce l'html
+2. rotte API -> operazioni dinamiche per non ricaricare la pagina
+
+Rotte web:
+mostra pagina principale: GET / (HomeController->index)
+mostra loginPage: GET /login (UserController->view_login)
+elabora login: POST /login (UserController->login)
+mostra registerPage: GET (UserController->view_register)
+elabora registrazione: POST (UserController->register)
+logout (distrugge la sessione e torna alla home): GET /

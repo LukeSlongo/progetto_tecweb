@@ -31,3 +31,11 @@ Lo studente non è che vede tutte le segnalazioni, come il tecnico se cerca un a
 
 nel db ho messo solo id aula nella segnalazione poi da frontend va messo tutto ma per una questione che così cercando filtri già praticamente,
 poi viene passato solo id aula
+
+
+- toglierei tecnico id, togliere stato
+- piano si può togliere
+- valutare di togliere stato e tecnico -> è l'admin che gestisce lo stato delle segnalazioni
+- il tecnico può fil
+
+

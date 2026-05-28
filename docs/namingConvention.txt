@@ -1,0 +1,9 @@
+PHP:
+
+1. Nomi classi: PascalCase
+2. Nomi metodi: camelCase
+3. Costanti: UPPER_SNAKE_CASE
+4. Nomi variabili: snake_case
+5. indentazione: 4 spazi
+6. classi parentesi: alla riga successiva
+7. classi statenent (if, while, for): spazio e riga successiva
