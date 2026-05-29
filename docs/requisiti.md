@@ -30,7 +30,8 @@
     - titolo segnalazione
     - descrizione segnalazione
     - priorità segnalazione
-6.  **visualizza dettaglio segnalazione**: seleziona una segnalazione dalla coda e il sistema mostra tutti i dettagli completi e visualizza azioni disponibili in base al suo stato
+5. **eliminazione segnalazione**: l'utente elimina la segnalazione selezionata: 
+7.  **visualizza dettaglio segnalazione**: seleziona una segnalazione dalla coda e il sistema mostra tutti i dettagli completi e visualizza azioni disponibili in base al suo stato
     - titolo segnalazione
     - aula
     - edificio
