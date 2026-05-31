@@ -6,7 +6,6 @@ skinparam linetype ortho
 entity "edificio" as edificio {
   * id : INT <<PK>>
   --
-  * dipartimento_id : INT <<FK>>
   nome : VARCHAR(50) [UNIQUE]
   indirizzo : VARCHAR(255)
 }
@@ -17,14 +16,16 @@ entity "aula" as aula {
   * edificio_id : INT <<FK>>
   nome : VARCHAR(50)
   piano : INT
+  ..
+  note: UNIQUE(edificio_id, nome)
 }
 
 entity "utente" as utente {
   * id : INT <<PK>>
   --
-  nome_utente : VARCHAR(50)
+  nome_utente : VARCHAR(50) [UNIQUE]
   password : VARCHAR(255)
-  ruolo : ENUM('studente', 'admin')
+  ruolo : ENUM('studente', 'tecnico', 'admin')
 }
 
 entity "segnalazione" as segnalazione {
@@ -32,10 +33,14 @@ entity "segnalazione" as segnalazione {
   --
   * utente_id : INT <<FK>>
   * aula_id : INT <<FK>>
+  tecnico_id: INT <<FK>> [NULLABLE]
   titolo : VARCHAR(150)
   descrizione : TEXT
   data_apertura : TIMESTAMP
   data_chiusura : TIMESTAMP [NULLABLE]
+  stato : ENUM('aperto', 'in lavorazione', 'chiuso')
+  ..
+  note: CHECK (data_chiusura >= data_apertura)  
 }
 
 entity "preferiti" as preferiti {
@@ -44,13 +49,8 @@ entity "preferiti" as preferiti {
   --
 }
 
-dipartimento ||--o{ edificio : "ha"
-
 ' Un edificio ha molte aule
 edificio ||--o{ aula : "contiene"
-
-' Un dipartimento ha molti utenti (tecnici/admin)
-dipartimento ||--o{ utente : "impiega"
 
 ' Un utente (studente) crea molte segnalazioni
 utente ||--o{ segnalazione : "apre"

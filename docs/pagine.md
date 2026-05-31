@@ -3,10 +3,9 @@ figma: https://www.figma.com/site/TJ9UrurdZz45BM1yz13pNW/Untitled?node-id=0-1&p=
 1. loginpage
 2. registerpage
 3. homepage
-4. profilo page
-5. lista aule page
-6. dettaglio aula page
-7. modulo segnalazione page
-8. lista segnalazioni page
-9. dettaglio segnalazione page
-10. lista utenti page
+4. lista aule page
+5. dettaglio aula page
+6. modulo segnalazione page
+7. lista segnalazioni page
+8. dettaglio segnalazione page
+9. lista utenti page
