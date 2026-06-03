@@ -1,8 +1,7 @@
 <?php
 namespace App\Core;
 
-
-Class Router {
+class Router {
     
     private $routes = [
         'GET' => [],
@@ -17,9 +16,10 @@ Class Router {
         $this->add('POST', $uri, $controller, $method, $middleware);
     }
 
-    public function add($uri, $controller, $method, $middleware = []){
-
-        $this->routes[$uri] = [
+    // FIX 1: Aggiunto $httpMethod come primo parametro
+    public function add($httpMethod, $uri, $controller, $method, $middleware = []){
+        // Inseriamo la rotta nel cassetto giusto (GET o POST)
+        $this->routes[$httpMethod][$uri] = [
             'controller' => $controller,
             'method' => $method,
             'middleware' => $middleware
@@ -32,9 +32,11 @@ Class Router {
         
         $matchedRoute = null;
         $params = [];
+        // Prendiamo solo le rotte del metodo richiesto (es. solo le GET)
         $routesToSearch = $this->routes[$httpMethod] ?? [];
 
-        foreach($this->routes as $routePath => $routeData){
+        // FIX 2: Iteriamo su $routesToSearch, non su $this->routes
+        foreach($routesToSearch as $routePath => $routeData){
             $pattern = preg_replace('/\{[a-zA-Z0-9-_]+:num\}/', '([0-9]+)', $routePath);
             $pattern = preg_replace('/\{[a-zA-Z0-9-_]+:alpha\}/', '([a-zA-Z-_]+)', $pattern);
             $pattern = preg_replace('/\{[a-zA-Z0-9-_]+:alphanum\}/', '([a-zA-Z0-9-_]+)', $pattern);
@@ -64,7 +66,6 @@ Class Router {
         call_user_func_array([$controller, $matchedRoute['method']], $params);
     }
 
-
     private function getNamedParams($routePath, $matches) {
         $namedParams = [];
         if (!empty($matches)) {
@@ -78,7 +79,6 @@ Class Router {
     }
 
     private function handleMiddleware($middleware, $params) {
-        // Controllo Login Generico
         if (in_array('auth', $middleware)) {
             if (!\App\Core\Auth::isLogged()) {
                 header('Location: /login');
@@ -86,7 +86,6 @@ Class Router {
             }
         }
 
-        // Controllo Ruolo Admin
         if (in_array('admin', $middleware)) {
             $currentUser = \App\Core\Auth::getUser()['is_admin'] ?? null;
 
@@ -95,7 +94,6 @@ Class Router {
             }
         }
 
-        // Controllo Ruolo Tecnico
         if (in_array('tecnico', $middleware)) {
             $user = \App\Core\Auth::getUser();
             if (!$user || ($user['ruolo'] !== 'tecnico' && $user['ruolo'] !== 'admin')) {
@@ -103,19 +101,4 @@ Class Router {
             }
         }
     }
-} 
-
-/** 
- * aggiungo le pagine su index.php con $controller->add(<url>, <controller>, <metodo> )
- * 
- * - url:          puo` essere qualcosa del tipo: /canzone, /canzone/{id:num}, /canzone/{nome_canzone:alphanum}, /canzone/{nome_canzone:aplhanum}/download, /utente/{nome_utente:alphanum}/playlist/{id:num}.
- *                [consiglio di usare il tipo del paramentre messo con :<tipo>. se non si mette e` alphanum]
- * 
- * - controller:   e' la classe del controller utilizzato
- * 
- * - metodo:       metodo della classe controller che viene invocato quando viene visitata la pagina. I parametri vengono passati come array.
- * 
- * 
- * avvio la pagina con $router->dispatch($_SERVER['REQUEST_URI']);
- * 
- */
+}

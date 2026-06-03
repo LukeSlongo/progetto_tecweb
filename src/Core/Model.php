@@ -1,25 +1,29 @@
-<?php 
+<?php
 namespace App\Core;
 
 use PDO;
 use PDOException;
 use Exception;
-abstract class Model{
+abstract class Model
+{
 
     protected $db;
     protected $table;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->db = Database::getInstance();
     }
 
-    protected function checkTable() {
+    protected function checkTable()
+    {
         if (!$this->table) {
             throw new Exception("Proprietà \$table non definita nel Model figlio.");
         }
     }
 
-    public function query($sql, $params = []) {
+    public function query($sql, $params = [])
+    {
         try {
             $stmt = $this->db->prepare($sql);
             $stmt->execute($params);
@@ -29,30 +33,35 @@ abstract class Model{
         }
     }
 
-    protected function fetchOne($sql, $params = []) {
+    protected function fetchOne($sql, $params = [])
+    {
         return $this->query($sql, $params)->fetch();
     }
 
-    protected function fetchAll($sql, $params = []) {
+    protected function fetchAll($sql, $params = [])
+    {
         return $this->query($sql, $params)->fetchAll();
     }
 
-    public function findAll(){
+    public function findAll()
+    {
         $this->checkTable();
         $sql = "SELECT * FROM " . $this->table;
         return $this->fetchAll($sql);
     }
 
-    public function findById($id) {
+    public function findById($id)
+    {
         $this->checkTable();
         $sql = "SELECT * FROM {$this->table} WHERE id = ?";
         return $this->fetchOne($sql, [$id]);
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $this->checkTable();
         $sql = "DELETE FROM {$this->table} WHERE id = ?";
         return $this->query($sql, [$id]);
     }
-    
+
 }
