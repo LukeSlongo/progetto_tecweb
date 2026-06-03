@@ -3,16 +3,9 @@ hide circle
 skinparam linetype ortho
 
 
-entity "dipartimento" as dipartimento {
-  * id : INT <<PK>>
-  --
-  nome : VARCHAR(100) [UNIQUE]
-}
-
 entity "edificio" as edificio {
   * id : INT <<PK>>
   --
-  * dipartimento_id : INT <<FK>>
   nome : VARCHAR(50) [UNIQUE]
   indirizzo : VARCHAR(255)
 }
@@ -23,15 +16,14 @@ entity "aula" as aula {
   * edificio_id : INT <<FK>>
   nome : VARCHAR(50)
   piano : INT
+  ..
+  note: UNIQUE(edificio_id, nome)
 }
 
 entity "utente" as utente {
   * id : INT <<PK>>
   --
-  dipartimento_id : INT <<FK>> [NULLABLE]
-  nome : VARCHAR(50)
-  cognome : VARCHAR(50)
-  email : VARCHAR(100) [UNIQUE]
+  nome_utente : VARCHAR(50) [UNIQUE]
   password : VARCHAR(255)
   ruolo : ENUM('studente', 'tecnico', 'admin')
 }
@@ -40,14 +32,15 @@ entity "segnalazione" as segnalazione {
   * id : INT <<PK>>
   --
   * utente_id : INT <<FK>>
-  tecnico_id : INT <<FK>> [NULLABLE]
   * aula_id : INT <<FK>>
+  tecnico_id: INT <<FK>> [NULLABLE]
   titolo : VARCHAR(150)
   descrizione : TEXT
-  stato : ENUM('aperto', 'in_carico', 'risolto', 'chiuso')
-  priorita : ENUM('bassa', 'media', 'alta')
   data_apertura : TIMESTAMP
   data_chiusura : TIMESTAMP [NULLABLE]
+  stato : ENUM('aperto', 'in lavorazione', 'chiuso')
+  ..
+  note: CHECK (data_chiusura >= data_apertura)  
 }
 
 entity "preferiti" as preferiti {
@@ -56,13 +49,8 @@ entity "preferiti" as preferiti {
   --
 }
 
-dipartimento ||--o{ edificio : "ha"
-
 ' Un edificio ha molte aule
 edificio ||--o{ aula : "contiene"
-
-' Un dipartimento ha molti utenti (tecnici/admin)
-dipartimento ||--o{ utente : "impiega"
 
 ' Un utente (studente) crea molte segnalazioni
 utente ||--o{ segnalazione : "apre"

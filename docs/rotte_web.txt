@@ -1,0 +1,30 @@
+Applicazione ibrida: server-side rendering con elementi dinamici gestiti frontend da JS
+
+1. rotte web -> caricamento delle pagine: renderizza il template e restituisce l'html
+2. rotte API -> operazioni dinamiche per non ricaricare la pagina
+
+Rotte web:
+mostra loginPage:                                          GET   /login                                    (UserController->viewLogin)
+elabora login:                                             POST  /login                                    (UserController->login)
+mostra registerPage:                                       GET   /register                                 (UserController->viewRegister)
+elabora registrazione:                                     POST  /register                                 (UserController->register)
+logout (distrugge la sessione e torna alla loginPage):     POST  /logout                                   (UserController->logout)
+
+mostra pagina principale:                                  GET   /                                         (UserController->viewHome)
+mostra lista aule:                                         GET   /rooms                                    (RoomController->viewRooms)
+mostra dettaglio aula:                                     GET   /rooms/{id}                               (RoomController->viewRoomDetail)
+mostra segnalazione form:                                  GET   /issues/new                               (IssueController->viewIssueForm)
+submit segnalazione:                                       POST  /issues                                   (IssueController->saveIssue)
+delete segnalazione:                                       POST  /issues/{id}/delete                       (IssueController->deleteIssue)
+mostra dettaglio segnalazione:                             GET   /issues/{id}                              (IssueController->viewIssueDetail)
+
+mostra segnalazioni:                                       GET   /issues?status={status}                  (IssueController->viewIssueList)
+mostra lista utenti:                                       GET   /users                                   (UserController->viewUserList)
+elimina utente:                                            POST  /users/{id}/delete                       (UserController->deleteUser)  
+
+ROTTE API:
+
+aggiungi preferiti:                                        POST /api/favorites/{room_id}/add               (UserController->addFavorite)
+rimuovi preferiti:                                         POST /api/favorites/{room_id}/remove            (UserController->removeFavorite)
+prendi segnalazione:                                       POST /api/issues/{issue_id}/take                (IssueController->takeIssue)
+chiudi segnalazione:                                       POST /api/issues/{issue_id}/close               (IssueController->closeIssue)

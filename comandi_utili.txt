@@ -30,7 +30,7 @@ Eliminare una riga:
     
 
 accedere a server:
-  1. accedere a account laboratorio:        ssh msanguin@sshpaolotti.studenti.math.unipd.it -L 8080:tecweb:80 -L 8022:tecweb:22
+  1. accedere a account laboratorio:        ssh msanguin@sshpaolotti.studenti.math.unipd.it -L8080:tecweb:80 -L8022:tecweb:22
   2. accedere a server tecweb:              ssh msanguin@tecweb.studenti.math.unipd.it
 
   scp -r /home/1/2023/msanguin/Documents/Progetto_tec_web/ msanguin@tecweb.studenti.math.unipd.it:/home/msanguin/
