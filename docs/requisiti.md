@@ -25,7 +25,14 @@
     - selezione toggle aula
     - scrittura testuale titolo segnalazione
     - scrittura testuale descrizione segnalazione
-  [nota: verranno caricati tutti gli edifici e le aule, ci sarà una toggle list che mostrerà tutti gli edifici, se seleziono un edificio la toggle list di aule mi mostrerà solo le aule di quell'edifico. Se invece seleziono un aula senza aver selezionato un edificio, mi verrà inserito automaticamente l'edifico di quell'aula. Questa logica sarà gestita con JS]
+  [nota: verranno caricati tutti gli edifici e le aule, ci sarà una toggle list che mostrerà tutti gli edifici, se seleziono un edificio la toggle list di aule mi mostrerà solo le aule di quell'edifico. Se invece seleziono un aula senza aver selezionato un edificio, mi verrà inserito automaticamente l'edifico di quell'aula. Questa logica sarà gestita con JS. Ecco come funzionerà:
+    1. Il Server (PHP) prepara il pacchetto: Il tuo Controller interroga il database, prende tutti gli edifici e tutte le aule, li trasforma in stringhe JSON e li "appiccica" come attributi invisibili (es. data-buildings="...") sul tag <form> nel tuo HTML.
+
+    2. Il Browser (JS) legge il pacchetto: Quando la pagina si carica, il tuo file JavaScript cerca il form, legge quegli attributi data- e li ritrasforma in veri e propri array di oggetti JS.
+
+    3. L'Interazione (Niente più server): Quando l'utente seleziona un edificio, JS filtra istantaneamente il suo array di aule (usando l'edificio_id) e aggiorna la seconda tendina in un millisecondo. Il server PHP ha già finito il suo lavoro da un pezzo e non viene più disturbato.
+  
+  ]
 6. **eliminazione segnalazione**:
     1. l'utente elimina una segnalazione propria in stato aperto _(studente, tecnico, admin)_
     2. l'utente elimina una qualsiasi segnalazione _(admin)_

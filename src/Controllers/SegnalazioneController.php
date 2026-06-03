@@ -19,7 +19,7 @@ class SegnalazioneController extends Controller {
     public function nuova_segnalazione() {
         $this->page_title = "Nuova Segnalazione";
         $this->page_description = "Crea una nuova segnalazione di guasto o problema.";
-        $this->render('new_report');
+        $this->render('new_issue');
     }
 
     public function salva_segnalazione() {
