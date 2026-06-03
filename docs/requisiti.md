@@ -95,8 +95,8 @@
     - una segnalazione non può esserci senza un id studente valido
     - una segnalazione non può esserci senza un id aula valida
     - se elimino un aula si eliminano le segnalazioni con quell'aula
-    - se elimino uno studente si eliminano le segnalazioni con quello studente
-    - se elimino un tecnico le segnalazioni con quell'id tecnico tornano in stato aperto e il campo tecnico_id di queste segnalazioni torna a NULL -> necessita trigger db
+    - se elimino uno studente il campo studente_id delle segnalazioni va a NULL
+    - se elimino un tecnico le segnalazioni in lavorazione con quell'id tecnico tornano in stato aperto e il campo tecnico_id di queste segnalazioni torna a NULL (quelle chiuse restano chiuse) -> necessita trigger db
 3. preferiti
     - un preferito non può esserci senza un id studente valido
     - un preferito non può esserci senza un id aula valida
