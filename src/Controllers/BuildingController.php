@@ -3,15 +3,15 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Core\Template;
-use App\Models\EdificioModel;
+use App\Models\BuildingModel;
 
-class EdificioController extends Controller {
+class BuildingController extends Controller {
 
-    private $Edificio;
+    private $Building;
 
     public function __construct()
     {
-        $this->Edificio = new EdificioModel();
+        $this->Building = new BuildingModel();
         //BreadcrumbHelper::reset();
     }
 
@@ -26,7 +26,7 @@ class EdificioController extends Controller {
             exit;
         }
 
-        $edifici = $this->Edificio->get_edifici_by_dipartimento($dipartimento_id);
+        $edifici = $this->Building->get_edifici_by_dipartimento($dipartimento_id);
         echo json_encode($edifici);
         exit;
     }

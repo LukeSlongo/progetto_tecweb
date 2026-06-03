@@ -1,6 +1,6 @@
 1. uno stuende può vedere segnalazioni di altri studenti?
 
-la mia idea era che uno studente può cercare un aula e vedere se ci sono segnalazioni così in caso non ci va, 
+la mia idea era che uno studente può cercare un room e vedere se ci sono segnalazioni così in caso non ci va, 
 poi la cosa dei preferiti è in più quindi a uno studente non interessa avere tutte le segnalazioni ma solo quelle delle aule che gli interessano 
 
 2. un tecnico si prende segnalazioni da solo?
@@ -16,7 +16,7 @@ delete on cascade stando attenti anche agli utenti
 
 va bene, pensavo fosse più completo con tutto ma ok
 
-5. una segnalazione quando viene chiusa viene eliminata o permane nel sistema? per semplicità si può eliminare ma se si ritiene una
+5. una issue quando viene chiusa viene eliminata o permane nel sistema? per semplicità si può eliminare ma se si ritiene una
 funzionalità valida si può mantenere.
 
 la manterrei, dato che poi si possono fare le dashboard con le statistiche per gli admin
@@ -25,12 +25,12 @@ la manterrei, dato che poi si possono fare le dashboard con le statistiche per g
 le sengalazioni del suo dipartimento e uno studente le può vedere tutte?
 
 si il tecnico ha un suo dipartimento e quindi avrà una pagina dove prenderà in carico le segnalazioni del suo dipartimento, non le vede tutte. 
-Lo studente non è che vede tutte le segnalazioni, come il tecnico se cerca un aula può vedere se c'è qualcosa che non va
+Lo studente non è che vede tutte le segnalazioni, come il tecnico se cerca un room può vedere se c'è qualcosa che non va
 
-7. nella segnalazione delle aule si segnala anche il piano e l'edifico? perchè il nome dell'aula dovrebbe essere identificativo dell'aula, oppure no?
+7. nella issue delle aule si segnala anche il piano e l'edifico? perchè il nome dell'room dovrebbe essere identificativo dell'room, oppure no?
 
-nel db ho messo solo id aula nella segnalazione poi da frontend va messo tutto ma per una questione che così cercando filtri già praticamente,
-poi viene passato solo id aula
+nel db ho messo solo id room nella issue poi da frontend va messo tutto ma per una questione che così cercando filtri già praticamente,
+poi viene passato solo id room
 
 
 - toglierei tecnico id, togliere stato

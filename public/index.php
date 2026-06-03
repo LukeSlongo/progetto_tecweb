@@ -10,9 +10,10 @@ spl_autoload_register(function ($class) {
     $prefix = 'App\\';
     $base_dir = __DIR__ . '/../src/';
 
-    
+
     $len = strlen($prefix);
-    if (strncmp($prefix, $class, $len) !== 0) return;
+    if (strncmp($prefix, $class, $len) !== 0)
+        return;
 
 
     $relative_class = substr($class, $len);
@@ -25,12 +26,7 @@ spl_autoload_register(function ($class) {
 });
 
 use App\Core\Router;
-use App\Controllers\HomeController;
-use App\Controllers\SegnalazioneController;
 use App\Controllers\ErrorController;
-use App\Controllers\DipartimentoController;
-use App\Controllers\EdificioController;
-use App\Controllers\AulaController;
 
 
 
@@ -40,31 +36,52 @@ set_exception_handler(function ($e) {
 
     if ($e instanceof \App\Exceptions\NotFoundException) {
         $errorController->index(404, '404_notfound', $e->getMessage());
-    } 
-    elseif ($e instanceof \App\Exceptions\ForbiddenException) {
+    } elseif ($e instanceof \App\Exceptions\ForbiddenException) {
         $errorController->index(403, '403_forbidden');
-    } 
-    else {
+    } else {
         // Logga l'errore vero per te
         error_log($e->getMessage());
         // Mostra pagina 500 generica
         $errorController->index(500, '500_internalerror', $e->getMessage());
     }
-    
+
     exit;
 });
 
-    $router = new Router();
+$router = new Router();
+
+$router->get('/login', 'UserController', 'viewLogin');
+$router->post('/login', 'UserController', 'login');
+$router->get('/register', 'UserController', 'viewRegister');
+$router->post('/register', 'UserController', 'register');
+$router->post('/logout', 'UserController', 'logout');
+
+// Home
+$router->get('/', 'UserController', 'viewHome', ['auth']);
+
+// Aule
+$router->get('/rooms', 'RoomController', 'viewRooms', ['auth']);
+$router->get('/rooms/{id:num}', 'RoomController', 'viewRoomDetail', ['auth']);
+
+// Segnalazioni
+$router->get('/issues/new', 'IssueController', 'viewIssueForm', ['auth']);
+$router->post('/issues', 'IssueController', 'saveIssue', ['auth']);
+$router->get('/issues', 'IssueController', 'viewIssueList', ['auth']);
+$router->get('/issues/{id:num}', 'IssueController', 'viewIssueDetail', ['auth']);
+$router->post('/issues/{id:num}/delete', 'IssueController', 'deleteIssue', ['auth']);
+
+// Utenti (solo admin)
+$router->get('/users', 'UserController', 'viewUserList', ['auth', 'admin']);
+$router->post('/users/{id:num}/delete', 'UserController', 'deleteUser', ['auth', 'admin']);
+
+// Rotte API
+$router->post('/api/favorites/{room_id:num}/add', 'UserController', 'addFavorite', ['auth']);
+$router->post('/api/favorites/{room_id:num}/remove', 'UserController', 'removeFavorite', ['auth']);
+$router->post('/api/issues/{issue_id:num}/take', 'IssueController', 'takeIssue', ['auth', 'tecnico']);
+$router->post('/api/issues/{issue_id:num}/close', 'IssueController', 'closeIssue', ['auth', 'tecnico']);
 
 
-    $router->add('/', HomeController::class, 'visualizza_home');
-
-    $router->add('/nuova_segnalazione', SegnalazioneController::class, 'nuova_segnalazione');
-    $router->add('/api/segnalazione/dipartimenti', DipartimentoController::class, 'get_all_dipartimenti');
-    $router->add('/api/segnalazione/edifici', EdificioController::class, 'get_edifici_by_dipartimento');
-    $router->add('/api/segnalazione/aule', AulaController::class, 'get_aule_by_edificio');
-
-
-    $router->dispatch($_SERVER['REQUEST_URI']);
+// Dispatch della rotta
+$router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 
 ?>

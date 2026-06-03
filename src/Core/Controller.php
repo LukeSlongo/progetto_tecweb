@@ -2,6 +2,10 @@
 namespace App\Core;
 use App\Core\Template;
 use App\Helpers\ScriptHelper;
+use App\Exceptions\NotFoundException;
+use App\Exceptions\ForbiddenException;
+
+use Exception;
 
 
 abstract class Controller
@@ -11,7 +15,7 @@ abstract class Controller
 
     protected $scriptPathList = [];
 
-    public function render($view, $data = [], $layout = 'main')
+    public function render($view, $data = [])
     {
 
 
@@ -22,11 +26,10 @@ abstract class Controller
 
         $view_file = new Template("pages/{$view}");
 
-        $view_file->set_dati_pagina($data);
+        $view_file->setPageData($data);
 
-        $contenuto_vista = $view_file->get_pagina();
+        $contenuto_vista = $view_file->getPage();
 
-        if ($layout) {
             $layout_data = [
                 'CLASSE_PAGINA' => strtolower($view),
                 'LINK_UTENTE' => Auth::getHeaderLinks(),
@@ -34,18 +37,13 @@ abstract class Controller
                 'IMPORT_SCRIPTS' => ScriptHelper::import_script($this->scriptPathList),
                 'TITOLO_PAGINA' => $this->page_title,
                 'DESCRIZIONE_PAGINA' => $this->page_description,
-                //'BREADCRUMB' => BreadcrumbHelper::render(),
-                'UTENTE_LOGGATO' => (Auth::isUser()) ? "true" : "false"
+                'UTENTE_LOGGATO' => (Auth::isLogged()) ? "true" : "false"
             ];
 
-            $layout_file = new Template("layouts/{$layout}");
-            $layout_file->set_dati_pagina(['CONTENUTO_PRINCIPALE' => $contenuto_vista]);
-            $layout_file->set_dati_pagina($layout_data);
-            echo $layout_file->get_pagina();
-
-        } else {
-            echo $contenuto_vista;
-        }
+            $layout_file = new Template("layouts/main");
+            $layout_file->setPageData(['CONTENUTO_PRINCIPALE' => $contenuto_vista]);
+            $layout_file->setPageData($layout_data);
+            echo $layout_file->getPage();
 
     }
 
@@ -71,7 +69,7 @@ abstract class Controller
         return $default;
     }
 
-    protected function require_login()
+    protected function requireLogin()
     {
         if (!Auth::isLogged()) {
             $_SESSION['flash_error'] = "Non sei loggato. Accedi per visualizzare il profilo!";
@@ -80,7 +78,7 @@ abstract class Controller
         }
     }
 
-    protected function require_guest()
+    protected function requireGuest()
     {
         if (Auth::isLogged()) {
             $_SESSION['flash_error'] = "Disconettiti dal tuo account per continuare";
@@ -91,7 +89,7 @@ abstract class Controller
 
     protected function require_owner($username)
     {
-        $this->require_login();
+        $this->requireLogin();
         if (!Auth::isOwner($username)) {
             $this->abort(403, "Accesso negato! Non hai il permesso di visitare questa pagina");
             exit;
@@ -100,9 +98,9 @@ abstract class Controller
 
 
 
-    protected function check_admin()
+    protected function checkAdmin()
     {
-        $this->require_login();
+        $this->requireLogin();
 
         if (!Auth::isAdmin()) {
             $_SESSION['flash_error'] = "Non hai il permesso, esegui l'accesso come amministratore!";
@@ -120,7 +118,7 @@ abstract class Controller
                 throw new ForbiddenException($message);
             case 500:
             default:
-                throw new \Exception($message, 500);
+                throw new Exception($message, 500);
         }
     }
 }

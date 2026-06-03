@@ -70,7 +70,7 @@ body {
     margin-top: 20px;
 }
 
-.card-aula {
+.card-room {
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 15px;
@@ -79,7 +79,7 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.card-aula.alert {
+.card-room.alert {
     border-left: 5px solid #d93025; /* Colore d'errore */
 }
 
@@ -122,7 +122,7 @@ body {
 
 
 
-/* invia_segnalazione.html */
+/* invia_issue.html */
 
 .container {
     max-width: 800px;

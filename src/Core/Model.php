@@ -1,8 +1,9 @@
 <?php 
 namespace App\Core;
 
-use App\Core\Database;
-
+use PDO;
+use PDOException;
+use Exception;
 abstract class Model{
 
     protected $db;
@@ -12,52 +13,46 @@ abstract class Model{
         $this->db = Database::getInstance();
     }
 
-    protected function query($sql, $params = []){
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($params);
-        return $stmt;
+    protected function checkTable() {
+        if (!$this->table) {
+            throw new Exception("Proprietà \$table non definita nel Model figlio.");
+        }
+    }
 
+    public function query($sql, $params = []) {
+        try {
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+            return $stmt;
+        } catch (PDOException $e) {
+            throw new Exception("Errore Database nella tabella '{$this->table}': " . $e->getMessage());
+        }
     }
 
     protected function fetchOne($sql, $params = []) {
         return $this->query($sql, $params)->fetch();
     }
 
-
     protected function fetchAll($sql, $params = []) {
         return $this->query($sql, $params)->fetchAll();
     }
 
-    public function get_all(){
+    public function findAll(){
+        $this->checkTable();
         $sql = "SELECT * FROM " . $this->table;
         return $this->fetchAll($sql);
     }
 
-    public function get_rand($limit = 15) {
-        $limit = (int)$limit;
-        $sql = "SELECT * FROM " . $this->table . " ORDER BY RAND() LIMIT $limit";
-        return $this->fetchAll($sql);
+    public function findById($id) {
+        $this->checkTable();
+        $sql = "SELECT * FROM {$this->table} WHERE id = ?";
+        return $this->fetchOne($sql, [$id]);
     }
 
-    public function insert($data) {
-        if (empty($this->table)) {
-            throw new \Exception("Nessuna tabella definita nel model.");
-        }
-
-        $columns = implode(', ', array_keys($data));
-        $placeholders = implode(', ', array_fill(0, count($data), '?'));
-
-        $sql = "INSERT INTO {$this->table} ($columns) VALUES ($placeholders)";
-
-        $values = array_values($data);
-
-        try {
-            $this->query($sql, $values);
-            return true;
-        } catch (\Exception $e) {
-            error_log("Errore insert generico: " . $e->getMessage());
-            return false;
-        }
+    public function delete($id) {
+        $this->checkTable();
+        $sql = "DELETE FROM {$this->table} WHERE id = ?";
+        return $this->query($sql, [$id]);
     }
     
 }

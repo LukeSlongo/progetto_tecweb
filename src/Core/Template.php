@@ -2,34 +2,37 @@
 namespace App\Core;
 // Questa classe si limita seplicemente a sostituire i placeholder dell' html con i dati presi dal Controller
 
-class Template {
-    private $contenuto;
+class Template
+{
+    private $content;
 
-    public function __construct($page) {
-        $filePath = __DIR__ . "/../Views/{$page}.html";
-        if (file_exists($filePath)) {
-            $this->contenuto = file_get_contents($filePath);
+    public function __construct($page)
+    {
+        $file_path = __DIR__ . "/../Views/{$page}.html";
+        if (file_exists($file_path)) {
+            $this->content = file_get_contents($file_path);
         } else {
-            throw new \Exception("File template non trovato: $filePath");
+            throw new \Exception("File template non trovato: $file_path");
         }
     }
 
-    public function set_dati_pagina($array_assoc_dati) {
-        if (!is_array($array_assoc_dati)) {
+    public function setPageData($data_array)
+    {
+        if (!is_array($data_array)) {
             return;
         }
 
-        foreach ($array_assoc_dati as $chiave => $valore) {
-            $this->contenuto = str_replace("##$chiave##", $valore ?? '', $this->contenuto);
+        foreach ($data_array as $key => $value) {
+            $this->content = str_replace("##$key##", $value ?? '', $this->content);
         }
     }
 
-    public function get_pagina($keep_placeholder = false) {
-
-        if(!$keep_placeholder){
-            return preg_replace('/##.*?##/', '', $this->contenuto);
-        }else{
-            return $this->contenuto;
+    public function getPage($keep_placeholder = false)
+    {
+        if (!$keep_placeholder) {
+            return preg_replace('/##.*?##/', '', $this->content);
+        } else {
+            return $this->content;
         }
     }
 }

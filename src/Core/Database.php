@@ -3,12 +3,17 @@ namespace App\Core;
 
 use PDO;
 use PDOException;
+use Exception;
 
-Class Database{
+class Database {
 
     private static $instance = null;
 
     private function __construct() {}
+    private function __clone() {}
+    public function __wakeup() {
+        throw new Exception("Non è possibile deserializzare un singleton.");
+    }
 
     public static function getInstance() {
 
@@ -25,10 +30,9 @@ Class Database{
             try{
                 self::$instance = new PDO($dsn, DB_USER, DB_PASSWORD, $options);
             } catch(PDOException $e) {
-                die("Error to get the instance of db");
+                throw new Exception("Errore di connessione al database: " . $e->getMessage());
             }
         }
         return self::$instance;
     }
-
 }

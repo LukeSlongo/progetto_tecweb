@@ -3,14 +3,14 @@ namespace App\Models;
 use App\Core\Model;
 use App\Core\Auth;
 
-class SegnalazioneModel extends Model {
+class IssueModel extends Model {
 
-    protected $table = 'segnalazione';
+    protected $table = 'issue';
 
 
-    public function find_segnalazione($segnalazione_id) {
-        $sql = "SELECT * FROM segnalazione WHERE id = ?";
-        return $this->fetchOne($sql, [$segnalazione_id]);
+    public function find_issue($issue_id) {
+        $sql = "SELECT * FROM issue WHERE id = ?";
+        return $this->fetchOne($sql, [$issue_id]);
     }
 
     public function validate ($data) {
@@ -28,10 +28,10 @@ class SegnalazioneModel extends Model {
             $errors[] = "Valore di Priorità non valido.";
         }
 
-        if (empty($data['aula_id'])) {
-            $errors[] = "Il campo Aula è obbligatorio.";
-        }else if (!$this->find_aula($data['aula_id'])) {
-            $errors[] = "L'aula selezionata non esiste.";
+        if (empty($data['room_id'])) {
+            $errors[] = "Il campo Room è obbligatorio.";
+        }else if (!$this->find_room($data['room_id'])) {
+            $errors[] = "L'room selezionata non esiste.";
         }
 
         if (empty($data['descrizione'])) {

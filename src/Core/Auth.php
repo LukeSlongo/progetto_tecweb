@@ -7,8 +7,20 @@ class Auth {
         return isset($_SESSION['user']);
     }
 
-    public static function isUser() {
-        return self::isLogged() && empty($_SESSION['user']['is_admin']);
+    public static function isStudent() {
+        if (!self::isLogged()) {
+            return false;
+        }
+        
+        return $_SESSION['user']['ruolo'] === 'studente';
+    }
+
+    public static function isTechnician() {
+        if (!self::isLogged()) {
+            return false;
+        }
+        
+        return $_SESSION['user']['ruolo'] === 'tecnico';
     }
 
     public static function isAdmin() {
@@ -27,9 +39,8 @@ class Auth {
 
     public static function getHeaderLinks() {
         if (self::isAdmin()) {
-            $user = self::getUser();
             return '<a href="/admin" lang="en">Admin</a>';
-        } elseif (self::isUser()) {
+        } else if (self::isLogged()) {
             $user = self::getUser();
             return '<a href="/profilo'. '">Profilo</a>';
         } else {

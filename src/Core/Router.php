@@ -4,7 +4,18 @@ namespace App\Core;
 
 Class Router {
     
-    private $routes = [];
+    private $routes = [
+        'GET' => [],
+        'POST' => []
+    ];
+
+    public function get($uri, $controller, $method, $middleware = []) {
+        $this->add('GET', $uri, $controller, $method, $middleware);
+    }
+
+    public function post($uri, $controller, $method, $middleware = []) {
+        $this->add('POST', $uri, $controller, $method, $middleware);
+    }
 
     public function add($uri, $controller, $method, $middleware = []){
 
@@ -15,12 +26,13 @@ Class Router {
         ];
     }
 
-    public function dispatch($requestedUri){
+    public function dispatch($requestedUri, $httpMethod){
 
         $uri = parse_url($requestedUri, PHP_URL_PATH);
         
         $matchedRoute = null;
         $params = [];
+        $routesToSearch = $this->routes[$httpMethod] ?? [];
 
         foreach($this->routes as $routePath => $routeData){
             $pattern = preg_replace('/\{[a-zA-Z0-9-_]+:num\}/', '([0-9]+)', $routePath);
@@ -46,7 +58,9 @@ Class Router {
         $namedParams = $this->getNamedParams($matchedRoute['pattern_originale'], $params);
 
         $this->handleMiddleware($matchedRoute['middleware'], $namedParams);
-        $controller = new $matchedRoute['controller']();
+
+        $controllerName = "App\\Controllers\\" . $matchedRoute['controller'];
+        $controller = new $controllerName();
         call_user_func_array([$controller, $matchedRoute['method']], $params);
     }
 
@@ -64,6 +78,7 @@ Class Router {
     }
 
     private function handleMiddleware($middleware, $params) {
+        // Controllo Login Generico
         if (in_array('auth', $middleware)) {
             if (!\App\Core\Auth::isLogged()) {
                 header('Location: /login');
@@ -71,11 +86,20 @@ Class Router {
             }
         }
 
+        // Controllo Ruolo Admin
         if (in_array('admin', $middleware)) {
             $currentUser = \App\Core\Auth::getUser()['is_admin'] ?? null;
 
             if (!$currentUser) {
                 throw new \App\Exceptions\ForbiddenException("Non hai i permessi da amministratore");
+            }
+        }
+
+        // Controllo Ruolo Tecnico
+        if (in_array('tecnico', $middleware)) {
+            $user = \App\Core\Auth::getUser();
+            if (!$user || ($user['ruolo'] !== 'tecnico' && $user['ruolo'] !== 'admin')) {
+                throw new \App\Exceptions\ForbiddenException("Accesso riservato ai tecnici");
             }
         }
     }

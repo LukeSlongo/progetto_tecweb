@@ -3,21 +3,21 @@ hide circle
 skinparam linetype ortho
 
 
-entity "edificio" as edificio {
+entity "building" as building {
   * id : INT <<PK>>
   --
   nome : VARCHAR(50) [UNIQUE]
   indirizzo : VARCHAR(255)
 }
 
-entity "aula" as aula {
+entity "room" as room {
   * id : INT <<PK>>
   --
-  * edificio_id : INT <<FK>>
+  * building_id : INT <<FK>>
   nome : VARCHAR(50)
   piano : INT
   ..
-  note: UNIQUE(edificio_id, nome)
+  note: UNIQUE(building_id, nome)
 }
 
 entity "utente" as utente {
@@ -28,11 +28,11 @@ entity "utente" as utente {
   ruolo : ENUM('studente', 'tecnico', 'admin')
 }
 
-entity "segnalazione" as segnalazione {
+entity "issue" as issue {
   * id : INT <<PK>>
   --
   * utente_id : INT <<FK>>
-  * aula_id : INT <<FK>>
+  * room_id : INT <<FK>>
   tecnico_id: INT <<FK>> [NULLABLE]
   titolo : VARCHAR(150)
   descrizione : TEXT
@@ -45,22 +45,22 @@ entity "segnalazione" as segnalazione {
 
 entity "preferiti" as preferiti {
   * utente_id : INT <<PK, FK>>
-  * aula_id : INT <<PK, FK>>
+  * room_id : INT <<PK, FK>>
   --
 }
 
-' Un edificio ha molte aule
-edificio ||--o{ aula : "contiene"
+' Un building ha molte aule
+building ||--o{ room : "contiene"
 
 ' Un utente (studente) crea molte segnalazioni
-utente ||--o{ segnalazione : "apre"
+utente ||--o{ issue : "apre"
 
 ' Un utente (tecnico) prende in carico molte segnalazioni
-utente |o--o{ segnalazione : "risolve"
+utente |o--o{ issue : "risolve"
 
-aula ||--o{ segnalazione : "riguarda"
+room ||--o{ issue : "riguarda"
 
 utente ||--o{ preferiti
-aula ||--o{ preferiti
+room ||--o{ preferiti
 
 @enduml
