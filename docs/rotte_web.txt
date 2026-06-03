@@ -4,25 +4,27 @@ Applicazione ibrida: server-side rendering con elementi dinamici gestiti fronten
 2. rotte API -> operazioni dinamiche per non ricaricare la pagina
 
 Rotte web:
-mostra loginPage:                                          GET   /login                                    (UserController->view_login)
+mostra loginPage:                                          GET   /login                                    (UserController->viewLogin)
 elabora login:                                             POST  /login                                    (UserController->login)
-mostra registerPage:                                       GET   /register                                 (UserController->view_register)
+mostra registerPage:                                       GET   /register                                 (UserController->viewRegister)
 elabora registrazione:                                     POST  /register                                 (UserController->register)
 logout (distrugge la sessione e torna alla loginPage):     POST  /logout                                   (UserController->logout)
 
-mostra pagina principale:                                  GET   /                                         (UserController->view_home)
-mostra lista aule:                                         GET   /aule                                     (AulaController->view_aule_page)
-mostra dettaglio aula:                                     GET   /aule/{id}                                (AulaController->view_aula_dettaglio)
-mostra segnalazione form:                                  GET   /segnalazione                             (SegnalazioneController->view_issue_form)
-submit segnalazione:                                       POST  /segnalazione                             (SegnalazioneController->save)
-delete segnalazione:                                       POST  /segnalazione/{id}/delete                 (SegnalazioneController->delete)
-mostra dettaglio segnalazione:                             GET   /segnalazione/{id}                        (SegnalazioneController->view_issue_detail)
+mostra pagina principale:                                  GET   /                                         (UserController->viewHome)
+mostra lista aule:                                         GET   /rooms                                    (RoomController->viewRooms)
+mostra dettaglio aula:                                     GET   /rooms/{id}                               (RoomController->viewRoomDetail)
+mostra segnalazione form:                                  GET   /issues/new                               (IssueController->viewIssueForm)
+submit segnalazione:                                       POST  /issues                                   (IssueController->saveIssue)
+delete segnalazione:                                       POST  /issues/{id}/delete                       (IssueController->deleteIssue)
+mostra dettaglio segnalazione:                             GET   /issues/{id}                              (IssueController->viewIssueDetail)
 
-mostra segnalazioni:                                       GET   /segnalazioni?status={status}             (SegnalazioneController->view_issue)
-mostra lista utenti:                                       GET   /utenti                                   (UserController->view_utenti_list)
-elimina utente:                                            POST  /utenti/{id}/delete                       (UserController->delete)  
+mostra segnalazioni:                                       GET   /issues?status={status}                  (IssueController->viewIssueList)
+mostra lista utenti:                                       GET   /users                                   (UserController->viewUserList)
+elimina utente:                                            POST  /users/{id}/delete                       (UserController->deleteUser)  
 
-aggiungi preferiti:                                        POST /api/preferiti/{aula_id}/add               (UserController->add_favorite)
-rimuovi preferiti:                                         POST /api/preferiti/{aula_id}/remove            (UserController->remove_favorite)
-prendi segnalazione:                                       POST /api/segnalazione/{segnalazione_id}/take   (SegnalazioneController->take_issue)
-chiudi segnalazione:                                       POST /api/segnalazione/{segnalazione_id}/close  (SegnalazioneController->close_issue)
+ROTTE API:
+
+aggiungi preferiti:                                        POST /api/favorites/{room_id}/add               (UserController->addFavorite)
+rimuovi preferiti:                                         POST /api/favorites/{room_id}/remove            (UserController->removeFavorite)
+prendi segnalazione:                                       POST /api/issues/{issue_id}/take                (IssueController->takeIssue)
+chiudi segnalazione:                                       POST /api/issues/{issue_id}/close               (IssueController->closeIssue)
