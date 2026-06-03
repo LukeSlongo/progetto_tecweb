@@ -1,42 +1,40 @@
-//puramente copiata da gemini e mai toccata, da rivedere completamente
-<section class="login-container">
-    <h2>Accesso al Portale</h2>
-    <p>Inserisci le tue credenziali d'Ateneo per gestire o segnalare i guasti.</p>
+    <section class="login-card">
+        
+        <hgroup class="login-header">
+            <h2 class="login-title">Accesso al Portale</h2>
+            <p class="login-subtitle">Inserisci le tue credenziali d'Ateneo per gestire o segnalare i guasti.</p>
+        </hgroup>
+        ##MESSAGGIO_ERRORE##
 
-    <!-- Messaggio di errore (nascosto di default, appare se PHP rileva errori) -->
-    <?php if(isset($_GET['error'])): ?>
-        <div role="alert" class="error-banner">
-            <p>Credenziali non valide. Riprova o contatta l'assistenza.</p>
-        </div>
-    <?php endif; ?>
+        <form action="/login" method="POST" class="login-form">
+            
+            <fieldset class="form-group">
+                <label for="email">Email Istituzionale</label>
+                <input type="email" id="email" name="email" required 
+                       autocomplete="email" placeholder="nome.cognome@studenti.unipd.it">
+            </fieldset>
 
-    <form action="backend/auth.php" method="POST" class="issue-form">
-        <div class="form-group">
-            <label for="email">Email Istituzionale</label>
-            <input type="email" id="email" name="email" required 
-                    autocomplete="email" placeholder="nome.cognome@universita.it">
-        </div>
+           <fieldset class="form-group">
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" required 
+                           autocomplete="current-password" placeholder="••••••••">
+                    <button type="button" id="toggle-password" class="btn-toggle-pass" aria-label="Mostra password">
+                        👁️
+                    </button>
+                </div>
+            </fieldset>
 
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required 
-                    autocomplete="current-password" placeholder="••••••••">
-        </div>
+            <fieldset class="form-options">
+                <a href="/recupero" class="link-forgot">Password dimenticata?</a>
+            </fieldset>
 
-        <div class="form-options">
-            <label class="checkbox-container">
-                <input type="checkbox" name="remember">
-                <span>Ricordami su questo dispositivo</span>
-            </label>
-            <a href="recupero.php" class="link-standard">Password dimenticata?</a>
-        </div>
+            <button type="submit" class="btn-primary btn-full">Accedi</button>
+        </form>
 
-        <button type="submit" class="btn-submit">Accedi</button>
-    </form>
-
-    <div class="login-footer">
-        <p>Non hai un account? <a href="registrati.php">Registrati qui</a></p>
-        <hr aria-hidden="true">
-        <p class="small-text">Accesso riservato a Studenti, Personale Tecnico e Amministratori.</p>
-    </div>
-</section>
+        <footer class="login-footer">
+            <p>Non hai un account? <a href="/register" class="link-register">Registrati qui</a></p>
+            <hr class="divider" aria-hidden="true">
+            <p class="small-text">Accesso riservato a Studenti, Personale Tecnico e Amministratori UniFix.</p>
+        </footer>
+    </section>
