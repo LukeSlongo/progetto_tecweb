@@ -1,87 +1,87 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard UniFix - Portale Guasti</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <!-- Skip link per accessibilità: permette di saltare il menu con la tastiera -->
-    <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
+<?php
+header('Content-Type: text/html; charset=utf-8');
 
-    <header role="banner">
-        <div class="container header-flex">
-            <h1>UniFix</h1>
-            <nav aria-label="Menu principale">
-                <ul>
-                    <li><a href="index.php" aria-current="page">Home</a></li>
-                    <li><a href="segnala.php">Invia Segnalazione</a></li>
-                    <li><a href="profilo.php">Il mio Profilo</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+session_start();
 
-    <main id="main-content">
-        <section class="hero container">
-            <h2>Bentornato, [Nome Utente]</h2>
-            <p>Controlla lo stato delle tue aule o segnala un nuovo problema.</p>
-            
-            <!-- Barra di Ricerca -->
-            <form action="search.php" method="GET" class="search-box" role="search">
-                <label for="search-aula" class="visually-hidden">Cerca aula o laboratorio</label>
-                <input type="search" id="search-aula" name="q" placeholder="Cerca aula (es. Aula 101, Lab Inf...)">
-                <button type="submit" class="btn-primary">Cerca</button>
-            </form>
+require_once __DIR__ . '/../config.php';
 
-            <div class="quick-actions">
-                <a href="segnala.php" class="btn-cta">⚠️ Segnala un Guasto</a>
-            </div>
-        </section>
 
-        <section class="container">
-            <h3>Le tue Aule Preferite</h3>
-            <div class="grid-aule">
-                <!-- Esempio di Card Aula -->
-                <article class="card-aula">
-                    <header class="card-header">
-                        <h4>Aula Magna - Edificio A</h4>
-                        <button aria-label="Rimuovi dai preferiti" class="btn-fav">★</button>
-                    </header>
-                    <div class="card-body">
-                        <p class="status-ok">✅ Nessun guasto segnalato</p>
-                    </div>
-                    <footer class="card-footer">
-                        <a href="aula-dettaglio.php?id=AM" class="btn-secondary">Vedi dettagli</a>
-                    </footer>
-                </article>
+spl_autoload_register(function ($class) {
+    $prefix = 'App\\';
+    $base_dir = __DIR__ . '/../src/';
 
-                <!-- Esempio di Aula con Guasto -->
-                <article class="card-aula alert">
-                    <header class="card-header">
-                        <h4>Laboratorio 102 - Edificio C</h4>
-                        <button aria-label="Rimuovi dai preferiti" class="btn-fav">★</button>
-                    </header>
-                    <div class="card-body">
-                        <p class="status-warning">⚠️ 2 Segnalazioni attive</p>
-                        <ul class="mini-list">
-                            <li>Presa elettrica fila 3...</li>
-                            <li>PC postazione 12...</li>
-                        </ul>
-                    </div>
-                    <footer class="card-footer">
-                        <a href="aula-dettaglio.php?id=L102" class="btn-secondary">Controlla guasti</a>
-                    </footer>
-                </article>
-            </div>
-        </section>
-    </main>
 
-    <footer role="contentinfo">
-        <div class="container">
-            <p>&copy; 2026 Università degli Studi - UniFix</p>
-        </div>
-    </footer>
-</body>
-</html>
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0)
+        return;
+
+
+    $relative_class = substr($class, $len);
+    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+
+
+    if (file_exists($file)) {
+        require $file;
+    }
+});
+
+use App\Core\Router;
+use App\Controllers\ErrorController;
+
+
+
+set_exception_handler(function ($e) {
+
+    $errorController = new ErrorController();
+
+    if ($e instanceof \App\Exceptions\NotFoundException) {
+        $errorController->index(404, '404_notfound', $e->getMessage());
+    } elseif ($e instanceof \App\Exceptions\ForbiddenException) {
+        $errorController->index(403, '403_forbidden');
+    } else {
+        // Logga l'errore vero per te
+        error_log($e->getMessage());
+        // Mostra pagina 500 generica
+        $errorController->index(500, '500_internalerror', $e->getMessage());
+    }
+
+    exit;
+});
+
+$router = new Router();
+
+$router->get('/login', 'UserController', 'viewLogin');
+$router->post('/login', 'UserController', 'login');
+$router->get('/register', 'UserController', 'viewRegister');
+$router->post('/register', 'UserController', 'register');
+$router->post('/logout', 'UserController', 'logout');
+
+// Home
+$router->get('/', 'UserController', 'viewHome', ['auth']);
+
+// Aule
+$router->get('/rooms', 'RoomController', 'viewRooms', ['auth']);
+$router->get('/rooms/{id:num}', 'RoomController', 'viewRoomDetail', ['auth']);
+
+// Segnalazioni
+$router->get('/issues/new', 'IssueController', 'viewIssueForm', ['auth']);
+$router->post('/issues', 'IssueController', 'saveIssue', ['auth']);
+$router->get('/issues', 'IssueController', 'viewIssueList', ['auth']);
+$router->get('/issues/{id:num}', 'IssueController', 'viewIssueDetail', ['auth']);
+$router->post('/issues/{id:num}/delete', 'IssueController', 'deleteIssue', ['auth']);
+
+// Utenti (solo admin)
+$router->get('/users', 'UserController', 'viewUserList', ['auth', 'admin']);
+$router->post('/users/{id:num}/delete', 'UserController', 'deleteUser', ['auth', 'admin']);
+
+// Rotte API
+$router->post('/api/favorites/{room_id:num}/add', 'UserController', 'addFavorite', ['auth']);
+$router->post('/api/favorites/{room_id:num}/remove', 'UserController', 'removeFavorite', ['auth']);
+$router->post('/api/issues/{issue_id:num}/take', 'IssueController', 'takeIssue', ['auth', 'tecnico']);
+$router->post('/api/issues/{issue_id:num}/close', 'IssueController', 'closeIssue', ['auth', 'tecnico']);
+
+
+// Dispatch della rotta
+$router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
+
+?>

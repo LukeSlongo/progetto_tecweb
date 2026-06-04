@@ -1,0 +1,29 @@
+<section class="auth-section">
+    <div class="auth-container">
+        <h2 class="auth-title">Benvenuto su<br>UniFix</h2>
+
+        <div class="error-message" role="alert">##FLASH_ERROR##</div>
+
+        <form action="/register" method="POST" class="auth-form">
+
+            <div class="form-group">
+                <label for="username">Nome utente</label>
+                <input type="text" id="username" name="username" required aria-required="true" autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required aria-required="true" autocomplete="new-password">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Registrati</button>
+            </div>
+
+        </form>
+
+        <div class="auth-footer">
+            <p>Hai già un account? <a href="/login">Accedi qui</a></p>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,49 @@
+<section class="container">
+    <h1>Invia una nuova issue</h1>
+    <p>Compila il modulo sottostante per segnalare un problema tecnico nelle aule o nei laboratori.</p>
+
+    <form action="backend/process_issue.php" method="POST" class="issue-form">
+        <div class="form-group">
+            <label for="titolo">Titolo sintetico del guasto</label>
+            <input type="text" id="titolo" name="titolo" required 
+                    aria-describedby="titolo-help" placeholder="Es: Proiettore room 4 non si accende">
+            <small id="titolo-help">Descrivi brevemente il problema in poche parole.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="dipartimento">Dipartimento</label>
+            <select id="dipartimento" name="dipartimento" required>
+                <option value="">-- Seleziona Dipartimento --</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="building">Building / Plesso</label>
+            <select id="building" name="building" required>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="room">Room o Numero Stanza</label>
+            <select id="room" name="room" required>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="priorita">Livello di urgenza</label>
+            <select id="priorita" name="priorita">
+                <option value="bassa">Bassa (non impedisce la lezione)</option>
+                <option value="media" selected>Media</option>
+                <option value="alta">Alta (lezione impossibile)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="descrizione">Descrizione dettagliata</label>
+            <textarea id="descrizione" name="descrizione" rows="5" required 
+                        placeholder="Fornisci maggiori dettagli sul problema..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">Invia Issue</button>
+    </form>
+</section>

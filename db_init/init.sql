@@ -1,0 +1,74 @@
+-- 1. Building Table
+CREATE TABLE building (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    address VARCHAR(255) NOT NULL
+);
+
+-- 2. Room Table
+CREATE TABLE room (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    building_id INT NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    floor INT NOT NULL,
+    CONSTRAINT fk_room_building FOREIGN KEY (building_id) REFERENCES building (id) ON DELETE CASCADE,
+    CONSTRAINT uq_building_room UNIQUE (building_id, name)
+);
+
+-- 3. User Table
+CREATE TABLE `user` (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('student', 'technician', 'admin') NOT NULL
+);
+
+-- 4. Issue Table
+CREATE TABLE issue (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT DEFAULT NULL,
+    room_id INT NOT NULL,
+    technician_id INT DEFAULT NULL,
+    title VARCHAR(150) NOT NULL,
+    description TEXT NOT NULL,
+    opened_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    closed_at TIMESTAMP NULL DEFAULT NULL,
+    status ENUM ('open', 'in_progress', 'closed') DEFAULT 'open',
+    CONSTRAINT fk_issue_user FOREIGN KEY (user_id) REFERENCES `user` (id) ON DELETE SET NULL,
+    CONSTRAINT fk_issue_room FOREIGN KEY (room_id) REFERENCES room (id) ON DELETE CASCADE,
+    CONSTRAINT fk_issue_technician FOREIGN KEY (technician_id) REFERENCES `user` (id) ON DELETE SET NULL,
+    CONSTRAINT chk_date_issue CHECK (
+        closed_at IS NULL
+        OR closed_at >= opened_at
+    )
+);
+
+-- 5. Favorite Table
+CREATE TABLE favorite (
+    user_id INT NOT NULL,
+    room_id INT NOT NULL,
+    PRIMARY KEY (user_id, room_id),
+    CONSTRAINT fk_favorite_user 
+        FOREIGN KEY (user_id) REFERENCES `user`(id) ON DELETE CASCADE,
+    CONSTRAINT fk_favorite_room 
+        FOREIGN KEY (room_id) REFERENCES room(id) ON DELETE CASCADE
+);
+
+-- 6. Trigger for Technician removal
+DELIMITER //
+
+CREATE TRIGGER trg_remove_technician
+BEFORE DELETE ON `user`
+FOR EACH ROW
+BEGIN
+    -- If the deleted user is a technician, their 'in_progress' issues
+    -- must return to the 'open' status.
+    IF OLD.role = 'technician' THEN
+        UPDATE issue
+        SET status = 'open', technician_id = NULL
+        WHERE technician_id = OLD.id AND status = 'in_progress';
+    END IF;
+END;
+//
+
+DELIMITER ;

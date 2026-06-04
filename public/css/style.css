@@ -1,30 +1,85 @@
-/* Palette colori con alto contrasto */
+/*
+==========================================================================
+   UNIFIX - MAIN STYLESHEET
+========================================================================== 
+   1. VARIABLES & BASE
+   2. UTILITIES
+   3. LAYOUT
+   4. COMPONENTS
+    4.1 Bottoni
+    4.2 Form
+    4.3 Cards
+    4.4 Error
+   5. PAGES
+    5.1 Autenticazione (Login/Register)
+    5.2 UserListPage
+    5.3 RoomListPage
+    5.4 RoomDetailPage
+    5.5 IssueFormPage
+    5.6 IssueListPage
+    5.7 IssueDetailPage
+    5.8 HomePage
+==========================================================================
+*/
+
+
+/* 
+=========================================
+   1. VARIABLES & BASE
+=========================================
+*/
+
+/*Colori del sito disponibili come variabili*/
 :root {
-    --primary-blue: #004a99; /* Contrasto elevato su bianco */
-    --text-dark: #222222;
-    --bg-light: #f4f4f4;
-    --error-red: #d93025;
+    --primary-blue: #0055A5;
+    --primary-blue-rgb: 0, 85, 165;
+    --primary-hover: #004488;
+    --danger-red: #E31818;
+    --danger-hover: #c91515;
+    --success-green: #28a745;
+    --bg-light: #fdfdfd;
+    --bg-card: #ffffff;
+    --text-blue: #2c3e50;
+    --text-gray: #6c757d;
+    --text-white: #ffffff;
+    --text-black: #000000;
+    --border-color: #d2d6dc;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 8px 24px rgba(0, 10, 40, 0.15);
+    --shadow-cta: rgba(227, 24, 24, 0.3);
+    --accent-yellow: #ffbf47;
+    --error-bg: #ffebee;
+    --error-text: #c62828;
+    --hero-bg-start: #f5f7fa;
+    --hero-bg-end: #e4e8f0;
 }
 
+/*definizione delle regole generali del body per tutte le pagine*/
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: var(--text-dark);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--text-blue);
+    background-color: var(--bg-light);
     margin: 0;
-    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
+/*contenuto principale della pagina*/
+main {
+    min-height: 75vh;
+    position: relative;
+    z-index: 1;
+}
 
+/*
+=========================================
+   2. UTILITIES
+=========================================
+*/
 
-
-
-
-
-
-
-/* index.html */
-
-/* Utilità per l'accessibilità: nasconde visivamente ma lascia leggibile agli screen reader */
+/*testo per gli screen reader*/
 .visually-hidden {
     position: absolute;
     width: 1px;
@@ -36,237 +91,508 @@ body {
     border: 0;
 }
 
+/*salta al contenuto, nascosto fuori dallo schermo e compare grazie a focus al pigiare di tab*/
 .skip-link {
     position: absolute;
     top: -40px;
     left: 0;
-    background: #ffbf47;
-    color: #000;
+    background: var(--accent-yellow);
+    color: var(--text-black);
     padding: 8px;
     z-index: 100;
 }
-.skip-link:focus { top: 0; }
 
-/* Layout Dashboard */
-.hero {
-    background: #f8f9fa;
-    padding: 40px 20px;
-    border-radius: 8px;
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.search-box {
-    display: flex;
-    gap: 10px;
-    max-width: 500px;
-    margin: 20px auto;
-}
-
-.grid-aule {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.card-aula {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.card-aula.alert {
-    border-left: 5px solid #d93025; /* Colore d'errore */
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.btn-cta {
-    background-color: #d93025;
-    color: white;
-    padding: 15px 30px;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 5px;
-    display: inline-block;
-}
-
-.status-warning {
-    color: #b71c1c;
-    font-weight: bold;
-}
-
-.status-ok {
-    color: #2e7d32;
-    font-weight: bold;
-}
-
-.mini-list {
-    font-size: 0.9rem;
-    padding-left: 20px;
+.skip-link:focus {
+    top: 0;
 }
 
 
+/*
+=========================================
+   3. LAYOUT (Struttura Globale)
+=========================================
+*/
 
-
-
-
-
-
-
-/* invia_segnalazione.html */
-
+/*Crea il recinto per il testo, in modo che questo non si sparpagli, utilizzabile con <div class="container">*/
 .container {
     max-width: 800px;
-    margin: 0 auto;
+    margin: auto;
     padding: 20px;
 }
 
+/* Sfondo e impostazioni generali della barra di intestazione */
 header {
+    display: flex;
     background-color: var(--primary-blue);
-    color: white;
+    color: var(--text-white);
     padding: 1rem 0;
 }
 
-header h1 { margin: 0; font-size: 1.5rem; }
+/* Allinea orizzontalmente il titolo a sinistra e il menu a destra */
+.header-flex {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 20px;
+}
 
-nav ul {
+/* Stile del testo del logo*/
+.header-flex h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text-white);
+}
+
+/*punto giallo dopo Unifix*/
+.header-flex h1::after {
+    content: '.';
+    color: var(--accent-yellow);
+}
+
+/* Rimuove i pallini della lista e affianca i link di navigazione */
+.header-flex nav ul {
     list-style: none;
     padding: 0;
+    margin: 1rem;
     display: flex;
-    gap: 15px;
+    gap: 1.5rem;
 }
 
-nav a {
-    color: white;
-    text-decoration: underline; /* Più accessibile del solo colore */
+/* Aspetto dei singoli link del menu e sfumatura al passaggio del mouse */
+.header-flex nav a {
+    color: var(--text-white);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.5rem 0;
+    transition: color 0.2s, opacity 0.2s;
 }
 
-/* Modulo */
-.form-group {
-    margin-bottom: 20px;
-}
-
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-input, select, textarea {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #767676; /* Bordo visibile */
-    border-radius: 4px;
-    box-sizing: border-box; /* Essenziale per il layout */
-}
-
-/* Stato di Focus: molto importante per chi usa la tastiera */
-input:focus, select:focus, textarea:focus, button:focus {
-    outline: 3px solid #ffbf47; /* Outline giallo/arancio visibile */
-    outline-offset: 2px;
-}
-
-.btn-submit {
-    background-color: var(--primary-blue);
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.btn-submit:hover {
-    background-color: #003366;
-}
-
-small {
-    display: block;
-    color: #555;
-    margin-top: 5px;
-}
-
-
-
-
-
-
-/* login.html */
-
-.login-page {
-    background-color: var(--bg-light);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.login-container {
-    max-width: 450px;
-    margin: 60px auto;
-    background: white;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.error-banner {
-    background-color: #fce8e6;
-    border-left: 5px solid var(--error-red);
-    color: var(--error-red);
-    padding: 10px;
-    margin-bottom: 20px;
-    font-weight: bold;
-}
-
-.form-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    font-size: 0.9rem;
-}
-
-.checkbox-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-}
-
-/* Checkbox più grande per accessibilità */
-input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-}
-
-.link-standard {
-    color: var(--primary-blue);
+/* Evidenzia di giallo il link quando ci passi sopra o se è la pagina attuale */
+.header-flex nav a:hover,
+.header-flex nav a[aria-current="page"] {
+    color: var(--accent-yellow);
     text-decoration: underline;
 }
 
-.login-footer {
-    margin-top: 30px;
+/* Layout per cellulari: impila titolo e menu uno sotto l'altro invece di affiancarli */
+@media (max-width: 600px) {
+    .header-flex {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+/* 
+===============================================
+    4. COMPONENTS (Elementi riutilizzabili)
+===============================================
+*/
+
+/* 
+===============================================
+    4.1 BOTTONI
+===============================================
+*/
+
+/* Stile base per i pulsanti di azione principale (forma, colore e animazione) */
+.btn-primary {
+    background-color: var(--primary-blue);
+    color: var(--text-white);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.6rem 2.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+/* Cambia colore al passaggio del mouse sul bottone principale */
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Stile per i link secondari come "Annulla": solo testo blu */
+.btn-secondary {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+/* Sottolinea e scurisce il link secondario al passaggio del mouse */
+.btn-secondary:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+/* Pulsante "Call To Action" per l'azione "Nuova Segnalazione"*/
+.btn-cta {
+    background-color: var(--danger-red);
+    color: var(--text-white);
+    padding: 0.85rem 2.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    display: inline-block;
+    box-shadow: 0 4px 10px var(--shadow-cta);
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+/* Effetto 3D sul CTA*/
+.btn-cta:hover {
+    background-color: var(--danger-hover);
+    box-shadow: 0 6px 15px var(--shadow-cta);
+    transform: translateY(-2px);
+}
+
+
+/*pulsante per logout (con contrasto con il header) (usati !important per differenziarli di gli altri elementi di navbar)*/
+.btn-logout {
+    background-color: var(--accent-yellow);
+    color: var(--text-black) !important;
+    border: 2px solid transparent;      
+    padding: 0.3rem 0.8rem !important;             
+    border-radius: 10px;              
+    font-weight: 750 !important;
+    text-shadow: var(--shadow-md);
+    letter-spacing: 0.5px;
+}
+/* Effetto hover per il bottone di logout: cambia colore del testo e aggiunge un bordo nero */
+.btn-logout:hover {
+    color: var(--text-black)!important;
+    border-color: var(--text-black);
+    transition: all 0.3s ease;
+
+}
+
+/* 
+===============================================
+    4.2 FORM
+===============================================
+*/
+
+/* Crea spazio verticale tra un campo del form e l'altro */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Forza l'etichetta di un form a stare sopra la barra di testo, non di fianco */
+.form-group label {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--text-blue);
+    margin-bottom: 0.4rem;
+}
+
+/* Stile della barra di testo*/
+.form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Effetto quando l'utente clicca per scrivere: bordo blu e alone luminoso azzurro */
+.form-group input:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 2px rgba(0, 85, 165, 0.2);
+}
+
+/* Centra orizzontalmente i bottoni in fondo al form */
+.form-actions {
+    margin-top: 2.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+/* 
+===============================================
+    4.3 CARDS
+===============================================
+*/
+
+/* Riquadro flessibile per mostrare elementi di caroselli*/
+.card-room {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Effetto 3D al passaggio del mouse*/
+.card-room:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Intestazione della card: allinea titolo e bottone preferiti sullo stesso piano */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Titolo dell'aula all'interno della card */
+.card-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-blue);
+}
+
+/* Bottone a forma di stella per i preferiti */
+.btn-fav {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-gray);
+    transition: color 0.2s;
+    padding: 0;
+    line-height: 1;
+    cursor: pointer;
+}
+
+/* Colora la stella di giallo quando ci passi sopra o è attiva */
+.btn-fav:hover,
+.btn-fav:focus {
+    color: var(--accent-yellow);
+}
+
+/* Corpo centrale della card (spinge il footer in basso) */
+.card-body {
+    flex-grow: 1;
+}
+
+/* Testo verde per aule senza problemi */
+.status-ok {
+    color: var(--success-green);
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Testo rosso per aule con guasti */
+.status-warning {
+    color: var(--danger-red);
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+/* Lista formattata per l'elenco dei guasti interni alla card */
+.mini-list {
+    font-size: 0.9rem;
+    padding-left: 20px;
+    color: var(--text-gray);
+    margin: 0;
+}
+
+/* Posiziona i link di dettaglio in basso a destra */
+.card-footer {
+    margin-top: 1.5rem;
+    text-align: right;
+}
+
+/* 
+===============================================
+    4.4 ERROR
+===============================================
+*/
+.error-message:empty {
+    display: none;
+}
+
+.error-message {
+    background-color: var(--error-bg);
+    color: var(--error-text);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--error-text);
+}
+
+/* 
+=================================================================
+    5. PAGES 
+=================================================================
+*/
+
+
+/* 
+=================================================================
+    5.1 Autenticazione (Login/Register)
+=================================================================
+*/
+
+/* Centra il blocco di login nella pagina con spazio sopra e sotto */
+.auth-section {
+    display: flex;
+    justify-content: center;
+    padding: 5rem 1rem;
+}
+
+/* Contenitore a forma di scheda (Card) per far risaltare il form rispetto allo sfondo */
+.auth-container {
+    width: 100%;
+    max-width: 450px;
+    background-color: var(--bg-card);
+    padding: 2.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+/* Titolo grande e centrato del form di login/registrazione */
+.auth-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-blue);
+    margin-bottom: 2rem;
+    line-height: 1.2;
     text-align: center;
 }
 
-.small-text {
-    font-size: 0.85rem;
-    color: #666;
+/* Spazio e posizionamento per i link secondari a fine form */
+.auth-footer {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.95rem;
 }
 
-hr {
-    border: 0;
-    border-top: 1px solid #eee;
-    margin: 20px 0;
+/* Stile per i link nel footer (es. "Accedi qui") */
+.auth-footer a {
+    color: var(--primary-blue);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+/* Effetto hover per i link del footer */
+.auth-footer a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+
+/* 
+=================================================================
+    5.2 UserListPage
+=================================================================
+*/
+
+
+/* 
+=================================================================
+    5.3 RoomListPage
+=================================================================
+*/
+
+/* 
+=================================================================
+    5.4 RoomDetailPage
+=================================================================
+*/
+
+/* 
+=================================================================
+    5.5 IssueFormPage
+=================================================================
+*/
+
+/* 
+=================================================================
+    5.6 IssueListPage
+=================================================================
+*/
+
+/* 
+=================================================================
+    5.7 IssueDetailPage
+=================================================================
+*/
+
+/* 
+=================================================================
+    5.8 HomePage
+=================================================================
+*/
+
+/* =================================================================
+    5.8 HomePage
+=================================================================
+*/
+
+/* Il banner di benvenuto in cima alla pagina */
+.hero {
+    background: linear-gradient(135deg, var(--hero-bg-start) 0%, var(--hero-bg-end) 100%);
+    padding: 3.5rem 2rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+}
+
+/* Titolo del banner di benvenuto */
+.hero h2 {
+    color: var(--primary-blue);
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 2.2rem;
+}
+
+/* Sottotitolo del banner di benvenuto */
+.hero p {
+    color: var(--text-gray);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+/* Contenitore della barra di ricerca nel banner */
+.search-box {
+    display: flex;
+    gap: 10px;
+    max-width: 550px;
+    margin: 0 auto 2.5rem auto;
+}
+
+/* Stile specifico per l'input di ricerca grosso della home */
+.search-box input[type="search"] {
+    flex-grow: 1;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Anello luminoso quando clicchi per cercare */
+.search-box input[type="search"]:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(var(--primary-blue-rgb), 0.15); 
+}
+
+/* Griglia responsiva per impaginare le card delle aule */
+.grid-aule {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 1.5rem;
 }

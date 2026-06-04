@@ -1,0 +1,40 @@
+    <section class="login-card">
+        
+        <hgroup class="login-header">
+            <h2 class="login-title">Accesso al Portale</h2>
+            <p class="login-subtitle">Inserisci le tue credenziali d'Ateneo per gestire o segnalare i guasti.</p>
+        </hgroup>
+        ##MESSAGGIO_ERRORE##
+
+        <form action="/login" method="POST" class="login-form">
+            
+            <fieldset class="form-group">
+                <label for="email">Email Istituzionale</label>
+                <input type="email" id="email" name="email" required 
+                       autocomplete="email" placeholder="nome.cognome@studenti.unipd.it">
+            </fieldset>
+
+           <fieldset class="form-group">
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" required 
+                           autocomplete="current-password" placeholder="••••••••">
+                    <button type="button" id="toggle-password" class="btn-toggle-pass" aria-label="Mostra password">
+                        👁️
+                    </button>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-options">
+                <a href="/recupero" class="link-forgot">Password dimenticata?</a>
+            </fieldset>
+
+            <button type="submit" class="btn-primary btn-full">Accedi</button>
+        </form>
+
+        <footer class="login-footer">
+            <p>Non hai un account? <a href="/register" class="link-register">Registrati qui</a></p>
+            <hr class="divider" aria-hidden="true">
+            <p class="small-text">Accesso riservato a Studenti, Personale Tecnico e Amministratori UniFix.</p>
+        </footer>
+    </section>

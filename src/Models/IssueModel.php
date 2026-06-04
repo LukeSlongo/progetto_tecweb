@@ -1,0 +1,52 @@
+<?php
+namespace App\Models;
+use App\Core\Model;
+use App\Core\Auth;
+
+class IssueModel extends Model {
+
+    protected $table = 'issue';
+
+
+    public function find_issue($issue_id) {
+        $sql = "SELECT * FROM issue WHERE id = ?";
+        return $this->fetchOne($sql, [$issue_id]);
+    }
+
+    public function validate ($data) {
+        $errors = [];
+
+        if (empty($data['titolo'])){
+            $errors[] = "Il campo Titolo è obbligatorio.";
+        }else if (strlen($data['titolo']) > 150) {
+            $errors[] = "Il titolo non può superare i 150 caratteri.";
+        }
+
+        if (empty($data['priorita'])) {
+            $errors[] = "Il campo Priorità è obbligatorio.";
+        } else if (!in_array($data['priorita'], ['bassa', 'media', 'alta'])) {
+            $errors[] = "Valore di Priorità non valido.";
+        }
+
+        if (empty($data['room_id'])) {
+            $errors[] = "Il campo Room è obbligatorio.";
+        }else if (!$this->find_room($data['room_id'])) {
+            $errors[] = "L'room selezionata non esiste.";
+        }
+
+        if (empty($data['descrizione'])) {
+            $errors[] = "Il campo Descrizione è obbligatorio.";
+        } elseif (strlen($data['descrizione']) > 1000) {
+            $errors[] = "La descrizione non può superare i 1000 caratteri.";
+        }
+
+        if (empty($data['utente_id'])) {
+            $errors[] = "Utente non autenticato.";
+        } else if (!$this->find_utente($data['utente_id'])) {
+            $errors[] = "Utente non valido.";
+        }
+
+        return $errors;
+    }
+
+}
