@@ -32,6 +32,7 @@
 /*Colori del sito disponibili come variabili*/
 :root {
     --primary-blue: #0055A5;
+    --primary-blue-rgb: 0, 85, 165;
     --primary-hover: #004488;
     --danger-red: #E31818;
     --danger-hover: #c91515;
@@ -50,6 +51,8 @@
     --accent-yellow: #ffbf47;
     --error-bg: #ffebee;
     --error-text: #c62828;
+    --hero-bg-start: #f5f7fa;
+    --hero-bg-end: #e4e8f0;
 }
 
 /*definizione delle regole generali del body per tutte le pagine*/
@@ -317,6 +320,74 @@ header {
     box-shadow: var(--shadow-hover);
 }
 
+/* Intestazione della card: allinea titolo e bottone preferiti sullo stesso piano */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Titolo dell'aula all'interno della card */
+.card-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-blue);
+}
+
+/* Bottone a forma di stella per i preferiti */
+.btn-fav {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-gray);
+    transition: color 0.2s;
+    padding: 0;
+    line-height: 1;
+    cursor: pointer;
+}
+
+/* Colora la stella di giallo quando ci passi sopra o è attiva */
+.btn-fav:hover,
+.btn-fav:focus {
+    color: var(--accent-yellow);
+}
+
+/* Corpo centrale della card (spinge il footer in basso) */
+.card-body {
+    flex-grow: 1;
+}
+
+/* Testo verde per aule senza problemi */
+.status-ok {
+    color: var(--success-green);
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Testo rosso per aule con guasti */
+.status-warning {
+    color: var(--danger-red);
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+/* Lista formattata per l'elenco dei guasti interni alla card */
+.mini-list {
+    font-size: 0.9rem;
+    padding-left: 20px;
+    color: var(--text-gray);
+    margin: 0;
+}
+
+/* Posiziona i link di dettaglio in basso a destra */
+.card-footer {
+    margin-top: 1.5rem;
+    text-align: right;
+}
+
 /* 
 ===============================================
     4.4 ERROR
@@ -441,18 +512,24 @@ header {
 =================================================================
 */
 
+/* =================================================================
+    5.8 HomePage
+=================================================================
+*/
+
+/* Il banner di benvenuto in cima alla pagina */
 .hero {
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    background: linear-gradient(135deg, var(--hero-bg-start) 0%, var(--hero-bg-end) 100%);
     padding: 3.5rem 2rem;
     border-radius: 12px;
     text-align: center;
-    margin-bottom: 3rem;
     box-shadow: var(--shadow-sm);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--border-color);
     margin-top: 2rem;
-    margin-bottom: 1rem;
+    margin-bottom: 3rem;
 }
 
+/* Titolo del banner di benvenuto */
 .hero h2 {
     color: var(--primary-blue);
     margin-top: 0;
@@ -460,12 +537,14 @@ header {
     font-size: 2.2rem;
 }
 
+/* Sottotitolo del banner di benvenuto */
 .hero p {
     color: var(--text-gray);
     font-size: 1.1rem;
     margin-bottom: 2rem;
 }
 
+/* Contenitore della barra di ricerca nel banner */
 .search-box {
     display: flex;
     gap: 10px;
@@ -473,6 +552,7 @@ header {
     margin: 0 auto 2.5rem auto;
 }
 
+/* Stile specifico per l'input di ricerca grosso della home */
 .search-box input[type="search"] {
     flex-grow: 1;
     padding: 0.8rem 1.2rem;
@@ -482,123 +562,17 @@ header {
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+/* Anello luminoso quando clicchi per cercare */
 .search-box input[type="search"]:focus {
     outline: none;
     border-color: var(--primary-blue);
-    box-shadow: 0 0 0 3px rgba(0, 85, 165, 0.15);
+    box-shadow: 0 0 0 3px rgba(var(--primary-blue-rgb), 0.15); 
 }
 
-.btn-cta {
-    background-color: var(--danger-red);
-    color: white;
-    padding: 0.85rem 2.5rem;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.1rem;
-    border-radius: 30px;
-    /* Forma de píldora más moderna */
-    display: inline-block;
-    box-shadow: 0 4px 10px rgba(227, 24, 24, 0.3);
-    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
-}
-
-.btn-cta:hover {
-    background-color: var(--danger-hover);
-    box-shadow: 0 6px 15px rgba(227, 24, 24, 0.4);
-}
-
-/*griglia di auli*/
+/* Griglia responsiva per impaginare le card delle aule */
 .grid-aule {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
     margin-top: 1.5rem;
-}
-
-.card-room {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    box-shadow: var(--shadow-sm);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card-room:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-hover);
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    border-bottom: 1px solid #edf2f7;
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
-}
-
-.card-header h4 {
-    margin: 0;
-    margin-left: 1rem;
-    font-size: 1.1rem;
-    color: var(--text-white);
-}
-
-.btn-fav {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--text-gray);
-    transition: color 0.2s;
-    padding: 0;
-    line-height: 1;
-}
-
-.btn-fav:hover,
-.btn-fav:focus {
-    color: var(--accent-yellow);
-}
-
-.card-body {
-    flex-grow: 1;
-}
-
-.status-ok {
-    color: var(--success-green);
-    font-weight: 600;
-    margin: 0;
-}
-
-.status-warning {
-    color: var(--danger-red);
-    font-weight: 600;
-    margin: 0 0 0.5rem 0;
-}
-
-.mini-list {
-    font-size: 0.9rem;
-    padding-left: 20px;
-    color: var(--text-gray);
-    margin: 0;
-}
-
-.card-footer {
-    margin-top: 1.5rem;
-    text-align: right;
-}
-
-.btn-secondary {
-    color: var(--primary-blue);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: color 0.2s;
-}
-
-.btn-secondary:hover {
-    color: var(--primary-hover);
-    text-decoration: underline;
 }
