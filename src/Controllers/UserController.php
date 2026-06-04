@@ -24,6 +24,7 @@ class UserController extends Controller
         {
             $_SESSION['flash_error'] = "Tutti i campi sono obbligatori.";
             $this->redirect('/login');
+            return;
         }
 
         $user_model = new UserModel();
