@@ -13,4 +13,10 @@ class UserModel extends Model
         $sql = "INSERT INTO `user` (username, password, role) VALUES (?, ?, ?)";
         $this->query($sql, [$username, $hashed_password, $role]);
     }
+
+    public function find_user($username)
+    {
+        $sql = "SELECT * FROM user WHERE username = ?";
+        return $this->fetchOne($sql, [$username]);
+    }
 }
