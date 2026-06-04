@@ -12,7 +12,7 @@ class UserController extends Controller
     {
         $this->requireGuest();
         $this->page_title = "Registrazione - UniFix";
-        $this->render('registerPage');
+        $this->render('registerPage', [], 'auth');
     }
 
     public function register()
@@ -46,7 +46,7 @@ class UserController extends Controller
     public function viewLogin() {
         $this->requireGuest();
         $this->page_title = "Login - UniFix";
-        $this->render('loginPage');
+        $this->render('loginPage', [], 'auth');
     }
 
     public function login()
