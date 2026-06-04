@@ -22,10 +22,8 @@ class UserController extends Controller
 
         if (empty($username) || empty($password))
         {
-            die("ERRORE FORM: I dati non arrivano al PHP. Hai cambiato l'attributo name in name='username' nel file registerPage.html?");
-    
-            //$_SESSION['flash_error'] = "Tutti i campi sono obbligatori.";
-            $this->redirect('/register');
+            $_SESSION['flash_error'] = "Tutti i campi sono obbligatori.";
+            $this->redirect('/login');
         }
 
         $user_model = new UserModel();
@@ -34,12 +32,11 @@ class UserController extends Controller
         {
             $user_model->register($username, $password, 'student');
             // reindirizziamo a login per il primo accesso
-            //$this->redirect('/login');
+            $this->redirect('/login');
         }
         catch (Exception $e)
         {
-            die("ERRORE SQL REALE: " . $e->getMessage());
-            //$_SESSION['flash_error'] = "Errore durante la registrazione. Il nome utente potrebbe essere già in uso.";
+            $_SESSION['flash_error'] = "Errore durante la registrazione. Il nome utente potrebbe essere già in uso.";
             $this->redirect('/register');
         }
     }

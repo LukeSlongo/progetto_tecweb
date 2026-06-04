@@ -1,6 +1,6 @@
 <section class="auth-section">
-    <div class="auth-card">
-        <h2>Registrazione Studente</h2>
+    <div class="auth-container">
+        <h2 class="auth-title">Benvenuto su<br>UniFix</h2>
 
         <div class="error-message" role="alert">
             ##FLASH_ERROR##
@@ -9,14 +9,13 @@
         <form action="/register" method="POST" class="auth-form">
 
             <div class="form-group">
-                <label for="username">Nome Utente *</label>
+                <label for="username">Nome utente</label>
                 <input type="text" id="username" name="username" required aria-required="true" autocomplete="username">
             </div>
 
             <div class="form-group">
-                <label for="password">Password *</label>
-                <input type="password" id="password" name="password" required aria-required="true"
-                    autocomplete="new-password">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required aria-required="true" autocomplete="new-password">
             </div>
 
             <div class="form-actions">
