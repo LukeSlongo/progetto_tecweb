@@ -6,6 +6,10 @@
    2. UTILITIES
    3. LAYOUT
    4. COMPONENTS
+    4.1 Bottoni
+    4.2 Form
+    4.3 Cards
+    4.4 Error
    5. PAGES
     5.1 Autenticazione (Login/Register)
     5.2 UserListPage
@@ -37,11 +41,15 @@
     --text-blue: #2c3e50;
     --text-gray: #6c757d;
     --text-white: #ffffff;
+    --text-black: #000000;
     --border-color: #d2d6dc;
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
     --shadow-hover: 0 8px 24px rgba(0, 10, 40, 0.15);
+    --shadow-cta: rgba(227, 24, 24, 0.3);
     --accent-yellow: #ffbf47;
+    --error-bg: #ffebee;
+    --error-text: #c62828;
 }
 
 /*definizione delle regole generali del body per tutte le pagine*/
@@ -86,7 +94,7 @@ main {
     top: -40px;
     left: 0;
     background: var(--accent-yellow);
-    color: #000;
+    color: var(--text-black);
     padding: 8px;
     z-index: 100;
 }
@@ -109,7 +117,7 @@ main {
     padding: 20px;
 }
 
-/*regole per il tag header che contiene logo e navigazione*/
+/* Sfondo e impostazioni generali della barra di intestazione */
 header {
     display: flex;
     background-color: var(--primary-blue);
@@ -117,6 +125,7 @@ header {
     padding: 1rem 0;
 }
 
+/* Allinea orizzontalmente il titolo a sinistra e il menu a destra */
 .header-flex {
     display: flex;
     flex-direction: row;
@@ -125,19 +134,22 @@ header {
     padding: 0 20px;
 }
 
+/* Stile del testo del logo*/
 .header-flex h1 {
     margin: 0;
     font-size: 1.8rem;
     font-weight: 800;
     letter-spacing: -0.5px;
-    color: #ffffff;
+    color: var(--text-white);
 }
 
+/*punto giallo dopo Unifix*/
 .header-flex h1::after {
     content: '.';
     color: var(--accent-yellow);
 }
 
+/* Rimuove i pallini della lista e affianca i link di navigazione */
 .header-flex nav ul {
     list-style: none;
     padding: 0;
@@ -146,8 +158,9 @@ header {
     gap: 1.5rem;
 }
 
+/* Aspetto dei singoli link del menu e sfumatura al passaggio del mouse */
 .header-flex nav a {
-    color: white;
+    color: var(--text-white);
     text-decoration: none;
     font-weight: 600;
     font-size: 0.95rem;
@@ -155,12 +168,14 @@ header {
     transition: color 0.2s, opacity 0.2s;
 }
 
+/* Evidenzia di giallo il link quando ci passi sopra o se è la pagina attuale */
 .header-flex nav a:hover,
 .header-flex nav a[aria-current="page"] {
     color: var(--accent-yellow);
     text-decoration: underline;
 }
 
+/* Layout per cellulari: impila titolo e menu uno sotto l'altro invece di affiancarli */
 @media (max-width: 600px) {
     .header-flex {
         flex-direction: column;
@@ -169,14 +184,21 @@ header {
 }
 
 /* 
-=========================================
+===============================================
     4. COMPONENTS (Elementi riutilizzabili)
-=========================================
+===============================================
 */
 
+/* 
+===============================================
+    4.1 BOTTONI
+===============================================
+*/
+
+/* Stile base per i pulsanti di azione principale (forma, colore e animazione) */
 .btn-primary {
     background-color: var(--primary-blue);
-    color: #ffffff;
+    color: var(--text-white);
     font-weight: 600;
     font-size: 1rem;
     padding: 0.6rem 2.5rem;
@@ -186,10 +208,12 @@ header {
     transition: background-color 0.2s;
 }
 
+/* Cambia colore al passaggio del mouse sul bottone principale */
 .btn-primary:hover {
     background-color: var(--primary-hover);
 }
 
+/* Stile per i link secondari come "Annulla": solo testo blu */
 .btn-secondary {
     color: var(--primary-blue);
     text-decoration: none;
@@ -198,41 +222,53 @@ header {
     transition: color 0.2s;
 }
 
+/* Sottolinea e scurisce il link secondario al passaggio del mouse */
 .btn-secondary:hover {
     color: var(--primary-hover);
     text-decoration: underline;
 }
 
+/* Pulsante "Call To Action" per l'azione "Nuova Segnalazione"*/
 .btn-cta {
     background-color: var(--danger-red);
-    color: white;
+    color: var(--text-white);
     padding: 0.85rem 2.5rem;
     text-decoration: none;
     font-weight: 600;
     font-size: 1.1rem;
     border-radius: 30px;
     display: inline-block;
-    box-shadow: 0 4px 10px rgba(227, 24, 24, 0.3);
+    box-shadow: 0 4px 10px var(--shadow-cta);
     transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
 }
 
+/* Effetto 3D sul CTA*/
 .btn-cta:hover {
     background-color: var(--danger-hover);
-    box-shadow: 0 6px 15px rgba(227, 24, 24, 0.4);
+    box-shadow: 0 6px 15px var(--shadow-cta);
+    transform: translateY(-2px);
 }
 
-/* --- Form --- */
+/* 
+===============================================
+    4.2 FORM
+===============================================
+*/
+
+/* Crea spazio verticale tra un campo del form e l'altro */
 .form-group {
     margin-bottom: 1.5rem;
 }
 
+/* Forza l'etichetta di un form a stare sopra la barra di testo, non di fianco */
 .form-group label {
     display: block;
     font-size: 0.95rem;
-    color: #000000;
+    color: var(--text-blue);
     margin-bottom: 0.4rem;
 }
 
+/* Stile della barra di testo*/
 .form-group input {
     width: 100%;
     padding: 0.75rem 1rem;
@@ -244,18 +280,26 @@ header {
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+/* Effetto quando l'utente clicca per scrivere: bordo blu e alone luminoso azzurro */
 .form-group input:focus {
     border-color: var(--primary-blue);
-    box-shadow: 0 0 0 2px rgba(0, 75, 147, 0.2);
+    box-shadow: 0 0 0 2px rgba(0, 85, 165, 0.2);
 }
 
+/* Centra orizzontalmente i bottoni in fondo al form */
 .form-actions {
     margin-top: 2.5rem;
     display: flex;
     justify-content: center;
 }
 
-/* --- Cards --- */
+/* 
+===============================================
+    4.3 CARDS
+===============================================
+*/
+
+/* Riquadro flessibile per mostrare elementi di caroselli*/
 .card-room {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -267,23 +311,28 @@ header {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Effetto 3D al passaggio del mouse*/
 .card-room:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-hover);
 }
 
-/* --- Messaggi di Errore --- */
+/* 
+===============================================
+    4.4 ERROR
+===============================================
+*/
 .error-message:empty {
     display: none;
 }
 
 .error-message {
-    background-color: #ffebee;
-    color: #c62828;
+    background-color: var(--error-bg);
+    color: var(--error-text);
     padding: 1rem;
     border-radius: 6px;
     margin-bottom: 2rem;
-    border-left: 4px solid #c62828;
+    border-left: 4px solid var(--error-text);
 }
 
 /* 
@@ -299,38 +348,52 @@ header {
 =================================================================
 */
 
+/* Centra il blocco di login nella pagina con spazio sopra e sotto */
 .auth-section {
     display: flex;
     justify-content: center;
     padding: 5rem 1rem;
 }
 
+/* Contenitore a forma di scheda (Card) per far risaltare il form rispetto allo sfondo */
 .auth-container {
     width: 100%;
     max-width: 450px;
+    background-color: var(--bg-card);
+    padding: 2.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
 }
 
+/* Titolo grande e centrato del form di login/registrazione */
 .auth-title {
     font-size: 2.5rem;
-    font-weight: 500;
-    color: #000000;
-    margin-bottom: 3rem;
+    font-weight: 800;
+    color: var(--text-blue);
+    margin-bottom: 2rem;
     line-height: 1.2;
-}
-
-.auth-footer {
-    margin-top: 2.5rem;
     text-align: center;
-    font-size: 0.9rem;
 }
 
+/* Spazio e posizionamento per i link secondari a fine form */
+.auth-footer {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+/* Stile per i link nel footer (es. "Accedi qui") */
 .auth-footer a {
     color: var(--primary-blue);
     font-weight: 600;
     text-decoration: none;
+    transition: color 0.2s;
 }
 
+/* Effetto hover per i link del footer */
 .auth-footer a:hover {
+    color: var(--primary-hover);
     text-decoration: underline;
 }
 
