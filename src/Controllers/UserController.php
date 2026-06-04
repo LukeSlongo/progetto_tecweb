@@ -40,4 +40,10 @@ class UserController extends Controller
             $this->redirect('/register');
         }
     }
+
+    public function logout(){
+        session_unset();
+        session_destroy();
+        $this->redirect('/login');
+    }
 }

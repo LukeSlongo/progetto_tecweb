@@ -252,6 +252,26 @@ header {
     transform: translateY(-2px);
 }
 
+
+/*pulsante per logout (con contrasto con il header) (usati !important per differenziarli di gli altri elementi di navbar)*/
+.btn-logout {
+    background-color: var(--accent-yellow);
+    color: var(--text-black) !important;
+    border: 2px solid transparent;      
+    padding: 0.3rem 0.8rem !important;             
+    border-radius: 10px;              
+    font-weight: 750 !important;
+    text-shadow: var(--shadow-md);
+    letter-spacing: 0.5px;
+}
+/* Effetto hover per il bottone di logout: cambia colore del testo e aggiunge un bordo nero */
+.btn-logout:hover {
+    color: var(--text-black)!important;
+    border-color: var(--text-black);
+    transition: all 0.3s ease;
+
+}
+
 /* 
 ===============================================
     4.2 FORM
