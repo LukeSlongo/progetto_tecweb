@@ -85,7 +85,7 @@ abstract class Controller
         }
     }
 
-    protected function require_owner($username)
+    protected function requireOwner($username)
     {
         $this->requireLogin();
         if (!Auth::isOwner($username)) {

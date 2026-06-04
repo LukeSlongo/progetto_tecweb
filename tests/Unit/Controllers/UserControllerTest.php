@@ -174,4 +174,57 @@ class UserControllerTest extends TestCase
         // Se arriviamo qui senza errori di output, l'azione è riuscita!
         $this->assertTrue(true);
     }
+
+    public function test_viewUserList_recupera_utenti_e_renderizza_lista()
+    {
+        // 1. Prepariamo un array di utenti finti che simula la risposta del database
+        $utentiFinti = [
+            ['id' => 1, 'username' => 'mario.rossi', 'role' => 'student'],
+            ['id' => 2, 'username' => 'luigi.verdi', 'role' => 'tecnico']
+        ];
+
+        // 2. Mockiamo il Database: il Model base findAll() di solito usa fetchAll()
+        $mockStmt = $this->createMock(PDOStatement::class);
+        $mockStmt->method('fetchAll')->willReturn($utentiFinti);
+
+        $mockPdo = $this->createMock(PDO::class);
+        // Intercettiamo sia query() che prepare() perché non sappiamo esattamente come
+        // è implementato findAll() nel tuo Model.php base
+        $mockPdo->method('query')->willReturn($mockStmt); 
+        $mockPdo->method('prepare')->willReturn($mockStmt);
+        $this->injectMockDatabase($mockPdo);
+
+        // 3. Prepariamo il Controller
+        $controller = $this->getMockBuilder(UserController::class)
+            ->onlyMethods(['checkAdmin', 'render'])
+            ->getMock();
+
+        // Assicuriamoci che la pagina sia protetta!
+        $controller->expects($this->once())->method('checkAdmin');
+
+        // 4. Verifichiamo che il render riceva l'HTML generato dall'Helper
+        $controller->expects($this->once())
+            ->method('render')
+            ->with(
+                $this->equalTo('userListPage'),
+                // Usiamo una callback per analizzare l'HTML che il ComponentHelper ha prodotto
+                $this->callback(function ($datiPassati) {
+                    if (!isset($datiPassati['USER_LIST_ITEMS'])) {
+                        return false;
+                    }
+                    
+                    $html = $datiPassati['USER_LIST_ITEMS'];
+                    
+                    // Se l'Helper ha funzionato bene, i nomi degli utenti finti 
+                    // devono essere stati "stampati" dentro la stringa HTML
+                    $trovatoMario = strpos($html, 'mario.rossi') !== false;
+                    $trovatoLuigi = strpos($html, 'luigi.verdi') !== false;
+                    
+                    return $trovatoMario && $trovatoLuigi;
+                })
+            );
+
+        // 5. Eseguiamo l'azione
+        $controller->viewUserList();
+    }
 }
