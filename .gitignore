@@ -16,3 +16,4 @@ build/
 
 # PHP / Composer
 vendor/
+.phpunit.result.cache
