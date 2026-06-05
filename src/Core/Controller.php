@@ -15,9 +15,8 @@ abstract class Controller
 
     protected $scriptPathList = [];
 
-    public function render($view, $data = [])
+    public function render($view, $data = [], $layout = 'main')
     {
-
 
         if (isset($_SESSION['flash_error'])) {
             $data['FLASH_ERROR'] = $_SESSION['flash_error'];
@@ -25,11 +24,12 @@ abstract class Controller
         }
 
         $view_file = new Template("pages/{$view}");
-
         $view_file->setPageData($data);
+        $content_view = $view_file->getPage();
 
-        $contenuto_vista = $view_file->getPage();
+        $layout_file = new Template("layouts/{$layout}");
 
+        if ($layout === 'main') {
             $layout_data = [
                 'CLASSE_PAGINA' => strtolower($view),
                 'LINK_UTENTE' => Auth::getHeaderLinks(),
@@ -39,12 +39,13 @@ abstract class Controller
                 'DESCRIZIONE_PAGINA' => $this->page_description,
                 'UTENTE_LOGGATO' => (Auth::isLogged()) ? "true" : "false"
             ];
-
-            $layout_file = new Template("layouts/main");
-            $layout_file->setPageData(['CONTENUTO_PRINCIPALE' => $contenuto_vista]);
             $layout_file->setPageData($layout_data);
-            echo $layout_file->getPage();
+        } else {
+            $layout_file->setPageData(['TITOLO_PAGINA' => $this->page_title]);
+        }
 
+        $layout_file->setPageData(['CONTENUTO_PRINCIPALE' => $content_view]);
+        echo $layout_file->getPage();
     }
 
     public function redirect($url)
@@ -85,7 +86,7 @@ abstract class Controller
         }
     }
 
-    protected function require_owner($username)
+    protected function requireOwner($username)
     {
         $this->requireLogin();
         if (!Auth::isOwner($username)) {

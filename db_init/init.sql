@@ -72,3 +72,8 @@ END;
 //
 
 DELIMITER ;
+
+-- Insert dei ruoli admin e tecnico
+INSERT INTO `user` (username, password, role) VALUES 
+('admin', '$2y$10$rTwKpKUBtWUq6QQKjVS/FuhEzFASXCpuekO2jsrY16wbaibHU0wtK', 'admin'),
+('tecnico', '$2y$10$7nnn3YJsSpqn1O7VnWO50.n/CRCHlMagJEyhQ5TQe9m3J5vh3ihAO', 'technician');
