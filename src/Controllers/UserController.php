@@ -60,4 +60,11 @@ class UserController extends Controller
             'USER_LIST_ITEMS' => $items_html
         ]);
     }
+
+    public function deleteUser($user_id)
+    {
+        $this->checkAdmin();
+        $user_model = new UserModel();
+        $user_model->delete($user_id);
+    }
 }
