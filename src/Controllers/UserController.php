@@ -113,4 +113,11 @@ class UserController extends Controller
             'NOME_UTENTE' => $utente['username']
         ]);
     }
+
+    public function deleteUser($user_id)
+    {
+        $this->checkAdmin();
+        $user_model = new UserModel();
+        $user_model->delete($user_id);
+    }
 }

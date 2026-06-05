@@ -19,10 +19,9 @@ class Router
         $this->add('POST', $uri, $controller, $method, $middleware);
     }
 
-    // FIX 1: Aggiunto $httpMethod come primo parametro
+
     public function add($httpMethod, $uri, $controller, $method, $middleware = [])
     {
-        // Inseriamo la rotta nel cassetto giusto (GET o POST)
         $this->routes[$httpMethod][$uri] = [
             'controller' => $controller,
             'method' => $method,
@@ -37,11 +36,10 @@ class Router
 
         $matchedRoute = null;
         $params = [];
-        // Prendiamo solo le rotte del metodo richiesto (es. solo le GET)
         $routesToSearch = $this->routes[$httpMethod] ?? [];
 
         // FIX 2: Iteriamo su $routesToSearch, non su $this->routes
-        foreach ($routesToSearch as $routePath => $routeData) {
+        foreach($routesToSearch as $routePath => $routeData){
             $pattern = preg_replace('/\{[a-zA-Z0-9-_]+:num\}/', '([0-9]+)', $routePath);
             $pattern = preg_replace('/\{[a-zA-Z0-9-_]+:alpha\}/', '([a-zA-Z-_]+)', $pattern);
             $pattern = preg_replace('/\{[a-zA-Z0-9-_]+:alphanum\}/', '([a-zA-Z0-9-_]+)', $pattern);
