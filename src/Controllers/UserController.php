@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\Auth;
 use App\Models\UserModel;
 use \App\Helpers\ComponentHelper;
 use Exception;
@@ -12,7 +13,7 @@ class UserController extends Controller
     {
         $this->requireGuest();
         $this->page_title = "Registrazione - UniFix";
-        $this->render('registerPage');
+        $this->render('registerPage', [], 'auth');
     }
 
     public function register()
@@ -39,6 +40,46 @@ class UserController extends Controller
         }
     }
 
+    public function viewLogin() {
+        $this->requireGuest();
+        $this->page_title = "Login - UniFix";
+        $this->render('loginPage', [], 'auth');
+    }
+
+    public function login()
+    {
+        $this->requireGuest();
+        
+        $username = $this->post('username');
+        $password = $this->post('password');
+
+        if (empty($username) || empty($password)) {
+            $_SESSION['flash_error'] = "Inserisci username e password.";
+            $this->redirect('/login');
+            return;
+        }
+
+        $user_model = new UserModel();
+        $user = $user_model->find_user($username);
+
+        if ($user && password_verify($password, $user['password'])) {
+            
+            $_SESSION['user'] = [
+                'id' => $user['id'] ?? null,
+                'username' => $user['username'],
+                'ruolo' => $user['role'],
+            ];
+            
+            $this->redirect('/');
+            return;
+            
+        } else {
+            $_SESSION['flash_error'] = "Credenziali non valide.";
+            $this->redirect('/login');
+            return;
+        }
+    }
+
     public function logout()
     {
         session_unset();
@@ -58,6 +99,15 @@ class UserController extends Controller
         $this->page_title = "Gestione Utenti - UniFix";
         $this->render('userListPage', [
             'USER_LIST_ITEMS' => $items_html
+    public function viewHome()
+    {
+        $this->requireLogin();
+
+        $this->page_title = "Home - UniFix";
+        $utente = Auth::getUser();
+
+        $this->render('homePage', [
+            'NOME_UTENTE' => $utente['username']
         ]);
     }
 
