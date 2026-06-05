@@ -119,5 +119,6 @@ class UserController extends Controller
         $this->checkAdmin();
         $user_model = new UserModel();
         $user_model->delete($user_id);
+        $this->redirect('/users');
     }
 }
