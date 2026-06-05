@@ -10,6 +10,7 @@
     4.2 Form
     4.3 Cards
     4.4 Error
+    4.5 Tabelle e Liste
    5. PAGES
     5.1 Autenticazione (Login/Register)
     5.2 UserListPage
@@ -264,12 +265,35 @@ header {
     text-shadow: var(--shadow-md);
     letter-spacing: 0.5px;
 }
+
 /* Effetto hover per il bottone di logout: cambia colore del testo e aggiunge un bordo nero */
 .btn-logout:hover {
     color: var(--text-black)!important;
     border-color: var(--text-black);
     transition: all 0.3s ease;
 
+}
+
+/* Bottone con azione che provoca azioni con side-effects */
+.btn-danger {
+    background-color: var(--danger-red);
+    color: var(--text-white);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+/* Hover del bottone con azioni che hanno side-effects*/
+.btn-danger:hover {
+    background-color: var(--danger-hover);
+}
+
+/* Variante più piccola per i bottoni dentro le liste/tabelle */
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
 }
 
 /* 
@@ -425,6 +449,54 @@ header {
     margin-bottom: 2rem;
     border-left: 4px solid var(--error-text);
 }
+
+/* 
+===============================================
+    4.5 TABELLE E LISTE
+===============================================
+*/
+
+/* Contenitore generico per le tabelle dati (Utenti, Aule, Issue) */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    margin-top: 1rem;
+    background-color: var(--bg-card);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Intestazione della tabella */
+.data-table thead {
+    background-color: var(--hero-bg-start);
+    border-bottom: 2px solid var(--border-color);
+}
+
+/* Spaziatura e bordi delle celle */
+.data-table th, 
+.data-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Evidenzia leggermente la riga quando ci passi sopra col mouse */
+.data-table tbody tr:hover {
+    background-color: rgba(0, 85, 165, 0.02);
+}
+
+/* Rimuove il bordo all'ultima riga per estetica */
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Rimuove i margini dai form dentro le celle (per i bottoni Rimuovi) */
+.data-table td form {
+    margin: 0;
+}
+
+
 
 /* 
 =================================================================
