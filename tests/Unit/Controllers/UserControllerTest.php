@@ -154,24 +154,82 @@ class UserControllerTest extends TestCase
         );
     }
 
-    public function test_logout_distrugge_sessione_e_reindirizza()
+    public function test_viewLogin_renderizza_pagina()
     {
-        // Riempiamo la sessione con dati finti
-        $_SESSION['user'] = ['username' => 'mario'];
+        $controller = $this->getMockBuilder(UserController::class)
+            ->onlyMethods(['requireGuest', 'render'])
+            ->getMock();
+
+        $controller->expects($this->once())->method('requireGuest');
+        $controller->expects($this->once())->method('render')->with('loginPage');
+
+        $controller->viewLogin();
+    }
+
+    public function test_login_successo_crea_sessione_e_redirige()
+    {
+        $passwordInChiaro = "Password123";
+        $hash = password_hash($passwordInChiaro, PASSWORD_DEFAULT);
+
+        $utenteFinto = [
+            'id' => 1,
+            'username' => 'studente_test',
+            'role' => 'student',
+            'password' => $hash
+        ];
+
+        // Mock del Model che restituisce l'utente
+        $mockStmt = $this->createMock(PDOStatement::class);
+        $mockStmt->method('fetch')->willReturn($utenteFinto);
+        $mockPdo = $this->createMock(PDO::class);
+        $mockPdo->method('prepare')->willReturn($mockStmt);
+        $this->injectMockDatabase($mockPdo);
+
+        $controller = $this->getMockBuilder(UserController::class)
+            ->onlyMethods(['requireGuest', 'post', 'redirect'])
+            ->getMock();
+
+        $controller->method('post')->willReturnMap([
+            ['username', null, 'studente_test'],
+            ['password', null, $passwordInChiaro]
+        ]);
+
+        $controller->expects($this->once())->method('redirect')->with('/');
+
+        $controller->login();
+
+        $this->assertEquals('studente_test', $_SESSION['user']['username']);
+    }
+
+    public function test_logout_distrugge_sessione()
+    {
+        $_SESSION['user'] = ['username' => 'test'];
 
         $controller = $this->getMockBuilder(UserController::class)
             ->onlyMethods(['redirect'])
             ->getMock();
 
-        // Verifichiamo che rediriga alla pagina di login
         $controller->expects($this->once())->method('redirect')->with('/login');
 
         $controller->logout();
 
-        // Poiché session_destroy è stato chiamato, in un ambiente web pulirebbe l'array.
-        // Nel CLI di PHPUnit a volte $_SESSION non viene svuotato automaticamente da session_destroy,
-        // ma ci basta sapere che il redirect e il clear sono stati invocati.
-        // Se arriviamo qui senza errori di output, l'azione è riuscita!
-        $this->assertTrue(true);
+        $this->assertArrayNotHasKey('user', $_SESSION);
+    }
+
+    public function test_viewHome_mostra_nome_utente_se_loggato()
+    {
+        // Simuliamo un utente loggato in sessione
+        $_SESSION['user'] = ['username' => 'mario_rossi'];
+
+        $controller = $this->getMockBuilder(UserController::class)
+            ->onlyMethods(['requireLogin', 'render'])
+            ->getMock();
+
+        $controller->expects($this->once())->method('requireLogin');
+        $controller->expects($this->once())
+            ->method('render')
+            ->with('homePage', ['NOME_UTENTE' => 'mario_rossi']);
+
+        $controller->viewHome();
     }
 }
