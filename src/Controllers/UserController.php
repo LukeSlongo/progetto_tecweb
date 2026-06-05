@@ -99,6 +99,9 @@ class UserController extends Controller
         $this->page_title = "Gestione Utenti - UniFix";
         $this->render('userListPage', [
             'USER_LIST_ITEMS' => $items_html
+        ]);
+    }
+
     public function viewHome()
     {
         $this->requireLogin();
