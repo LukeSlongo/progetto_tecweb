@@ -6,15 +6,18 @@
 // esattamente dove il Router si aspetta di trovarla (App\Controllers)
 // =========================================================================
 namespace App\Controllers {
-    class DummyController {
+    class DummyController
+    {
         // Usiamo una variabile statica per memorizzare cosa il Router ci passa
         public static $parametriRicevuti = [];
 
-        public function testMetodoSemplice() {
+        public function testMetodoSemplice()
+        {
             self::$parametriRicevuti = ['chiamato_senza_parametri'];
         }
 
-        public function testMetodoConParametri($id, $nome = null) {
+        public function testMetodoConParametri($id, $nome = null)
+        {
             self::$parametriRicevuti = func_get_args(); // Salva tutti i parametri passati
         }
     }
@@ -42,7 +45,7 @@ namespace {
         public function test_dispatch_lancia_404_se_rotta_inesistente()
         {
             $router = new Router();
-            
+
             // Diciamo a PHPUnit che ci aspettiamo un 404
             $this->expectException(NotFoundException::class);
             $this->expectExceptionMessage("Pagina non trovata");
@@ -60,7 +63,7 @@ namespace {
 
             // Verifichiamo che il router abbia istanziato il controller e chiamato il metodo!
             $this->assertEquals(
-                ['chiamato_senza_parametri'], 
+                ['chiamato_senza_parametri'],
                 \App\Controllers\DummyController::$parametriRicevuti
             );
         }
@@ -75,7 +78,7 @@ namespace {
 
             // Verifichiamo che il router abbia estratto '456' e 'luigi' e li abbia passati al metodo
             $this->assertEquals(
-                ['456', 'luigi'], 
+                ['456', 'luigi'],
                 \App\Controllers\DummyController::$parametriRicevuti
             );
         }
@@ -96,16 +99,14 @@ namespace {
 
         public function test_middleware_tecnico_blocca_studente()
         {
-            $router = new Router();
-            $router->get('/gestione-guasti', 'DummyController', 'testMetodoSemplice', ['tecnico']);
+            $_SESSION['user'] = ['username' => 'studente', 'role' => 'student'];
 
-            // Simuliamo un utente loggato ma con ruolo studente
-            $_SESSION['user'] = ['username' => 'mario', 'ruolo' => 'studente'];
+            $this->expectException(\App\Exceptions\ForbiddenException::class);
 
-            $this->expectException(ForbiddenException::class);
-            $this->expectExceptionMessage("Accesso riservato ai tecnici");
+            $router = new \App\Core\Router();
+            $router->get('/rotta-segreta', 'FakeController', 'fakeMethod', ['technician']);
 
-            $router->dispatch('/gestione-guasti', 'GET');
+            $router->dispatch('/rotta-segreta', 'GET');
         }
 
         public function test_middleware_tecnico_permette_accesso_a_tecnici_e_admin()

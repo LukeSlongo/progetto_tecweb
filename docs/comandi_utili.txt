@@ -1,8 +1,8 @@
 Accedere a mysql:  
     $ docker exec -it [id_database] mysql -u root -p
 
-Accedere al dbmysql 'miosito':
-    USE miosito
+Accedere al dbmysql 'unifix':
+    USE unifix
 
 Vedere info tabella:
     DESCRIBE [nome_tabella]

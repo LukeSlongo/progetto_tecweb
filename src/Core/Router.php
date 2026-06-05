@@ -1,24 +1,27 @@
 <?php
 namespace App\Core;
 
-class Router {
-    
+class Router
+{
+
     private $routes = [
         'GET' => [],
         'POST' => []
     ];
 
-    public function get($uri, $controller, $method, $middleware = []) {
+    public function get($uri, $controller, $method, $middleware = [])
+    {
         $this->add('GET', $uri, $controller, $method, $middleware);
     }
 
-    public function post($uri, $controller, $method, $middleware = []) {
+    public function post($uri, $controller, $method, $middleware = [])
+    {
         $this->add('POST', $uri, $controller, $method, $middleware);
     }
 
-    // FIX 1: Aggiunto $httpMethod come primo parametro
-    public function add($httpMethod, $uri, $controller, $method, $middleware = []){
-        // Inseriamo la rotta nel cassetto giusto (GET o POST)
+
+    public function add($httpMethod, $uri, $controller, $method, $middleware = [])
+    {
         $this->routes[$httpMethod][$uri] = [
             'controller' => $controller,
             'method' => $method,
@@ -26,13 +29,13 @@ class Router {
         ];
     }
 
-    public function dispatch($requestedUri, $httpMethod){
+    public function dispatch($requestedUri, $httpMethod)
+    {
 
         $uri = parse_url($requestedUri, PHP_URL_PATH);
-        
+
         $matchedRoute = null;
         $params = [];
-        // Prendiamo solo le rotte del metodo richiesto (es. solo le GET)
         $routesToSearch = $this->routes[$httpMethod] ?? [];
 
         // FIX 2: Iteriamo su $routesToSearch, non su $this->routes
@@ -44,12 +47,12 @@ class Router {
             $pattern = '#^' . $pattern . '$#';
 
             if (preg_match($pattern, $uri, $matches)) {
-                array_shift($matches); 
+                array_shift($matches);
 
                 $matchedRoute = $routeData;
                 $matchedRoute['pattern_originale'] = $routePath;
                 $params = $matches;
-                break; 
+                break;
             }
         }
 
@@ -66,7 +69,8 @@ class Router {
         call_user_func_array([$controller, $matchedRoute['method']], $params);
     }
 
-    private function getNamedParams($routePath, $matches) {
+    private function getNamedParams($routePath, $matches)
+    {
         $namedParams = [];
         if (!empty($matches)) {
             preg_match_all('/\{([a-zA-Z0-9-_]+)(?::\w+)?\}/', $routePath, $paramKeys);
@@ -78,7 +82,8 @@ class Router {
         return $namedParams;
     }
 
-    private function handleMiddleware($middleware, $params) {
+    private function handleMiddleware($middleware, $params)
+    {
         if (in_array('auth', $middleware)) {
             if (!\App\Core\Auth::isLogged()) {
                 header('Location: /login');
@@ -87,16 +92,14 @@ class Router {
         }
 
         if (in_array('admin', $middleware)) {
-            $currentUser = \App\Core\Auth::getUser()['is_admin'] ?? null;
-
-            if (!$currentUser) {
+            if (!\App\Core\Auth::isAdmin()) {
                 throw new \App\Exceptions\ForbiddenException("Non hai i permessi da amministratore");
             }
         }
 
-        if (in_array('tecnico', $middleware)) {
+        if (in_array('technician', $middleware)) {
             $user = \App\Core\Auth::getUser();
-            if (!$user || ($user['ruolo'] !== 'tecnico' && $user['ruolo'] !== 'admin')) {
+            if (!$user || ($user['role'] !== 'technician' && $user['role'] !== 'admin')) {
                 throw new \App\Exceptions\ForbiddenException("Accesso riservato ai tecnici");
             }
         }
