@@ -30,5 +30,19 @@ class RoomController extends Controller {
         echo json_encode($aule);
         exit;
     }
+    public function viewRoomList()
+    {
+        $this->requireAuth();
+        $room_model = new RoomModel()
+        ;
+        $rooms = $room_model->searchRoomsWithCount();
+
+        $items_html = ComponentHelper::renderList('roomListItem', $rooms);
+
+
+        $this->page_title = "Aule - UniFix";
+        $this->render('roomListPage', ['ROOM_LIST_ITEMS' => $items_html]);
+    }
+
 
 }

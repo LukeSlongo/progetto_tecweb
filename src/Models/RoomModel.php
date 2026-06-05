@@ -17,4 +17,17 @@ class RoomModel extends Model {
         return $this->fetchOne($sql, [$room_id]);
     }
 
+public function searchRoomsWithCount($search = '') {
+    $sql = "SELECT 
+                r.id AS room_id, 
+                r.name AS room_name, 
+                b.name AS building_name, 
+                (SELECT COUNT(*) FROM issue i WHERE i.room_id = r.id) AS num_reports
+            FROM room r
+            JOIN building b ON r.building_id = b.id
+            WHERE r.name LIKE ?";
+            
+    return $this->fetchAll($sql, ["%$search%"]);
+}
+
 }
