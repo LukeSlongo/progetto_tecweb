@@ -60,7 +60,7 @@ $router->post('/logout', 'UserController', 'logout');
 $router->get('/', 'UserController', 'viewHome', ['auth']);
 
 // Aule
-$router->get('/rooms', 'RoomController', 'viewRooms', ['auth']);
+$router->get('/rooms', 'RoomController', 'viewRoomList', ['auth']);
 $router->get('/rooms/{id:num}', 'RoomController', 'viewRoomDetail', ['auth']);
 
 // Segnalazioni

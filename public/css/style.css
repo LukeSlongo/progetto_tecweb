@@ -296,6 +296,24 @@ header {
     font-size: 0.85rem;
 }
 
+/*variante di bottone per i link di visualizzazione dei dettagli nelle tabelle (es. "Visualizza" nella lista delle aule)*/
+.btn-view {
+    background-color: var(--primary-blue);
+    color: var(--text-white);
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    text-decoration: none;
+    padding: 0.2rem 0.4rem;
+}
+/*hover del bottone di visualizzazione dei dettagli nelle tabelle*/
+.btn-view:hover {
+    background-color: var(--primary-hover);
+}
+
+
 /* 
 ===============================================
     4.2 FORM
@@ -573,6 +591,14 @@ header {
     5.3 RoomListPage
 =================================================================
 */
+
+
+
+
+
+
+
+
 
 /* 
 =================================================================

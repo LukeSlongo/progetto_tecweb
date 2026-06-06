@@ -2,8 +2,8 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
-use App\Core\Template;
 use App\Models\RoomModel;
+use App\Helpers\ComponentHelper;
 
 class RoomController extends Controller {
 
@@ -15,20 +15,18 @@ class RoomController extends Controller {
         //BreadcrumbHelper::reset();
     }
 
-    public function get_aule_by_building() {
-        $building_id = isset($_GET['buildingId']) ? trim($_GET['buildingId']) : null;
+    public function viewRoomList()
+    {
+        $this->requireLogin();
+        $room_model = new RoomModel();
+        $rooms = $room_model->searchRoomsWithCount();
 
-        header('Content-Type: application/json');
+        $items_html = ComponentHelper::renderList('roomListItem', $rooms);
 
-        if (empty($building_id)) {
-            http_response_code(400);
-            echo json_encode(['error' => 'Parametro buildingId mancante o vuoto']);
-            exit;
-        }
 
-        $aule = $this->Room->get_aule_by_building($building_id);
-        echo json_encode($aule);
-        exit;
+        $this->page_title = "Aule - UniFix";
+        $this->render('roomListPage', ['ROOM_LIST_ITEMS' => $items_html]);
     }
+
 
 }
