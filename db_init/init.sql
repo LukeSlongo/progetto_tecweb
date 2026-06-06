@@ -1,11 +1,15 @@
--- 1. Building Table
+DROP TABLE IF EXISTS favorite;
+DROP TABLE IF EXISTS issue;
+DROP TABLE IF EXISTS room;
+DROP TABLE IF EXISTS building;
+DROP TABLE IF EXISTS `user`;
+
 CREATE TABLE building (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE,
     address VARCHAR(255) NOT NULL
 );
 
--- 2. Room Table
 CREATE TABLE room (
     id INT AUTO_INCREMENT PRIMARY KEY,
     building_id INT NOT NULL,
@@ -15,7 +19,6 @@ CREATE TABLE room (
     CONSTRAINT uq_building_room UNIQUE (building_id, name)
 );
 
--- 3. User Table
 CREATE TABLE `user` (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -23,7 +26,6 @@ CREATE TABLE `user` (
     role ENUM('student', 'technician', 'admin') NOT NULL
 );
 
--- 4. Issue Table
 CREATE TABLE issue (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT DEFAULT NULL,
@@ -43,7 +45,6 @@ CREATE TABLE issue (
     )
 );
 
--- 5. Favorite Table
 CREATE TABLE favorite (
     user_id INT NOT NULL,
     room_id INT NOT NULL,
@@ -54,15 +55,12 @@ CREATE TABLE favorite (
         FOREIGN KEY (room_id) REFERENCES room(id) ON DELETE CASCADE
 );
 
--- 6. Trigger for Technician removal
 DELIMITER //
 
 CREATE TRIGGER trg_remove_technician
 BEFORE DELETE ON `user`
 FOR EACH ROW
 BEGIN
-    -- If the deleted user is a technician, their 'in_progress' issues
-    -- must return to the 'open' status.
     IF OLD.role = 'technician' THEN
         UPDATE issue
         SET status = 'open', technician_id = NULL
@@ -77,3 +75,16 @@ DELIMITER ;
 INSERT INTO `user` (username, password, role) VALUES 
 ('admin', '$2y$10$rTwKpKUBtWUq6QQKjVS/FuhEzFASXCpuekO2jsrY16wbaibHU0wtK', 'admin'),
 ('tecnico', '$2y$10$7nnn3YJsSpqn1O7VnWO50.n/CRCHlMagJEyhQ5TQe9m3J5vh3ihAO', 'technician');
+
+-- Inserimento di edifici di esempio
+INSERT INTO building (name, address) VALUES 
+('Edificio A', 'Via Roma 10, Campus Centrale'),
+('Edificio B', 'Viale delle Scienze 42, Polo Nord');
+
+-- Inserimento di aule di esempio
+INSERT INTO room (building_id, name, floor) VALUES 
+(1, 'Aula Magna', 0),
+(1, 'Laboratorio Informatica 1', 1),
+(1, 'Aula 101', 1),
+(2, 'Aula 201', 2),
+(2, 'Biblioteca', 0);

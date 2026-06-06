@@ -5,15 +5,6 @@ use App\Core\Database;
 
 class DatabaseTest extends TestCase
 {
-    // Prepariamo delle costanti finte, altrimenti PHP ci darà un "Warning" 
-    // perché DB_HOST e le altre non esistono nell'ambiente di test.
-    protected function setUp(): void
-    {
-        if (!defined('DB_HOST')) define('DB_HOST', 'localhost');
-        if (!defined('DB_NAME')) define('DB_NAME', 'finto_db');
-        if (!defined('DB_USER')) define('DB_USER', 'root');
-        if (!defined('DB_PASSWORD')) define('DB_PASSWORD', '');
-    }
 
     public function test_impossibile_clonare_il_singleton()
     {
