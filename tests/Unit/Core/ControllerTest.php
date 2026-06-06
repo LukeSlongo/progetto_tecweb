@@ -16,9 +16,6 @@ class ConcreteController extends Controller
     }
     public function callPost($key, $default = null) { return $this->post($key, $default); }
     public function callGet($key, $default = null) { return $this->get($key, $default); }
-    public function callRequireLogin() { $this->requireLogin(); }
-    public function callRequireGuest() { $this->requireGuest(); }
-    public function callCheckAdmin() { $this->checkAdmin(); }
     public function callAbort($code = 404, $message = "") { $this->abort($code, $message); }
 }
 
@@ -47,50 +44,10 @@ class ControllerTest extends TestCase
         $this->assertEquals(1, $controller->callGet('chiave_finta', 1));
     }
 
-    public function test_requireLogin_reindirizza_se_utente_non_loggato()
-    {
-        $controller = new ConcreteController();
-        
-        // Non impostiamo nessuna $_SESSION['user'], quindi non siamo loggati
-        $controller->callRequireLogin();
-
-        // Verifichiamo che il redirect sia scattato e che l'errore sia in sessione
-        $this->assertEquals('/login', $controller->redirectUrl);
-        $this->assertEquals("Non sei loggato. Accedi per visualizzare il profilo!", $_SESSION['flash_error']);
-    }
-
-    public function test_requireGuest_reindirizza_alla_home_se_utente_gia_loggato()
-    {
-        $controller = new ConcreteController();
-        
-        // Simuliamo di essere già loggati
-        $_SESSION['user'] = ['username' => 'mario.rossi'];
-
-        $controller->callRequireGuest();
-
-        // Un utente già loggato che prova ad andare nel login/register deve essere cacciato!
-        $this->assertEquals('/', $controller->redirectUrl);
-        $this->assertEquals("Disconettiti dal tuo account per continuare", $_SESSION['flash_error']);
-    }
-
-    public function test_checkAdmin_reindirizza_se_utente_normale()
-    {
-        $controller = new ConcreteController();
-        
-        // Loggato, ma non admin
-        $_SESSION['user'] = ['username' => 'studente1', 'is_admin' => 0];
-
-        $controller->callCheckAdmin();
-
-        $this->assertEquals('/login', $controller->redirectUrl);
-        $this->assertEquals("Non hai il permesso, esegui l'accesso come amministratore!", $_SESSION['flash_error']);
-    }
-
     public function test_abort_lancia_eccezione_404_not_found()
     {
         $controller = new ConcreteController();
 
-        // Diciamo a PHPUnit: "Attento, mi aspetto che la prossima riga faccia esplodere un'eccezione!"
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage("Pagina inesistente");
 

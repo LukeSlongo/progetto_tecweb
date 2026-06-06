@@ -11,14 +11,12 @@ class UserController extends Controller
 {
     public function viewRegister()
     {
-        $this->requireGuest();
         $this->page_title = "Registrazione - UniFix";
         $this->render('registerPage', [], 'auth');
     }
 
     public function register()
     {
-        $this->requireGuest();
         $username = $this->post('username');
         $password = $this->post('password');
 
@@ -40,15 +38,14 @@ class UserController extends Controller
         }
     }
 
-    public function viewLogin() {
-        $this->requireGuest();
+    public function viewLogin() 
+    {
         $this->page_title = "Login - UniFix";
         $this->render('loginPage', [], 'auth');
     }
 
     public function login()
     {
-        $this->requireGuest();
         
         $username = $this->post('username');
         $password = $this->post('password');
@@ -89,8 +86,6 @@ class UserController extends Controller
 
    public function viewUserList()
     {
-        $this->checkAdmin();
-
         $user_model = new UserModel();
         $users = $user_model->findAll();
 
@@ -104,8 +99,6 @@ class UserController extends Controller
 
     public function viewHome()
     {
-        $this->requireLogin();
-
         $this->page_title = "Home - UniFix";
         $utente = Auth::getUser();
 
@@ -116,7 +109,6 @@ class UserController extends Controller
 
     public function deleteUser($user_id)
     {
-        $this->checkAdmin();
         $user_model = new UserModel();
         $user_model->delete($user_id);
         $this->redirect('/users');

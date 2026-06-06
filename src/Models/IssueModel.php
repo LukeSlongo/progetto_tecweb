@@ -49,4 +49,17 @@ class IssueModel extends Model {
         return $errors;
     }
 
+    public function getIssuesByRoom($room_id)
+    {
+        $sql = "SELECT
+                i.id AS issue_id,
+                i.title AS issue_title,
+                i.opened_at AS opened_at,
+                i.status AS issue_status
+                FROM issue i
+                WHERE room_id = ?
+                ";
+        return $this->fetchAll($sql, [$room_id]);
+    }
+
 }

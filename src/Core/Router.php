@@ -38,7 +38,7 @@ class Router
         $params = [];
         $routesToSearch = $this->routes[$httpMethod] ?? [];
 
-        foreach($routesToSearch as $routePath => $routeData){
+        foreach ($routesToSearch as $routePath => $routeData) {
             $pattern = preg_replace('/\{[a-zA-Z0-9-_]+:num\}/', '([0-9]+)', $routePath);
             $pattern = preg_replace('/\{[a-zA-Z0-9-_]+:alpha\}/', '([a-zA-Z-_]+)', $pattern);
             $pattern = preg_replace('/\{[a-zA-Z0-9-_]+:alphanum\}/', '([a-zA-Z0-9-_]+)', $pattern);
@@ -83,23 +83,69 @@ class Router
 
     private function handleMiddleware($middleware, $params)
     {
-        if (in_array('auth', $middleware)) {
-            if (!\App\Core\Auth::isLogged()) {
-                header('Location: /login');
-                exit;
-            }
-        }
+        foreach ($middleware as $mw) {
 
-        if (in_array('admin', $middleware)) {
-            if (!\App\Core\Auth::isAdmin()) {
-                throw new \App\Exceptions\ForbiddenException("Non hai i permessi da amministratore");
+            // utente non loggato
+            if ($mw === 'guest') {
+                if (\App\Core\Auth::isLogged()) {
+                    header('Location: /');
+                    exit;
+                }
             }
-        }
 
-        if (in_array('technician', $middleware)) {
-            $user = \App\Core\Auth::getUser();
-            if (!$user || ($user['role'] !== 'technician' && $user['role'] !== 'admin')) {
-                throw new \App\Exceptions\ForbiddenException("Accesso riservato ai tecnici");
+            // utente loggato
+            if ($mw === 'auth') {
+                if (!\App\Core\Auth::isLogged()) {
+                    header('Location: /login');
+                    exit;
+                }
+            }
+
+            // amministratore
+            if ($mw === 'admin') {
+                if (!\App\Core\Auth::isAdmin()) {
+                    throw new \App\Exceptions\ForbiddenException("Non hai i permessi da amministratore");
+                }
+            }
+
+            // tecnico (o admin)
+            if ($mw === 'technician') {
+                $user = \App\Core\Auth::getUser();
+                if (!$user || ($user['role'] !== 'technician' && $user['role'] !== 'admin')) {
+                    throw new \App\Exceptions\ForbiddenException("Accesso riservato ai tecnici");
+                }
+            }
+
+            // owner o admin
+            if (strpos($mw, 'owner:') === 0) {
+                if (\App\Core\Auth::isAdmin()) {
+                    continue;
+                }
+
+                $user = \App\Core\Auth::getUser();
+                if (!$user) {
+                    header('Location: /login');
+                    exit;
+                }
+
+                // item posseduto
+                $parts = explode(':', $mw);
+                $table = $parts[1];
+
+                $resourceId = $params['id'] ?? $params['issue_id'] ?? null;
+
+                if ($resourceId) {
+                    // si chiama l'owner ricavandolo direttamente dal db
+                    $db = \App\Core\Database::getInstance();
+                    $stmt = $db->prepare("SELECT user_id FROM {$table} WHERE id = :id");
+                    $stmt->execute(['id' => $resourceId]);
+                    $ownerId = $stmt->fetchColumn();
+                    if (!$ownerId || $ownerId != $user['id']) {
+                        throw new \App\Exceptions\ForbiddenException("Azione negata: non sei il proprietario di questa segnalazione.");
+                    }
+                } else {
+                    throw new \App\Exceptions\ForbiddenException("Impossibile verificare il proprietario: ID mancante.");
+                }
             }
         }
     }
