@@ -15,17 +15,24 @@ class RoomController extends Controller {
         //BreadcrumbHelper::reset();
     }
 
+    // esegue la ricerca con la funzione searchRoom e carica la pagina con i dati ricercati
     public function viewRoomList()
     {
         $this->requireLogin();
-        $room_model = new RoomModel();
-        $rooms = $room_model->searchRoomsWithCount();
-
+        
+        $query = $this->get('search');
+        $rooms = $this->searchRoom($query);
         $items_html = ComponentHelper::renderList('roomListItem', $rooms);
-
 
         $this->page_title = "Aule - UniFix";
         $this->render('roomListPage', ['ROOM_LIST_ITEMS' => $items_html]);
+    }
+
+    public function searchRoom($query)
+    {
+        $room_model = new RoomModel();
+        $roomList = $room_model->searchRoomsWithCount($query);
+        return $roomList;
     }
 
 

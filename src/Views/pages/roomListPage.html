@@ -1,7 +1,19 @@
 <section class="room-list">
     <div class="container">
         <h2>Lista Aule</h2>
-        
+
+        <!--ricarica la pagina con i dati ricercati-->
+        <form action="/rooms" method="GET" class="search-form">
+
+            <div class="form-group">
+                <input type="text" id="search" name="search" placeholder="Cerca per..." required>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Cerca</button>
+            </div>
+        </form>
+
         <div class="error-message">##FLASH_ERROR##</div>
 
         <div class="table-responsive">

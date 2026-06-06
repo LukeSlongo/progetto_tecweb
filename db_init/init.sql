@@ -75,6 +75,7 @@ DELIMITER ;
 INSERT INTO `user` (username, password, role) VALUES 
 ('admin', '$2y$10$rTwKpKUBtWUq6QQKjVS/FuhEzFASXCpuekO2jsrY16wbaibHU0wtK', 'admin'),
 ('tecnico', '$2y$10$7nnn3YJsSpqn1O7VnWO50.n/CRCHlMagJEyhQ5TQe9m3J5vh3ihAO', 'technician');
+('tecnico', '$2y$10$ekMDIhCRyKCf12oC/GC/led2NqD.1chaOwgO7x3witrVpKHK5xKwS', 'technician');
 
 -- Inserimento di edifici di esempio
 INSERT INTO building (name, address) VALUES 

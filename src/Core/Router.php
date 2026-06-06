@@ -38,7 +38,6 @@ class Router
         $params = [];
         $routesToSearch = $this->routes[$httpMethod] ?? [];
 
-        // FIX 2: Iteriamo su $routesToSearch, non su $this->routes
         foreach($routesToSearch as $routePath => $routeData){
             $pattern = preg_replace('/\{[a-zA-Z0-9-_]+:num\}/', '([0-9]+)', $routePath);
             $pattern = preg_replace('/\{[a-zA-Z0-9-_]+:alpha\}/', '([a-zA-Z-_]+)', $pattern);
