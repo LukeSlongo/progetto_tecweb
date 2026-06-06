@@ -107,6 +107,17 @@ abstract class Controller
         }
     }
 
+
+    protected function checkTechnician()
+    {
+        $this->requireLogin();
+
+        if (!Auth::isTechnician()) {
+            $_SESSION['flash_error'] = "Non hai il permesso, esegui l'accesso come tecnico!";
+            $this->redirect('/login');
+        }
+    }
+    
     protected function abort($code = 404, $message = "")
     {
         switch ($code) {

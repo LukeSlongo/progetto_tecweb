@@ -48,5 +48,19 @@ class IssueModel extends Model {
 
         return $errors;
     }
-
+    
+public function getActiveIssues($query = '') {
+    $sql = "SELECT 
+                i.title AS titolo,         
+                r.name AS room,           
+                i.opened_at AS data,      
+                i.status AS stato        
+            FROM issue i
+            JOIN room r ON i.room_id = r.id
+            JOIN `user` u ON i.user_id = u.id
+            WHERE i.status = 'open'       
+            ORDER BY i.opened_at DESC";
+            
+    return $this->fetchAll($sql);
+}
 }

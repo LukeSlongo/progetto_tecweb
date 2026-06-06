@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Core\Template;
 use App\Models\IssueModel;
+use App\Helpers\ComponentHelper;
 
 class IssueController extends Controller {
 
@@ -55,4 +56,28 @@ class IssueController extends Controller {
         }
     }
 
+    public function viewIssueList() {
+    $this->requireLogin(); 
+    
+    // Controlla se l'utente ha il ruolo di admin o technician
+    $role = $_SESSION['user']['role'] ?? ''; 
+    
+    if ($role !== 'admin' && $role !== 'technician') {
+        $this->redirect('/'); 
+        return;
+    }
+        $this->page_title = "Issue List - UniFix";
+
+        $issues = $this->searchIssues();
+        $items_html = ComponentHelper::renderList('issueListItem', $issues);
+
+        $this->render('issueListPage', ['ISSUE_LIST_ITEMS' => $items_html]);
+    }
+
+    public function searchIssues()
+    {
+    $issue_model = new IssueModel();
+    $issueList = $issue_model->getActiveIssues();
+    return $issueList;
+    }
 }
