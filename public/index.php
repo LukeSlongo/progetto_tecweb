@@ -48,13 +48,16 @@ set_exception_handler(function ($e) {
     exit;
 });
 
+// ... [codice precedente invariato fino alla creazione del Router] ...
+
 $router = new Router();
 
-$router->get('/login', 'UserController', 'viewLogin');
-$router->post('/login', 'UserController', 'login');
-$router->get('/register', 'UserController', 'viewRegister');
-$router->post('/register', 'UserController', 'register');
-$router->post('/logout', 'UserController', 'logout');
+
+$router->get('/login', 'UserController', 'viewLogin', ['guest']);
+$router->post('/login', 'UserController', 'login', ['guest']);
+$router->get('/register', 'UserController', 'viewRegister', ['guest']);
+$router->post('/register', 'UserController', 'register', ['guest']);
+$router->post('/logout', 'UserController', 'logout', ['auth']);
 
 // Home
 $router->get('/', 'UserController', 'viewHome', ['auth']);
@@ -68,7 +71,7 @@ $router->get('/issues/new', 'IssueController', 'viewIssueForm', ['auth']);
 $router->post('/issues', 'IssueController', 'saveIssue', ['auth']);
 $router->get('/issues', 'IssueController', 'viewIssueList', ['auth']);
 $router->get('/issues/{id:num}', 'IssueController', 'viewIssueDetail', ['auth']);
-$router->post('/issues/{id:num}/delete', 'IssueController', 'deleteIssue', ['auth']);
+$router->post('/issues/{id:num}/delete', 'IssueController', 'deleteIssue', ['auth', 'owner:issue']);
 
 // Utenti (solo admin)
 $router->get('/users', 'UserController', 'viewUserList', ['auth', 'admin']);
@@ -77,11 +80,8 @@ $router->post('/users/{id:num}/delete', 'UserController', 'deleteUser', ['auth',
 // Rotte API
 $router->post('/api/favorites/{room_id:num}/add', 'UserController', 'addFavorite', ['auth']);
 $router->post('/api/favorites/{room_id:num}/remove', 'UserController', 'removeFavorite', ['auth']);
-$router->post('/api/issues/{issue_id:num}/take', 'IssueController', 'takeIssue', ['auth', 'tecnico']);
-$router->post('/api/issues/{issue_id:num}/close', 'IssueController', 'closeIssue', ['auth', 'tecnico']);
-
+$router->post('/api/issues/{issue_id:num}/take', 'IssueController', 'takeIssue', ['auth', 'technician']);
+$router->post('/api/issues/{issue_id:num}/close', 'IssueController', 'closeIssue', ['auth', 'technician']);
 
 // Dispatch della rotta
 $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
-
-?>

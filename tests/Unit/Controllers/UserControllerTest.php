@@ -52,15 +52,14 @@ class UserControllerTest extends TestCase
         $property->setValue(null, null);
     }
 
-    public function test_viewRegister_reindirizza_se_loggato_altrimenti_renderizza()
+    public function test_viewRegister_renderizza_pagina()
     {
-        // 1. Creiamo un mock parziale del Controller per intercettare render() e requireGuest()
+        // 1. Creiamo un mock parziale del Controller per intercettare solo render()
         $controller = $this->getMockBuilder(UserController::class)
-            ->onlyMethods(['requireGuest', 'render'])
+            ->onlyMethods(['render'])
             ->getMock();
 
-        // 2. Diciamo che ci aspettiamo venga chiamato requireGuest() e poi render('registerPage')
-        $controller->expects($this->once())->method('requireGuest');
+        // 2. Diciamo che ci aspettiamo venga chiamato render('registerPage')
         $controller->expects($this->once())->method('render')->with('registerPage');
 
         // 3. Eseguiamo
@@ -71,10 +70,8 @@ class UserControllerTest extends TestCase
     {
         // Mock parziale per controllare gli input (post) e bloccare il cambio pagina (redirect)
         $controller = $this->getMockBuilder(UserController::class)
-            ->onlyMethods(['requireGuest', 'post', 'redirect'])
+            ->onlyMethods(['post', 'redirect'])
             ->getMock();
-
-        $controller->expects($this->once())->method('requireGuest');
 
         // Simuliamo l'utente che non inserisce niente
         $controller->method('post')->willReturn('');
@@ -103,7 +100,7 @@ class UserControllerTest extends TestCase
 
         // 2. Prepariamo il Controller
         $controller = $this->getMockBuilder(UserController::class)
-            ->onlyMethods(['requireGuest', 'post', 'redirect'])
+            ->onlyMethods(['post', 'redirect'])
             ->getMock();
 
         // Simuliamo l'input dell'utente
@@ -133,7 +130,7 @@ class UserControllerTest extends TestCase
 
         // 2. Prepariamo il Controller
         $controller = $this->getMockBuilder(UserController::class)
-            ->onlyMethods(['requireGuest', 'post', 'redirect'])
+            ->onlyMethods(['post', 'redirect'])
             ->getMock();
 
         $controller->method('post')->willReturnMap([
@@ -157,10 +154,9 @@ class UserControllerTest extends TestCase
     public function test_viewLogin_renderizza_pagina()
     {
         $controller = $this->getMockBuilder(UserController::class)
-            ->onlyMethods(['requireGuest', 'render'])
+            ->onlyMethods(['render'])
             ->getMock();
 
-        $controller->expects($this->once())->method('requireGuest');
         $controller->expects($this->once())->method('render')->with('loginPage');
 
         $controller->viewLogin();
@@ -186,7 +182,7 @@ class UserControllerTest extends TestCase
         $this->injectMockDatabase($mockPdo);
 
         $controller = $this->getMockBuilder(UserController::class)
-            ->onlyMethods(['requireGuest', 'post', 'redirect'])
+            ->onlyMethods(['post', 'redirect'])
             ->getMock();
 
         $controller->method('post')->willReturnMap([
@@ -222,10 +218,9 @@ class UserControllerTest extends TestCase
         $_SESSION['user'] = ['username' => 'mario_rossi'];
 
         $controller = $this->getMockBuilder(UserController::class)
-            ->onlyMethods(['requireLogin', 'render'])
+            ->onlyMethods(['render'])
             ->getMock();
 
-        $controller->expects($this->once())->method('requireLogin');
         $controller->expects($this->once())
             ->method('render')
             ->with('homePage', ['NOME_UTENTE' => 'mario_rossi']);
@@ -252,13 +247,10 @@ class UserControllerTest extends TestCase
         $mockPdo->method('prepare')->willReturn($mockStmt);
         $this->injectMockDatabase($mockPdo);
 
-        // 3. Prepariamo il Controller
+        // 3. Prepariamo il Controller (senza checkAdmin!)
         $controller = $this->getMockBuilder(UserController::class)
-            ->onlyMethods(['checkAdmin', 'render'])
+            ->onlyMethods(['render'])
             ->getMock();
-
-        // Assicuriamoci che la pagina sia protetta!
-        $controller->expects($this->once())->method('checkAdmin');
 
         // 4. Verifichiamo che il render riceva l'HTML generato dall'Helper
         $controller->expects($this->once())
