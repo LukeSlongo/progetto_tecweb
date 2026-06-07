@@ -1,0 +1,42 @@
+<section class="room-detail">
+    <div class="container">
+
+        <header class="room-header">
+            <h2>##ROOM_NAME##</h2>
+
+            <form action="/api/favorites/##ROOM_ID##/add" method="POST" class="favorite-form">
+                <button type="submit" class="btn-favorite" title="Aggiungi ai preferiti">
+                    Preferiti
+                </button>
+            </form>
+        </header>
+
+        <div class="room-content-wrapper">
+
+            <aside class="room-info-card">
+                <h3>Info aula</h3>
+                <ul>
+                    <li>Edificio: ##BUILDING_NAME##</li>
+                    <li>Indirizzo: ##BUILDING_ADDRESS##</li>
+                </ul>
+            </aside>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Titolo</th>
+                            <th>Data</th>
+                            <th>Stato</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ##ISSUES_LIST##
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</section>
