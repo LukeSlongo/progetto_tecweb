@@ -69,7 +69,7 @@ $router->get('/rooms/{id:num}', 'RoomController', 'viewRoomDetail', ['auth']);
 // Segnalazioni
 $router->get('/issues/new', 'IssueController', 'viewIssueForm', ['auth']);
 $router->post('/issues', 'IssueController', 'saveIssue', ['auth']);
-$router->get('/issues', 'IssueController', 'viewIssueList', ['auth']);
+$router->get('/issues', 'IssueController', 'viewIssueList', ['auth', 'technician']);
 $router->get('/issues/{id:num}', 'IssueController', 'viewIssueDetail', ['auth']);
 $router->post('/issues/{id:num}/delete', 'IssueController', 'deleteIssue', ['auth', 'owner:issue']);
 

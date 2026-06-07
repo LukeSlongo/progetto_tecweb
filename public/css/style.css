@@ -353,10 +353,12 @@ header {
 
 /* Centra orizzontalmente i bottoni in fondo al form */
 .form-actions {
-    margin-top: 2.5rem;
+    margin-top: 1rem;
     display: flex;
     justify-content: center;
+    margin-bottom: 2rem;
 }
+
 
 /* 
 ===============================================

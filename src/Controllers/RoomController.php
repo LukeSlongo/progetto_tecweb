@@ -5,6 +5,7 @@ use App\Core\Controller;
 use App\Models\IssueModel;
 use App\Models\RoomModel;
 use App\Helpers\ComponentHelper;
+use App\Core\Auth;
 
 class RoomController extends Controller
 {
