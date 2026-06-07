@@ -96,4 +96,48 @@ class IssueModelTest extends TestCase
         $this->assertIsArray($risultato);
         $this->assertEmpty($risultato);
     }
+
+    public function test_getIssuesByStatus_senza_parametro_ritorna_tutte_le_segnalazioni()
+    {
+        // 1. Prepariamo un mix di segnalazioni finte (es. una aperta e una chiusa)
+        $segnalazioniMiste = [
+            ['issue_id' => 1, 'issue_title' => 'Computer rotto', 'issue_status' => 'open', 'issue_room' => 'Aula 1'],
+            ['issue_id' => 2, 'issue_title' => 'Luce guasta', 'issue_status' => 'closed', 'issue_room' => 'Aula 2']
+        ];
+
+        // 2. Iniettiamo i dati nel database finto
+        $this->mockDatabase($segnalazioniMiste);
+
+        // 3. Chiamiamo il metodo SENZA passare nulla
+        $model = new IssueModel();
+        $risultato = $model->getIssuesByStatus(); // o getIssuesByStatus(null)
+
+        // 4. Verifichiamo che ci torni esattamente tutto il blocco intero
+        $this->assertIsArray($risultato);
+        $this->assertCount(2, $risultato);
+        $this->assertEquals('Computer rotto', $risultato[0]['issue_title']);
+    }
+
+    public function test_getIssuesByStatus_con_parametro_ritorna_solo_quelle_richieste()
+    {
+        // 1. Prepariamo solo segnalazioni "in_progress"
+        $segnalazioniFiltrate = [
+            ['issue_id' => 3, 'issue_title' => 'Sedia rotta', 'issue_status' => 'in_progress', 'issue_room' => 'Aula 3']
+        ];
+
+        // 2. Iniettiamo i dati
+        $this->mockDatabase($segnalazioniFiltrate);
+
+        // 3. Chiamiamo il metodo PASSANDO il filtro
+        $model = new IssueModel();
+        $risultato = $model->getIssuesByStatus('in_progress');
+
+        // 4. Verifiche
+        $this->assertIsArray($risultato);
+        $this->assertCount(1, $risultato);
+        
+        // Verifichiamo che il dato passato mantenga la struttura corretta
+        $this->assertEquals('in_progress', $risultato[0]['issue_status']);
+        $this->assertEquals('Aula 3', $risultato[0]['issue_room']);
+    }
 }
