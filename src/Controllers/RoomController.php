@@ -1,9 +1,9 @@
 <?php
 namespace App\Controllers;
 
-use App\Core\Controller;
 use App\Models\RoomModel;
 use App\Helpers\ComponentHelper;
+use App\Core\Auth;
 
 class RoomController extends Controller {
 
@@ -18,8 +18,7 @@ class RoomController extends Controller {
     // esegue la ricerca con la funzione searchRoom e carica la pagina con i dati ricercati
     public function viewRoomList()
     {
-        $this->requireLogin();
-        
+        $this->isLogged();
         $query = $this->get('search');
         $rooms = $this->searchRoom($query);
         $items_html = ComponentHelper::renderList('roomListItem', $rooms);
