@@ -1,8 +1,24 @@
 <section class="issues-list">
     <div class="container">
         <h2>Gestione Segnalazioni</h2>
-        
+
         <div class="error-message">##FLASH_ERROR##</div>
+
+        <form method="GET" action="/issues" class="status-filter-form">
+            
+            <input type="radio" id="all-issue" name="status" value="" ##CHECKED_ALL## onchange="this.form.submit()">
+            <label for="all-issue">Tutte le segnalazioni</label><br>
+            
+            <input type="radio" id="open-issue" name="status" value="open" ##CHECKED_OPEN## onchange="this.form.submit()">
+            <label for="open-issue">Segnalazioni aperte</label><br>
+            
+            <input type="radio" id="in-progress-issue" name="status" value="in_progress" ##CHECKED_IN_PROGRESS## onchange="this.form.submit()">
+            <label for="in-progress-issue">Segnalazioni in lavorazione</label><br>
+            
+            <input type="radio" id="closed-issue" name="status" value="closed" ##CHECKED_CLOSED## onchange="this.form.submit()">
+            <label for="closed-issue">Segnalazioni chiuse</label><br>
+
+        </form>
 
         <div class="table-responsive">
             <table class="data-table">

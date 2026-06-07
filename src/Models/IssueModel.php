@@ -3,22 +3,25 @@ namespace App\Models;
 use App\Core\Model;
 use App\Core\Auth;
 
-class IssueModel extends Model {
+class IssueModel extends Model
+{
 
     protected $table = 'issue';
 
 
-    public function find_issue($issue_id) {
+    public function find_issue($issue_id)
+    {
         $sql = "SELECT * FROM issue WHERE id = ?";
         return $this->fetchOne($sql, [$issue_id]);
     }
 
-    public function validate ($data) {
+    public function validate($data)
+    {
         $errors = [];
 
-        if (empty($data['titolo'])){
+        if (empty($data['titolo'])) {
             $errors[] = "Il campo Titolo è obbligatorio.";
-        }else if (strlen($data['titolo']) > 150) {
+        } else if (strlen($data['titolo']) > 150) {
             $errors[] = "Il titolo non può superare i 150 caratteri.";
         }
 
@@ -30,7 +33,7 @@ class IssueModel extends Model {
 
         if (empty($data['room_id'])) {
             $errors[] = "Il campo Room è obbligatorio.";
-        }else if (!$this->find_room($data['room_id'])) {
+        } else if (!$this->find_room($data['room_id'])) {
             $errors[] = "L'room selezionata non esiste.";
         }
 
@@ -48,19 +51,34 @@ class IssueModel extends Model {
 
         return $errors;
     }
-    
-public function getActiveIssues($query = '') {
-    $sql = "SELECT 
-                i.title AS titolo,         
-                r.name AS room,           
-                i.opened_at AS data,      
-                i.status AS stato        
+
+    public function getIssuesByStatus($status = null)
+    {
+        if ($status) {
+            $sql = "SELECT 
+                    i.id AS issue_id,
+                    i.title AS issue_title,         
+                    r.name AS issue_room,
+                    i.opened_at AS opened_at,      
+                    i.status AS issue_status        
+                FROM issue i
+                JOIN room r ON i.room_id = r.id
+                WHERE i.status = ?      
+                ORDER BY i.opened_at DESC";
+            return $this->fetchAll($sql, [$status]);
+        }
+
+        //Se non c'è nessun filtro, mostra tutte le segnalazioni
+        $sql = "SELECT 
+                i.id AS issue_id,
+                i.title AS issue_title,         
+                r.name AS issue_room,
+                i.opened_at AS opened_at,      
+                i.status AS issue_status        
             FROM issue i
             JOIN room r ON i.room_id = r.id
-            JOIN `user` u ON i.user_id = u.id
-            WHERE i.status = 'open'       
             ORDER BY i.opened_at DESC";
-            
-    return $this->fetchAll($sql);
-}
+
+        return $this->fetchAll($sql);
+    }
 }

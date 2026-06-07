@@ -6,7 +6,8 @@ use App\Core\Template;
 use App\Models\IssueModel;
 use App\Helpers\ComponentHelper;
 
-class IssueController extends Controller {
+class IssueController extends Controller
+{
 
     private $Issue;
 
@@ -17,13 +18,15 @@ class IssueController extends Controller {
         //BreadcrumbHelper::reset();
     }
 
-    public function nuova_issue() {
+    public function nuova_issue()
+    {
         $this->page_title = "Nuova Issue";
         $this->page_description = "Crea una nuova issue di guasto o problema.";
         $this->render('new_issue');
     }
 
-    public function salva_issue() {
+    public function salva_issue()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'titolo' => trim($_POST['titolo'] ?? ''),
@@ -56,28 +59,27 @@ class IssueController extends Controller {
         }
     }
 
-    public function viewIssueList() {
-    $this->requireLogin(); 
-    
-    // Controlla se l'utente ha il ruolo di admin o technician
-    $role = $_SESSION['user']['role'] ?? ''; 
-    
-    if ($role !== 'admin' && $role !== 'technician') {
-        $this->redirect('/'); 
-        return;
-    }
+    public function viewIssueList()
+    {
         $this->page_title = "Issue List - UniFix";
 
-        $issues = $this->searchIssues();
+        $status = $this->get('status');
+        $issues = $this->searchIssues($status);
+        
         $items_html = ComponentHelper::renderList('issueListItem', $issues);
-
-        $this->render('issueListPage', ['ISSUE_LIST_ITEMS' => $items_html]);
+        $this->render('issueListPage', [
+            'ISSUE_LIST_ITEMS' => $items_html,
+            'CHECKED_ALL'         => empty($status) ? 'checked' : '',
+            'CHECKED_OPEN'        => $status === 'open' ? 'checked' : '',
+            'CHECKED_IN_PROGRESS' => $status === 'in_progress' ? 'checked' : '',
+            'CHECKED_CLOSED'      => $status === 'closed' ? 'checked' : ''
+        ]);
     }
 
-    public function searchIssues()
+    public function searchIssues($status)
     {
-    $issue_model = new IssueModel();
-    $issueList = $issue_model->getActiveIssues();
-    return $issueList;
+        $issue_model = new IssueModel();
+        $issueList = $issue_model->getIssuesByStatus($status);
+        return $issueList;
     }
 }
