@@ -82,4 +82,32 @@ class IssueController extends Controller
         $issueList = $issue_model->getIssuesByStatus($status);
         return $issueList;
     }
+
+    public function viewIssueDetail($id)
+    {
+        $this->page_title = "Dettaglio Issue - UniFix";
+
+        $issue = $this->Issue->getIssueDetails($id);
+        
+        
+    $role = $_SESSION['user']['role'] ?? '';
+    $can_see_reporter = ($role === 'admin' || $role === 'technician');
+
+    $this->render('issueDetailPage', [
+        'ISSUE_TITLE'       => $issue['issue_title'],
+        'STATUS'      => ucfirst(str_replace('_', ' ', $issue['issue_status'])),
+        
+        //informazione sulla direzione
+        'BUILDING_NAME'     => $issue['building_name'],
+        'ROOM_NAME'         => $issue['room_name'],
+        
+        //data di inizio e di fine, con formatto
+        'OPEN_DATE'         => date('d/m/Y H:i', strtotime($issue['opened_at'])),
+        'CLOSE_DATE'         => $issue['closed_at'] ? date('d/m/Y H:i', strtotime($issue['closed_at'])) : 'Non ancora chiusa',
+        
+        // Controlla se il tecnico è assegnato, altrimenti mostra un messaggio di default, e se il reporter è visibile in base al ruolo dell'utente
+        'TECHNICIAN_NAME'        => $issue['technician_name'] ?? 'Nessun tecnico assegnato',
+        'REPORTER_NAME'          => $can_see_reporter ? ($issue['reporter_name'] ?? 'Utente eliminato') : 'Nascosto (Solo Admin/Tecnico)'
+    ]);
+    }
 }
