@@ -26,6 +26,7 @@ class RoomController extends Controller
         $items_html = ComponentHelper::renderList('roomListItem', $rooms);
 
         $this->page_title = "Aule - UniFix";
+        $this->scriptPathList[] = 'room';
         $this->render('roomListPage', ['ROOM_LIST_ITEMS' => $items_html]);
     }
 
@@ -48,8 +49,9 @@ class RoomController extends Controller
         $issue_model = new IssueModel();
         $issues_of_room = $issue_model->getIssuesByRoom($room_id);
         $issues_html = ComponentHelper::renderList('issueListItem', $issues_of_room);
+        $this->scriptPathList[] = 'room';
 
-        $this->render('roomPage', [
+        $this->render('roomDetailPage', [
             'ROOM_NAME' => $room_data['room_name'],
             'ROOM_ID' => $room_data['room_id'],
             'BUILDING_NAME' => $room_data['building_name'],
