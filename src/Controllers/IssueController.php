@@ -5,6 +5,7 @@ use App\Core\Controller;
 use App\Core\Template;
 use App\Models\IssueModel;
 use App\Helpers\ComponentHelper;
+use App\Core\Auth;
 
 class IssueController extends Controller
 {
@@ -92,6 +93,11 @@ class IssueController extends Controller
         
     $role = $_SESSION['user']['role'] ?? '';
     $can_see_reporter = ($role === 'admin' || $role === 'technician');
+    $deleteIssueButton = (Auth::isAdmin() || (Auth::isLogged() && Auth::isOwner($issue['reporter_id'])))
+            ? '<form action="/issues/' . $issue['issue_id'] . '/delete" method="POST" onsubmit="return confirm(\'Vuoi eliminare questa segnalazione?\')">'
+                . '<button class="btn btn-primary" type="submit">Elimina segnalazione</button>'
+                . '</form>'
+            : '';
 
     $this->render('issueDetailPage', [
         'ISSUE_TITLE'       => $issue['issue_title'],
@@ -107,7 +113,18 @@ class IssueController extends Controller
         
         // Controlla se il tecnico è assegnato, altrimenti mostra un messaggio di default, e se il reporter è visibile in base al ruolo dell'utente
         'TECHNICIAN_NAME'        => $issue['technician_name'] ?? 'Nessun tecnico assegnato',
-        'REPORTER_NAME'          => $can_see_reporter ? ($issue['reporter_name'] ?? 'Utente eliminato') : 'Nascosto (Solo Admin/Tecnico)'
+        'REPORTER_NAME'          => $can_see_reporter ? ($issue['reporter_name'] ?? 'Utente eliminato') : 'Nascosto (Solo Admin/Tecnico)',
+        'DELETE_ISSUE_BUTTON'    => $deleteIssueButton
     ]);
+    }
+
+    public function deleteIssue($id)
+    {
+        if($this->Issue->find_issue($id) === false)
+        {
+            throw new \App\Exceptions\NotFoundException("Segnalazione non trovata.");
+        }
+        $this->Issue->delete($id);
+        $this->redirect('/issues');
     }
 }

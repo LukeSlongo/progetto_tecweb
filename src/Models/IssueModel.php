@@ -105,6 +105,7 @@ public function getIssueDetails($issue_id)
                 i.closed_at AS closed_at,     
                 b.name AS building_name,      
                 r.name AS room_name,
+                u.id AS reporter_id,
                 u.username AS reporter_name,   
                 t.username AS technician_name  
             FROM issue i
