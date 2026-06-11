@@ -48,8 +48,6 @@ set_exception_handler(function ($e) {
     exit;
 });
 
-// ... [codice precedente invariato fino alla creazione del Router] ...
-
 $router = new Router();
 
 
