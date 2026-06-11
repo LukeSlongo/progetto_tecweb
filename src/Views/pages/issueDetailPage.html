@@ -2,12 +2,17 @@
     <div class="container">
 
         <header class="issue-header">
-            <h2>Detaglio segnalizazione</h2>
+            <h2>Dettaglio segnalazione</h2>
         </header>
-            
+
         <div class="issue-content-wrapper">
+            <div class="issue-description">
+                <h3>Descrizione</h3>
+                <p>##ISSUE_DESCRIPTION##</p>
+            </div>
+
             <aside class="issue-info-card">
-                <h3>Info segnalizazione</h3>
+                <h3>Info segnalazione</h3>
                 <ul>
                     <li>Titolo: ##ISSUE_TITLE##</li>
                     <li>Edificio: ##BUILDING_NAME##</li>
@@ -15,8 +20,8 @@
                     <li>Data apertura: ##OPEN_DATE##</li>
                     <li>Data chiusura: ##CLOSE_DATE##</li>
                     <li>Stato: ##STATUS##</li>
-                    <li>Tecnico in carica: ##TECHNICIAN_NAME##</li>
-                    <li>Utente segnalatore: ##REPORTER_NAME##</li>
+                    <li>Id del tecnico in carica: ##TECHNICIAN_ID##</li>
+                    ##REPORTER_ID##
                 </ul>
                 ##DELETE_ISSUE_BUTTON##
             </aside>

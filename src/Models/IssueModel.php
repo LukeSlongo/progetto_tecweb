@@ -1,7 +1,6 @@
 <?php
 namespace App\Models;
 use App\Core\Model;
-use App\Core\Auth;
 
 class IssueModel extends Model
 {
@@ -94,9 +93,9 @@ class IssueModel extends Model
         return $this->fetchAll($sql, [$room_id]);
     }
 
-public function getIssueDetails($issue_id)
-{
-    $sql = "SELECT 
+    public function getIssueDetails($issue_id)
+    {
+        $sql = "SELECT 
                 i.id AS issue_id,
                 i.title AS issue_title,
                 i.description AS issue_description,
@@ -106,16 +105,17 @@ public function getIssueDetails($issue_id)
                 b.name AS building_name,      
                 r.name AS room_name,
                 u.id AS reporter_id,
-                u.username AS reporter_name,   
-                t.username AS technician_name  
+                u.username AS reporter_name, 
+                t.id AS technician_id,  
+                t.username AS technician_name
             FROM issue i
             JOIN room r ON i.room_id = r.id
             JOIN building b ON r.building_id = b.id
             LEFT JOIN `user` u ON i.user_id = u.id
             LEFT JOIN `user` t ON i.technician_id = t.id
             WHERE i.id = ?";
-            
-    return $this->fetchOne($sql, [$issue_id]);
-}
+
+        return $this->fetchOne($sql, [$issue_id]);
+    }
 
 }
