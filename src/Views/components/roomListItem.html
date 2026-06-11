@@ -5,5 +5,12 @@
     <td>
         <a href="/rooms/##ROOM_ID##" class="btn-view">Visualizza</a>
     </td>
+    <td>
+        <form action="/api/favorites/##ROOM_ID##/add" method="POST" class="favorite-form" data-room-id="##ROOM_ID##" data-is-favorite="false">
+            <button type="submit" id="btn-favorite-##ROOM_ID##" class="btn-favorite" title="Aggiungi ai preferiti">
+                Preferiti
+            </button>
+        </form>
+    </td>
 </tr>
     

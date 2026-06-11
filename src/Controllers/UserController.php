@@ -107,6 +107,30 @@ class UserController extends Controller
         ]);
     }
 
+    public function isFavorite($room_id)
+    {
+        $user = Auth::getUser();
+
+        $user_model = new UserModel();
+        $is_favorite = $user_model->isFavorite($room_id, $user['id']);
+        header('Content-Type: application/json');
+        echo json_encode(['isFavorite' => $is_favorite]);
+    }
+
+    public function addFavorite($room_id)
+    {
+        $user = Auth::getUser();
+        $user_model = new UserModel();
+        $user_model->addFavorite($room_id, $user['id']);
+    }
+
+    public function removeFavorite($room_id)
+    {
+        $user = Auth::getUser();
+        $user_model = new UserModel();
+        $user_model->removeFavorite($room_id, $user['id']);
+    }
+
     public function deleteUser($user_id)
     {
         $user_model = new UserModel();

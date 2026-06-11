@@ -4,8 +4,8 @@
         <header class="room-header">
             <h2>##ROOM_NAME##</h2>
 
-            <form action="/api/favorites/##ROOM_ID##/add" method="POST" class="favorite-form">
-                <button type="submit" class="btn-favorite" title="Aggiungi ai preferiti">
+            <form action="/api/favorites/##ROOM_ID##/add" method="POST" class="favorite-form" data-room-id="##ROOM_ID##" data-is-favorite="false">
+                <button type="submit" id="btn-favorite-##ROOM_ID##" class="btn-favorite" title="Aggiungi ai preferiti">
                     Preferiti
                 </button>
             </form>
