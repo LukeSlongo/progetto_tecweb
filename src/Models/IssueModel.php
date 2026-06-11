@@ -94,9 +94,9 @@ class IssueModel extends Model
         return $this->fetchAll($sql, [$room_id]);
     }
 
-public function getIssueDetails($issue_id)
-{
-    $sql = "SELECT 
+    public function getIssueDetails($issue_id)
+    {
+        $sql = "SELECT 
                 i.id AS issue_id,
                 i.title AS issue_title,
                 i.description AS issue_description,
@@ -114,8 +114,19 @@ public function getIssueDetails($issue_id)
             LEFT JOIN `user` u ON i.user_id = u.id
             LEFT JOIN `user` t ON i.technician_id = t.id
             WHERE i.id = ?";
-            
-    return $this->fetchOne($sql, [$issue_id]);
-}
+
+        return $this->fetchOne($sql, [$issue_id]);
+    }
+
+    public function registerIssue($user_id, $room_id, $title, $description)
+    {
+        $this->checkTable();
+
+        $sql = "INSERT INTO {$this->table} 
+                (user_id, room_id, title, description) 
+                VALUES (?, ?, ?, ?)";
+
+        return $this->query($sql, [$user_id, $room_id, $title, $description]);
+    }
 
 }
