@@ -66,14 +66,14 @@ class IssueController extends Controller
 
         $status = $this->get('status');
         $issues = $this->searchIssues($status);
-        
+
         $items_html = ComponentHelper::renderList('issueListItem', $issues);
         $this->render('issueListPage', [
             'ISSUE_LIST_ITEMS' => $items_html,
-            'CHECKED_ALL'         => empty($status) ? 'checked' : '',
-            'CHECKED_OPEN'        => $status === 'open' ? 'checked' : '',
+            'CHECKED_ALL' => empty($status) ? 'checked' : '',
+            'CHECKED_OPEN' => $status === 'open' ? 'checked' : '',
             'CHECKED_IN_PROGRESS' => $status === 'in_progress' ? 'checked' : '',
-            'CHECKED_CLOSED'      => $status === 'closed' ? 'checked' : ''
+            'CHECKED_CLOSED' => $status === 'closed' ? 'checked' : ''
         ]);
     }
 
@@ -87,41 +87,47 @@ class IssueController extends Controller
     public function viewIssueDetail($id)
     {
         $this->page_title = "Dettaglio Issue - UniFix";
-
         $issue = $this->Issue->getIssueDetails($id);
-        
-        
-    $role = $_SESSION['user']['role'] ?? '';
-    $can_see_reporter = ($role === 'admin' || $role === 'technician');
-    $deleteIssueButton = (Auth::isAdmin() || (Auth::isLogged() && Auth::isOwner($issue['reporter_id'])))
+
+        if (!$issue) {
+            $this->abort(404, "La segnalazione richiesta non esiste.");
+        }
+
+        // creazione delle variabili per controllare i permessi
+        $role = $_SESSION['user']['role'] ?? '';
+        $has_privileges = $role === 'admin' || $role === 'technician';
+        $is_owner = Auth::isLogged() && Auth::isOwner($issue['reporter_id']);
+
+        // mostra il bottone se ha i permessi o se è il proprietario
+        $delete_issue_button = ($has_privileges || $is_owner)
             ? '<form action="/issues/' . $issue['issue_id'] . '/delete" method="POST" onsubmit="return confirm(\'Vuoi eliminare questa segnalazione?\')">'
-                . '<button class="btn btn-primary" type="submit">Elimina segnalazione</button>'
-                . '</form>'
+            . '<button class="btn btn-cta" type="submit">Elimina segnalazione</button>'
+            . '</form>'
             : '';
 
-    $this->render('issueDetailPage', [
-        'ISSUE_TITLE'       => $issue['issue_title'],
-        'STATUS'      => ucfirst(str_replace('_', ' ', $issue['issue_status'])),
-        
-        //informazione sulla direzione
-        'BUILDING_NAME'     => $issue['building_name'],
-        'ROOM_NAME'         => $issue['room_name'],
-        
-        //data di inizio e di fine, con formatto
-        'OPEN_DATE'         => date('d/m/Y H:i', strtotime($issue['opened_at'])),
-        'CLOSE_DATE'         => $issue['closed_at'] ? date('d/m/Y H:i', strtotime($issue['closed_at'])) : 'Non ancora chiusa',
-        
-        // Controlla se il tecnico è assegnato, altrimenti mostra un messaggio di default, e se il reporter è visibile in base al ruolo dell'utente
-        'TECHNICIAN_NAME'        => $issue['technician_name'] ?? 'Nessun tecnico assegnato',
-        'REPORTER_NAME'          => $can_see_reporter ? ($issue['reporter_name'] ?? 'Utente eliminato') : 'Nascosto (Solo Admin/Tecnico)',
-        'DELETE_ISSUE_BUTTON'    => $deleteIssueButton
-    ]);
+        // ricava il reporter id se esist
+        $reporter_id = $issue['reporter_id'] ?? 'Utente eliminato';
+        $reporter = ($has_privileges)
+            ? '<li>Id utente segnalatore:' . $reporter_id . '</li>'
+            : '';
+
+        $this->render('issueDetailPage', [
+            'ISSUE_TITLE' => $issue['issue_title'],
+            'ISSUE_DESCRIPTION' => $issue['issue_description'],
+            'STATUS' => ucfirst(str_replace('_', ' ', $issue['issue_status'])),
+            'BUILDING_NAME' => $issue['building_name'],
+            'ROOM_NAME' => $issue['room_name'],
+            'OPEN_DATE' => date('d/m/Y H:i', strtotime($issue['opened_at'])),
+            'CLOSE_DATE' => $issue['closed_at'] ? date('d/m/Y H:i', strtotime($issue['closed_at'])) : 'Non ancora chiusa',
+            'TECHNICIAN_ID' => $issue['technician_id'] ?? 'Nessun tecnico assegnato',
+            'REPORTER_ID' => $reporter,
+            'DELETE_ISSUE_BUTTON' => $delete_issue_button,
+        ]);
     }
 
     public function deleteIssue($id)
     {
-        if($this->Issue->find_issue($id) === false)
-        {
+        if ($this->Issue->find_issue($id) === false) {
             throw new \App\Exceptions\NotFoundException("Segnalazione non trovata.");
         }
         $this->Issue->delete($id);

@@ -24,9 +24,9 @@ class Auth {
         return self::getRole() === 'admin';
     }
 
-    public static function isOwner($username) {
+   public static function isOwner($owner_id) {
         if (!self::isLogged()) return false;
-        return $_SESSION['user']['username'] === $username;
+        return isset($_SESSION['user']['id']) && $_SESSION['user']['id'] == $owner_id;
     }
 
     public static function getUser() {
@@ -35,7 +35,7 @@ class Auth {
 
     public static function getHeaderLinks() {
         if (self::isAdmin()) {
-            return '<a href="/users" lang="en">Gestione Utenti</a>'; // Aggiornato con la rotta che abbiamo appena creato
+            return '<a href="/users" lang="en">Gestione Utenti</a>';
         } else if (self::isLogged()) {
             return '<a href="/profilo">Profilo</a>';
         } else {
