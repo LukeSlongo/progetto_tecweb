@@ -37,7 +37,7 @@
     --primary-hover: #004488;
     --danger-red: #E31818;
     --danger-hover: #c91515;
-    --success-green: #28a745;
+    --success-green: #15812E;
     --bg-light: #fdfdfd;
     --bg-card: #ffffff;
     --text-blue: #2c3e50;
@@ -494,6 +494,23 @@ header {
     border-radius: 6px;
     margin-bottom: 2rem;
     border-left: 4px solid var(--error-text);
+}
+
+.success-message:empty {
+    display: none;
+}
+
+.success-message {
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto 2rem;
+    font-size: 1rem;
+    text-align: center;
+    background-color: #eaf7ee;
+    color: var(--success-green);
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid var(--success-green);
 }
 
 /* 

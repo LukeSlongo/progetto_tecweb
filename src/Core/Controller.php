@@ -23,6 +23,11 @@ abstract class Controller
             unset($_SESSION['flash_error']);
         }
 
+        if (isset($_SESSION['flash_success'])) {
+            $data['FLASH_SUCCESS'] = $_SESSION['flash_success'];
+            unset($_SESSION['flash_success']);
+        }
+
         $view_file = new Template("pages/{$view}");
         $view_file->setPageData($data);
         $content_view = $view_file->getPage();
