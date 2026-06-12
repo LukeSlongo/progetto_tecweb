@@ -47,6 +47,42 @@ class IssueModelTest extends TestCase
         $instanceProperty->setValue(null, $mockDb);
     }
 
+    /**
+     * Funzione di supporto per falsificare il database per l'ESECUZIONE (UPDATE / INSERT / DELETE)
+     */
+    protected function mockDatabaseExecute()
+    {
+        $mockStmt = $this->createMock(\PDOStatement::class);
+        $mockStmt->method('execute')->willReturn(true);
+
+        $mockPdo = $this->createMock(\PDO::class);
+        $mockPdo->method('query')->willReturn($mockStmt);
+        $mockPdo->method('prepare')->willReturn($mockStmt);
+
+        $mockDb = new class ($mockPdo, $mockStmt) {
+            private $pdo;
+            private $stmt;
+            public function __construct($pdo, $stmt)
+            {
+                $this->pdo = $pdo;
+                $this->stmt = $stmt;
+            }
+            public function getConnection()
+            {
+                return $this->pdo; }
+            public function prepare($sql = null)
+            {
+                return $this->stmt; }
+            public function query($sql = null)
+            {
+                return $this->stmt; }
+        };
+
+        $reflection = new \ReflectionClass(\App\Core\Database::class);
+        $instanceProperty = $reflection->getProperty('instance');
+        $instanceProperty->setValue(null, $mockDb);
+    }
+
     protected function tearDown(): void
     {
         // Pulizia: svuotiamo il database finto dopo ogni test
@@ -208,7 +244,7 @@ class IssueModelTest extends TestCase
         $this->mockDatabaseFetch($issueFinta);
 
         // 3. Eseguiamo il metodo
-        $model = new \App\Models\IssueModel();
+        $model = new IssueModel();
         $risultato = $model->getIssueDetails(10);
 
         // 4. Verifichiamo che i dati delle tabelle collegate siano stati estratti e impacchettati bene
@@ -230,10 +266,38 @@ class IssueModelTest extends TestCase
         $this->mockDatabaseFetch(false);
 
         // 2. Cerchiamo una issue inesistente
-        $model = new \App\Models\IssueModel();
+        $model = new IssueModel();
         $risultato = $model->getIssueDetails(999);
 
         // 3. Ci assicuriamo che il Model propaghi il "false", fondamentale per far scattare il 404 nel Controller!
         $this->assertFalse($risultato);
+    }
+
+    // --- I TEST PER LA GESTIONE DELLE ISSUE (TECNICO) ---
+
+    public function test_takeIssue_esegue_update_correttamente()
+    {
+        // 1. Diciamo al database finto di simulare una query eseguita con successo
+        $this->mockDatabaseExecute();
+
+        // 2. Chiamiamo il metodo del model passando ID issue (es. 10) e ID tecnico (es. 2)
+        $model = new IssueModel();
+        $risultato = $model->takeIssue(10, 2);
+
+        // 3. Il tuo Model base restituisce l'oggetto PDOStatement quando la query va a buon fine
+        $this->assertInstanceOf(PDOStatement::class, $risultato);
+    }
+
+    public function test_closeIssue_esegue_update_correttamente()
+    {
+        // 1. Database finto pronto all'esecuzione
+        $this->mockDatabaseExecute();
+
+        // 2. Chiamiamo il metodo per chiudere la issue
+        $model = new IssueModel();
+        $risultato = $model->closeIssue(10);
+
+        // 3. Verifica del successo dell'operazione
+        $this->assertInstanceOf(PDOStatement::class, $risultato);
     }
 }

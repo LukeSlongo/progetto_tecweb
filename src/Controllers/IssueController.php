@@ -101,7 +101,7 @@ class IssueController extends Controller
         // mostra il bottone se ha i permessi o se è il proprietario
         $delete_issue_button = ($has_privileges || $is_owner)
             ? '<form action="/issues/' . $issue['issue_id'] . '/delete" method="POST" onsubmit="return confirm(\'Vuoi eliminare questa segnalazione?\')">'
-            . '<button class="btn btn-cta" type="submit">Elimina segnalazione</button>'
+            . '<button class="btn-danger" type="submit">Elimina segnalazione</button>'
             . '</form>'
             : '';
 
@@ -111,17 +111,34 @@ class IssueController extends Controller
             ? '<li>Id utente segnalatore:' . $reporter_id . '</li>'
             : '';
 
+        $takeIssueButton = '';
+        $closeIssueButton = '';
+
+        if ($role === 'technician') {
+            if ($issue['issue_status'] === 'open') {
+                $takeIssueButton = '<form action="/issues/' . $issue['issue_id'] . '/take" method="POST">'
+                    . '<button class="btn-primary" type="submit">Prendi in carico</button>'
+                    . '</form>';
+            } elseif ($issue['issue_status'] === 'in_progress') {
+                $closeIssueButton = '<form action="/issues/' . $issue['issue_id'] . '/close" method="POST" onsubmit="return confirm(\'Confermi di aver risolto il problema e voler chiudere la segnalazione?\')">'
+                    . '<button class="btn-success" type="submit">Risolvi</button>'
+                    . '</form>';
+            }
+        }
+
         $this->render('issueDetailPage', [
             'ISSUE_TITLE' => $issue['issue_title'],
             'ISSUE_DESCRIPTION' => $issue['issue_description'],
             'STATUS' => ucfirst(str_replace('_', ' ', $issue['issue_status'])),
             'BUILDING_NAME' => $issue['building_name'],
             'ROOM_NAME' => $issue['room_name'],
-            'OPEN_DATE' => date('d/m/Y H:i', strtotime($issue['opened_at'])),
-            'CLOSE_DATE' => $issue['closed_at'] ? date('d/m/Y H:i', strtotime($issue['closed_at'])) : 'Non ancora chiusa',
+            'OPEN_DATE' => date('d/m/Y', strtotime($issue['opened_at'])),
+            'CLOSE_DATE' => $issue['closed_at'] ? date('d/m/Y', strtotime($issue['closed_at'])) : 'Non ancora chiusa',
             'TECHNICIAN_ID' => $issue['technician_id'] ?? 'Nessun tecnico assegnato',
             'REPORTER_ID' => $reporter,
             'DELETE_ISSUE_BUTTON' => $delete_issue_button,
+            'TAKE_ISSUE_BUTTON' => $takeIssueButton,
+            'CLOSE_ISSUE_BUTTON' => $closeIssueButton
         ]);
     }
 
@@ -132,5 +149,47 @@ class IssueController extends Controller
         }
         $this->Issue->delete($id);
         $this->redirect('/issues');
+    }
+
+    public function takeIssue($id)
+    {
+        $user = Auth::getUser();
+
+        // Controllo di sicurezza: solo i tecnici possono prendere in carico le issue
+        if (!$user || $user['role'] !== 'technician') {
+            $_SESSION['flash_error'] = "Azione non consentita. Solo i tecnici possono prendere in carico le segnalazioni.";
+            $this->redirect("/issues/{$id}");
+            return;
+        }
+
+        try {
+            $this->Issue->takeIssue($id, $user['id']);
+            $_SESSION['flash_success'] = "Hai preso in carico la segnalazione con successo.";
+        } catch (\Exception $e) {
+            $_SESSION['flash_error'] = "Errore durante la presa in carico della segnalazione.";
+        }
+
+        $this->redirect("/issues/{$id}");
+    }
+
+    public function closeIssue($id)
+    {
+        $user = Auth::getUser();
+
+        // Controllo di sicurezza: solo i tecnici possono chiudere le issue
+        if (!$user || $user['role'] !== 'technician') {
+            $_SESSION['flash_error'] = "Azione non consentita. Solo i tecnici possono risolvere le segnalazioni.";
+            $this->redirect("/issues/{$id}");
+            return;
+        }
+
+        try {
+            $this->Issue->closeIssue($id);
+            $_SESSION['flash_success'] = "Segnalazione risolta e chiusa con successo.";
+        } catch (\Exception $e) {
+            $_SESSION['flash_error'] = "Errore durante la chiusura della segnalazione.";
+        }
+
+        $this->redirect("/issues/{$id}");
     }
 }

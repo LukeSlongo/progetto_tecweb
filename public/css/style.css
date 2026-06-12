@@ -38,6 +38,7 @@
     --danger-red: #E31818;
     --danger-hover: #c91515;
     --success-green: #28a745;
+    --hover-success-green: #218838;
     --bg-light: #fdfdfd;
     --bg-card: #ffffff;
     --text-blue: #2c3e50;
@@ -338,6 +339,23 @@ header {
 
 .btn-favorite.is-favorite:hover {
     background-color: var(--danger-hover);
+}
+
+/* Bottone di successo */
+.btn-success {
+    background-color: var(--success-green);
+    color: var(--text-white);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0.6rem 2.5rem;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+.btn-success:hover {
+    background-color: var(--hover-success-green);
 }
 
 
@@ -671,6 +689,88 @@ header {
     5.7 IssueDetailPage
 =================================================================
 */
+
+/* Intestazione blu della segnalazione (come da tuo screenshot) */
+.issue-header {
+    background-color: var(--primary-blue);
+    color: var(--text-white);
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    border-radius: 6px; 
+}
+
+.issue-header h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+/* Struttura a griglia per dividere descrizione e info su schermi grandi */
+.issue-content-wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* La descrizione occupa il doppio dello spazio delle info */
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+/* Titoli delle sezioni interne */
+.issue-description h3,
+.issue-info-card h3 {
+    color: var(--text-blue);
+    font-size: 1.3rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--hero-bg-end);
+}
+
+/* Testo della descrizione */
+.issue-description p {
+    color: var(--text-gray);
+    line-height: 1.6;
+    font-size: 1.05rem;
+}
+
+/* Lista delle informazioni */
+.issue-info-card ul {
+    list-style-type: none; /* Rimuoviamo i pallini base noiosi */
+    padding: 0;
+    margin: 0 0 2rem 0;
+}
+
+.issue-info-card li {
+    margin-bottom: 0.8rem;
+    padding-left: 1.5rem;
+    position: relative;
+    color: var(--text-blue);
+    line-height: 1.4;
+}
+
+/* Pallino giallo personalizzato per la lista */
+.issue-info-card li::before {
+    content: '•';
+    color: var(--accent-yellow);
+    font-weight: bold;
+    font-size: 1.5rem;
+    position: absolute;
+    left: 0;
+    top: -4px;
+}
+
+/* Contenitore per allineare correttamente i bottoni in fondo alla card */
+.issue-info-card form {
+    display: inline-block;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* --- RESPONSIVITÀ PER CELLULARI --- */
+@media (max-width: 768px) {
+    .issue-content-wrapper {
+        grid-template-columns: 1fr; /* Impila la descrizione sopra le info */
+        gap: 1.5rem;
+    }
+}
 
 /* 
 =================================================================
