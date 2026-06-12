@@ -48,8 +48,6 @@ set_exception_handler(function ($e) {
     exit;
 });
 
-// ... [codice precedente invariato fino alla creazione del Router] ...
-
 $router = new Router();
 
 
@@ -78,6 +76,7 @@ $router->get('/users', 'UserController', 'viewUserList', ['auth', 'admin']);
 $router->post('/users/{id:num}/delete', 'UserController', 'deleteUser', ['auth', 'admin']);
 
 // Rotte API
+$router->get('/api/favorites/{room_id:num}/check', 'UserController', 'isFavorite', ['auth']);
 $router->post('/api/favorites/{room_id:num}/add', 'UserController', 'addFavorite', ['auth']);
 $router->post('/api/favorites/{room_id:num}/remove', 'UserController', 'removeFavorite', ['auth']);
 $router->post('/api/issues/{issue_id:num}/take', 'IssueController', 'takeIssue', ['auth', 'technician']);

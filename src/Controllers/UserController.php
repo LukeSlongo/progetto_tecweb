@@ -107,6 +107,54 @@ class UserController extends Controller
         ]);
     }
 
+    public function isFavorite($room_id)
+    {
+        $user = Auth::getUser();
+        if (!$user) {
+            header('HTTP/1.1 401 Unauthorized');
+            echo json_encode(['error' => 'Devi essere loggato']);
+            return;
+        }
+
+        $user_model = new UserModel();
+        $is_favorite = $user_model->isFavorite($room_id, $user['id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode(['isFavorite' => (bool)$is_favorite]); 
+    }
+
+    public function addFavorite($room_id)
+    {
+        $user = Auth::getUser();
+        if (!$user) {
+            header('HTTP/1.1 401 Unauthorized');
+            echo json_encode(['error' => 'Devi essere loggato']);
+            return;
+        }
+
+        $user_model = new UserModel();
+        $user_model->addFavorite($room_id, $user['id']);
+
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'action' => 'added']);
+    }
+
+    public function removeFavorite($room_id)
+    {
+        $user = Auth::getUser();
+        if (!$user) {
+            header('HTTP/1.1 401 Unauthorized');
+            echo json_encode(['error' => 'Devi essere loggato']);
+            return;
+        }
+
+        $user_model = new UserModel();
+        $user_model->removeFavorite($room_id, $user['id']);
+
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'action' => 'removed']);
+    }
+
     public function deleteUser($user_id)
     {
         $user_model = new UserModel();
