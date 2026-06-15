@@ -4,6 +4,8 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Core\Auth;
 use App\Models\UserModel;
+use App\Models\IssueModel;
+use App\Models\RoomModel;
 use \App\Helpers\ComponentHelper;
 use Exception;
 
@@ -38,7 +40,7 @@ class UserController extends Controller
         }
     }
 
-    public function viewLogin() 
+    public function viewLogin()
     {
         $this->page_title = "Login - UniFix";
         $this->render('loginPage', [], 'auth');
@@ -46,7 +48,7 @@ class UserController extends Controller
 
     public function login()
     {
-        
+
         $username = $this->post('username');
         $password = $this->post('password');
 
@@ -60,16 +62,16 @@ class UserController extends Controller
         $user = $user_model->find_user($username);
 
         if ($user && password_verify($password, $user['password'])) {
-            
+
             $_SESSION['user'] = [
                 'id' => $user['id'] ?? null,
                 'username' => $user['username'],
                 'role' => $user['role'],
             ];
-            
+
             $this->redirect('/');
             return;
-            
+
         } else {
             $_SESSION['flash_error'] = "Credenziali non valide.";
             $this->redirect('/login');
@@ -84,7 +86,7 @@ class UserController extends Controller
         $this->redirect('/login');
     }
 
-   public function viewUserList()
+    public function viewUserList()
     {
         $user_model = new UserModel();
         $users = $user_model->findAll();
@@ -101,9 +103,79 @@ class UserController extends Controller
     {
         $this->page_title = "Home - UniFix";
         $utente = Auth::getUser();
+        $role = $utente['role'] ?? 'guest';
+
+        $student_section_html = '';
+
+        if ($role === 'student') {
+            $room_model = new RoomModel();
+            $issue_model = new IssueModel();
+
+            // 1. Aule Preferite
+            $favorites = $room_model->getFavoritesByUser($utente['id']);
+            $fav_data = [];
+            foreach ($favorites as $fav) {
+                $fav['ROOM_STATUS_CLASS'] = ($fav['active_issues'] > 0) ? 'status-warning' : 'status-ok';
+                $fav['ROOM_STATUS_TEXT'] = ($fav['active_issues'] > 0) ? 'Guasta (' . $fav['active_issues'] . ' attive)' : 'Ok (Nessun problema)';
+
+                $fav_data[] = array_change_key_case($fav, CASE_UPPER);
+            }
+
+            $favorites_html = empty($fav_data)
+                ? '<p style="color: var(--text-gray);">Non hai ancora aggiunto nessuna aula ai preferiti.</p>'
+                : ComponentHelper::renderList('favoriteRoomCard', $fav_data);
+
+            $my_issues = $issue_model->getIssuesByUser($utente['id']);
+            $iss_data = [];
+            foreach ($my_issues as $issue) {
+                $issue['STATUS_FORMATTED'] = ucfirst(str_replace('_', ' ', $issue['issue_status']));
+
+                $iss_data[] = array_change_key_case($issue, CASE_UPPER);
+            }
+
+            $my_issues_html = empty($iss_data)
+                ? '<p style="color: var(--text-gray);">Non hai aperto nessuna segnalazione.</p>'
+                : ComponentHelper::renderList('issueCard', $iss_data);
+
+            $student_section_html = '
+                <div class="student-dashboard">
+                    <div class="student-dashboard-section">
+                        <h3>Le mie Aule Preferite</h3>
+                        <div class="grid-aule">' . $favorites_html . '</div>
+                    </div>
+                    <div class="student-dashboard-section">
+                        <h3>Le mie Segnalazioni</h3>
+                        <div class="grid-aule">' . $my_issues_html . '</div>
+                    </div>
+                </div>
+            ';
+        }
+
+        $search_banner = '
+            <div class="hero">
+                <h2>Cerca un\'aula</h2>
+                <p>Verifica lo stato di un\'aula prima di recartici.</p>
+                <form action="/rooms" method="GET" class="search-box">
+                    <label for="search" class="visually-hidden">Nome aula</label>
+                    <input type="search" name="search" id="search" placeholder="Es. Aula Magna..." required>
+                    <button type="submit" class="btn-primary">Cerca</button>
+                </form>
+            </div>
+        ';
+
+        $create_banner = '
+            <div class="create-issue-banner">
+                <h3>Hai notato un problema?</h3>
+                <p>Aiutaci a mantenere il campus efficiente segnalando guasti o malfunzionamenti.</p>
+                <a href="/issues/new" class="btn-cta">Nuova Segnalazione</a>
+            </div>
+        ';
 
         $this->render('homePage', [
-            'NOME_UTENTE' => $utente['username']
+            'NOME_UTENTE' => $utente['username'],
+            'SEARCH_BANNER' => $search_banner,
+            'CREATE_ISSUE_BANNER' => $create_banner,
+            'STUDENT_SECTION' => $student_section_html
         ]);
     }
 
@@ -118,9 +190,9 @@ class UserController extends Controller
 
         $user_model = new UserModel();
         $is_favorite = $user_model->isFavorite($room_id, $user['id']);
-        
+
         header('Content-Type: application/json');
-        echo json_encode(['isFavorite' => (bool)$is_favorite]); 
+        echo json_encode(['isFavorite' => (bool) $is_favorite]);
     }
 
     public function addFavorite($room_id)

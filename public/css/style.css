@@ -340,6 +340,24 @@ header {
     background-color: var(--danger-hover);
 }
 
+/* Bottone a forma di stella per i preferiti */
+.btn-fav {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-gray);
+    transition: color 0.2s;
+    padding: 0;
+    line-height: 1;
+    cursor: pointer;
+}
+
+/* Colora la stella di giallo quando ci passi sopra o è attiva */
+.btn-fav:hover,
+.btn-fav:focus {
+    color: var(--accent-yellow);
+}
+
 
 /* 
 ===============================================
@@ -428,22 +446,18 @@ header {
     color: var(--text-blue);
 }
 
-/* Bottone a forma di stella per i preferiti */
-.btn-fav {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
+/* Sottotitolo della card (es. nome edificio o nome aula) */
+.card-subtitle {
+    margin: 0 0 1rem 0;
     color: var(--text-gray);
-    transition: color 0.2s;
-    padding: 0;
-    line-height: 1;
-    cursor: pointer;
+    font-size: 0.95rem;
 }
 
-/* Colora la stella di giallo quando ci passi sopra o è attiva */
-.btn-fav:hover,
-.btn-fav:focus {
-    color: var(--accent-yellow);
+/* Testo informativo per lo stato neutro/informativo (es. In Progress) */
+.status-info {
+    margin: 0;
+    font-weight: 600;
+    color: var(--primary-blue);
 }
 
 /* Corpo centrale della card (spinge il footer in basso) */
@@ -650,7 +664,7 @@ header {
     margin-right: 2rem;
 }
 
-.room-header .btn-favorite{
+.room-header .btn-favorite {
     padding: 0.4rem 0.8rem;
 }
 
@@ -669,12 +683,6 @@ header {
 /* 
 =================================================================
     5.7 IssueDetailPage
-=================================================================
-*/
-
-/* 
-=================================================================
-    5.8 HomePage
 =================================================================
 */
 
@@ -741,4 +749,32 @@ header {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
     margin-top: 1.5rem;
+}
+
+/* Banner "Crea Segnalazione" */
+.create-issue-banner {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.create-issue-banner p {
+    color: var(--text-gray);
+    margin-bottom: 1.5rem;
+}
+
+/* Sezione dedicata allo studente (Preferiti e Mie Segnalazioni) */
+.student-dashboard {
+    margin-top: 3rem;
+    border-top: 2px solid var(--hero-bg-end);
+    padding-top: 2rem;
+}
+
+.student-dashboard-section {
+    margin-bottom: 3rem;
+}
+
+.student-dashboard h3 {
+    color: var(--text-blue);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
 }
