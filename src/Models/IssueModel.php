@@ -1,7 +1,6 @@
 <?php
 namespace App\Models;
 use App\Core\Model;
-use App\Core\Auth;
 
 class IssueModel extends Model
 {
@@ -106,8 +105,9 @@ class IssueModel extends Model
                 b.name AS building_name,      
                 r.name AS room_name,
                 u.id AS reporter_id,
-                u.username AS reporter_name,   
-                t.username AS technician_name  
+                u.username AS reporter_name, 
+                t.id AS technician_id,  
+                t.username AS technician_name
             FROM issue i
             JOIN room r ON i.room_id = r.id
             JOIN building b ON r.building_id = b.id

@@ -22,8 +22,12 @@ class IssueModelTest extends TestCase
         $mockPdo->method('query')->willReturn($mockStmt);
 
         $mockDb = new class ($mockPdo, $mockStmt) {
+        $mockDb = new class ($mockPdo, $mockStmt) {
             private $pdo;
             private $stmt;
+
+            public function __construct($pdo, $stmt)
+            {
 
             public function __construct($pdo, $stmt)
             {
@@ -153,6 +157,7 @@ class IssueModelTest extends TestCase
         $this->assertIsArray($risultato);
         $this->assertCount(2, $risultato);
 
+
         // Controlliamo il contenuto del primo elemento
         $this->assertEquals(1, $risultato[0]['issue_id']);
         $this->assertEquals('Proiettore non funzionante', $risultato[0]['issue_title']);
@@ -211,6 +216,7 @@ class IssueModelTest extends TestCase
         // 4. Verifiche
         $this->assertIsArray($risultato);
         $this->assertCount(1, $risultato);
+
 
         // Verifichiamo che il dato passato mantenga la struttura corretta
         $this->assertEquals('in_progress', $risultato[0]['issue_status']);

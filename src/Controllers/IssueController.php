@@ -105,7 +105,6 @@ class IssueController extends Controller
     public function viewIssueDetail($id)
     {
         $this->page_title = "Dettaglio Issue - UniFix";
-
         $issue = $this->Issue->getIssueDetails($id);
 
 

@@ -259,9 +259,9 @@ header {
 .btn-logout {
     background-color: var(--accent-yellow);
     color: var(--text-black) !important;
-    border: 2px solid transparent;      
-    padding: 0.3rem 0.8rem !important;             
-    border-radius: 10px;              
+    border: 2px solid transparent;
+    padding: 0.3rem 0.8rem !important;
+    border-radius: 10px;
     font-weight: 750 !important;
     text-shadow: var(--shadow-md);
     letter-spacing: 0.5px;
@@ -269,7 +269,7 @@ header {
 
 /* Effetto hover per il bottone di logout: cambia colore del testo e aggiunge un bordo nero */
 .btn-logout:hover {
-    color: var(--text-black)!important;
+    color: var(--text-black) !important;
     border-color: var(--text-black);
     transition: all 0.3s ease;
 
@@ -309,6 +309,7 @@ header {
     text-decoration: none;
     padding: 0.2rem 0.4rem;
 }
+
 /*hover del bottone di visualizzazione dei dettagli nelle tabelle*/
 .btn-view:hover {
     background-color: var(--primary-hover);
@@ -538,7 +539,7 @@ header {
 }
 
 /* Spaziatura e bordi delle celle */
-.data-table th, 
+.data-table th,
 .data-table td {
     padding: 12px 16px;
     border-bottom: 1px solid var(--border-color);
@@ -868,7 +869,7 @@ header {
 .search-box input[type="search"]:focus {
     outline: none;
     border-color: var(--primary-blue);
-    box-shadow: 0 0 0 3px rgba(var(--primary-blue-rgb), 0.15); 
+    box-shadow: 0 0 0 3px rgba(var(--primary-blue-rgb), 0.15);
 }
 
 /* Griglia responsiva per impaginare le card delle aule */
