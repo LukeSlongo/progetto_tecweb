@@ -38,7 +38,7 @@ class UserController extends Controller
         }
     }
 
-    public function viewLogin() 
+    public function viewLogin()
     {
         $this->page_title = "Login - UniFix";
         $this->render('loginPage', [], 'auth');
@@ -46,7 +46,7 @@ class UserController extends Controller
 
     public function login()
     {
-        
+
         $username = $this->post('username');
         $password = $this->post('password');
 
@@ -60,16 +60,16 @@ class UserController extends Controller
         $user = $user_model->find_user($username);
 
         if ($user && password_verify($password, $user['password'])) {
-            
+
             $_SESSION['user'] = [
                 'id' => $user['id'] ?? null,
                 'username' => $user['username'],
                 'role' => $user['role'],
             ];
-            
+
             $this->redirect('/');
             return;
-            
+
         } else {
             $_SESSION['flash_error'] = "Credenziali non valide.";
             $this->redirect('/login');
@@ -84,7 +84,7 @@ class UserController extends Controller
         $this->redirect('/login');
     }
 
-   public function viewUserList()
+    public function viewUserList()
     {
         $user_model = new UserModel();
         $users = $user_model->findAll();
@@ -100,6 +100,7 @@ class UserController extends Controller
     public function viewHome()
     {
         $this->page_title = "Home - UniFix";
+        $this->page_description = "UniFix è il portale ufficiale dell'Università di Padova per la segnalazione, il monitoraggio e la risoluzione dei guasti nelle aule e negli edifici.";
         $utente = Auth::getUser();
 
         $this->render('homePage', [
@@ -118,9 +119,9 @@ class UserController extends Controller
 
         $user_model = new UserModel();
         $is_favorite = $user_model->isFavorite($room_id, $user['id']);
-        
+
         header('Content-Type: application/json');
-        echo json_encode(['isFavorite' => (bool)$is_favorite]); 
+        echo json_encode(['isFavorite' => (bool) $is_favorite]);
     }
 
     public function addFavorite($room_id)

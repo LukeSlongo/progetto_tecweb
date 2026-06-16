@@ -180,6 +180,46 @@ header {
     text-decoration: underline;
 }
 
+
+footer {
+    background-color: var(--primary-blue);
+    color: var(--text-white);
+    padding: 2rem 0;
+    margin-top: auto;
+    /* Spinge il footer sempre a fine pagina */
+}
+
+/* Flexbox per affiancare testi a sinistra e loghi a destra */
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.footer-info p {
+    margin: 0 0 0.5rem 0;
+}
+
+/* Stile per il link obbligatorio AgID */
+.a11y-link {
+    color: var(--accent-yellow);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.a11y-link:hover {
+    text-decoration: underline;
+}
+
+/* Contenitore per allineare i loghi W3C */
+.footer-logos {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 /* Layout per cellulari: impila titolo e menu uno sotto l'altro invece di affiancarli */
 @media (max-width: 600px) {
     .header-flex {
@@ -667,7 +707,7 @@ header {
     margin-right: 2rem;
 }
 
-.room-header .btn-favorite{
+.room-header .btn-favorite {
     padding: 0.4rem 0.8rem;
 }
 
@@ -685,7 +725,7 @@ header {
 
 /* Riquadro grigio centrale: sfrutto il tuo hero-bg-end per un grigio coerente con la palette */
 .form-gray-box {
-    background-color: var(--hero-bg-end); 
+    background-color: var(--hero-bg-end);
     padding: 2.5rem 3rem;
     border-radius: 8px;
     box-shadow: var(--shadow-sm);
@@ -703,7 +743,7 @@ header {
 /* Riga flessibile per allineare etichetta a sinistra e input a destra */
 .form-horizontal-group {
     display: flex;
-    align-items: center; 
+    align-items: center;
     margin-bottom: 1.2rem;
 }
 
@@ -719,9 +759,10 @@ header {
 
 /* Stile delle etichette (sinistra) */
 .form-horizontal-group label {
-    width: 220px;            /* Larghezza fissa per farle incolonnare perfettamente */
-    text-align: right;       
-    margin-right: 1.5rem;    
+    width: 220px;
+    /* Larghezza fissa per farle incolonnare perfettamente */
+    text-align: right;
+    margin-right: 1.5rem;
     font-size: 1rem;
     font-weight: 500;
     color: var(--text-blue);
@@ -731,8 +772,10 @@ header {
 .form-horizontal-group select,
 .form-horizontal-group input,
 .form-horizontal-group textarea {
-    flex: 1;                 /* Occupa lo spazio rimanente */
-    max-width: 400px;        /* Evita che diventino larghissimi su schermi grandi */
+    flex: 1;
+    /* Occupa lo spazio rimanente */
+    max-width: 400px;
+    /* Evita che diventino larghissimi su schermi grandi */
     padding: 0.6rem 1rem;
     border: 1px solid var(--border-color);
     border-radius: 6px;
@@ -759,13 +802,13 @@ header {
 /* Contenitore per spingere il bottone a destra (fuori dal riquadro grigio) */
 .submit-row {
     display: flex;
-    justify-content: flex-end; 
+    justify-content: flex-end;
     margin-top: 1.5rem;
 }
 
 /* Variante leggermente più larga per il bottone di invio */
 .btn-invia {
-    padding: 0.7rem 3.5rem;    
+    padding: 0.7rem 3.5rem;
     font-size: 1.1rem;
 }
 
@@ -774,9 +817,10 @@ header {
     .form-gray-box {
         padding: 1.5rem;
     }
-    
+
     .form-horizontal-group {
-        flex-direction: column; /* Impila etichetta e campo uno sull'altro */
+        flex-direction: column;
+        /* Impila etichetta e campo uno sull'altro */
         align-items: flex-start;
     }
 
