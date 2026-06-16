@@ -1,0 +1,44 @@
+<section class="container">
+
+    <div class="error-message" role="alert">##FLASH_ERROR##</div>
+
+    <form action="/issues" method="POST" class="report-form" id="issue-form" data-buildings='##BUILDINGS_JSON##'
+        data-rooms='##ROOMS_JSON##'>
+
+        <div class="form-gray-box">
+            <h2>Segnala un problema</h2>
+
+            <div class="form-horizontal-group">
+                <label for="building_id">edificio</label>
+                <select name="building_id" id="building_id" required>
+                    <option value="">Seleziona</option>
+                    ##BUILDING_OPTIONS##
+                </select>
+            </div>
+
+            <div class="form-horizontal-group">
+                <label for="room_id">nome aula</label>
+                <select name="room_id" id="room_id" required>
+                    <option value="">Seleziona</option>
+                    ##ROOM_OPTIONS##
+                </select>
+            </div>
+
+            <div class="form-horizontal-group spacer-group">
+                <label for="issue_title">titolo segnalazione</label>
+                <input type="text" name="issue_title" id="issue_title" required>
+            </div>
+
+            <div class="form-horizontal-group align-top">
+                <label for="issue_description">descrizione segnalazione</label>
+                <textarea name="issue_description" id="issue_description" rows="5" required></textarea>
+            </div>
+        </div>
+
+        <div class="submit-row">
+            <button type="submit" class="btn-primary btn-invia">invia</button>
+        </div>
+
+    </form>
+
+</section>

@@ -37,7 +37,7 @@
     --primary-hover: #004488;
     --danger-red: #E31818;
     --danger-hover: #c91515;
-    --success-green: #28a745;
+    --success-green: #15812E;
     --bg-light: #fdfdfd;
     --bg-card: #ffffff;
     --text-blue: #2c3e50;
@@ -497,6 +497,23 @@ header {
     border-left: 4px solid var(--error-text);
 }
 
+.success-message:empty {
+    display: none;
+}
+
+.success-message {
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto 2rem;
+    font-size: 1rem;
+    text-align: center;
+    background-color: #eaf7ee;
+    color: var(--success-green);
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid var(--success-green);
+}
+
 /* 
 ===============================================
     4.5 TABELLE E LISTE
@@ -659,6 +676,126 @@ header {
     5.5 IssueFormPage
 =================================================================
 */
+
+/* Contenitore principale del form */
+.report-form {
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+/* Riquadro grigio centrale: sfrutto il tuo hero-bg-end per un grigio coerente con la palette */
+.form-gray-box {
+    background-color: var(--hero-bg-end); 
+    padding: 2.5rem 3rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Titolo dentro il riquadro */
+.form-gray-box h2 {
+    margin-top: 0;
+    margin-bottom: 2.5rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-blue);
+}
+
+/* Riga flessibile per allineare etichetta a sinistra e input a destra */
+.form-horizontal-group {
+    display: flex;
+    align-items: center; 
+    margin-bottom: 1.2rem;
+}
+
+/* Variante per la textarea: allinea il testo in alto invece che al centro */
+.form-horizontal-group.align-top {
+    align-items: flex-start;
+}
+
+/* Distanza extra tra le select (aule) e l'input di testo (titolo) */
+.spacer-group {
+    margin-top: 3rem;
+}
+
+/* Stile delle etichette (sinistra) */
+.form-horizontal-group label {
+    width: 220px;            /* Larghezza fissa per farle incolonnare perfettamente */
+    text-align: right;       
+    margin-right: 1.5rem;    
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-blue);
+}
+
+/* Stile dei campi di inserimento (destra) */
+.form-horizontal-group select,
+.form-horizontal-group input,
+.form-horizontal-group textarea {
+    flex: 1;                 /* Occupa lo spazio rimanente */
+    max-width: 400px;        /* Evita che diventino larghissimi su schermi grandi */
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 1rem;
+    background-color: var(--bg-card);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Permette alla textarea di essere ridimensionata solo in verticale */
+.form-horizontal-group textarea {
+    resize: vertical;
+}
+
+/* Effetto focus coerente con le tue regole globali */
+.form-horizontal-group select:focus,
+.form-horizontal-group input:focus,
+.form-horizontal-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(var(--primary-blue-rgb), 0.15);
+}
+
+/* Contenitore per spingere il bottone a destra (fuori dal riquadro grigio) */
+.submit-row {
+    display: flex;
+    justify-content: flex-end; 
+    margin-top: 1.5rem;
+}
+
+/* Variante leggermente più larga per il bottone di invio */
+.btn-invia {
+    padding: 0.7rem 3.5rem;    
+    font-size: 1.1rem;
+}
+
+/* --- RESPONSIVITÀ PER CELLULARI --- */
+@media (max-width: 600px) {
+    .form-gray-box {
+        padding: 1.5rem;
+    }
+    
+    .form-horizontal-group {
+        flex-direction: column; /* Impila etichetta e campo uno sull'altro */
+        align-items: flex-start;
+    }
+
+    .form-horizontal-group label {
+        width: 100%;
+        text-align: left;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-horizontal-group select,
+    .form-horizontal-group input,
+    .form-horizontal-group textarea {
+        max-width: 100%;
+    }
+
+    .spacer-group {
+        margin-top: 1.5rem;
+    }
+}
 
 /* 
 =================================================================

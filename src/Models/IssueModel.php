@@ -118,4 +118,15 @@ class IssueModel extends Model
         return $this->fetchOne($sql, [$issue_id]);
     }
 
+    public function registerIssue($user_id, $room_id, $title, $description)
+    {
+        $this->checkTable();
+
+        $sql = "INSERT INTO {$this->table} 
+                (user_id, room_id, title, description) 
+                VALUES (?, ?, ?, ?)";
+
+        return $this->query($sql, [$user_id, $room_id, $title, $description]);
+    }
+
 }
