@@ -99,7 +99,7 @@ class IssueController extends Controller
         $is_owner = Auth::isLogged() && Auth::isOwner($issue['reporter_id']);
 
         // mostra il bottone se ha i permessi o se è il proprietario
-        $delete_issue_button = ($has_privileges || $is_owner)
+        $delete_issue_button = (Auth::isAdmin() || $is_owner)
             ? '<form action="/issues/' . $issue['issue_id'] . '/delete" method="POST" onsubmit="return confirm(\'Vuoi eliminare questa segnalazione?\')">'
             . '<button class="btn-danger" type="submit">Elimina segnalazione</button>'
             . '</form>'

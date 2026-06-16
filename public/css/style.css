@@ -37,8 +37,8 @@
     --primary-hover: #004488;
     --danger-red: #E31818;
     --danger-hover: #c91515;
-    --success-green: #28a745;
-    --hover-success-green: #218838;
+    --success-green: #15812E;
+    --hover-success-green: #126b27;
     --bg-light: #fdfdfd;
     --bg-card: #ffffff;
     --text-blue: #2c3e50;
@@ -278,12 +278,15 @@ header {
 
 /* Bottone con azione che provoca azioni con side-effects */
 .btn-danger {
+    width: 100%;
     background-color: var(--danger-red);
     color: var(--text-white);
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
+    padding: 0.6rem 2.5rem;
+    font-size: 1rem;
     transition: background-color 0.2s;
 }
 
@@ -343,6 +346,7 @@ header {
 
 /* Bottone di successo */
 .btn-success {
+    width: 100%;
     background-color: var(--success-green);
     color: var(--text-white);
     border: none;
@@ -762,6 +766,7 @@ header {
     display: inline-block;
     margin-right: 0.5rem;
     margin-bottom: 0.5rem;
+    width: 100%;
 }
 
 /* --- RESPONSIVITÀ PER CELLULARI --- */
@@ -769,6 +774,11 @@ header {
     .issue-content-wrapper {
         grid-template-columns: 1fr; /* Impila la descrizione sopra le info */
         gap: 1.5rem;
+    }
+
+    .issue-info-card form {
+        width: 70%;
+        margin-left: 15%;
     }
 }
 
