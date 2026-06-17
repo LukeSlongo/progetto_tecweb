@@ -18,3 +18,7 @@ build/
 vendor/
 .phpunit.result.cache
 coverage-report/
+
+#CLAUDE
+.claude/
+CLAUDE.md
