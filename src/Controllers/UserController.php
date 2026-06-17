@@ -118,7 +118,7 @@ class UserController extends Controller
                 $fav['ROOM_STATUS_CLASS'] = ($fav['active_issues'] > 0) ? 'status-warning' : 'status-ok';
                 $fav['ROOM_STATUS_TEXT'] = ($fav['active_issues'] > 0) ? 'Guasta (' . $fav['active_issues'] . ' attive)' : 'Ok (Nessun problema)';
 
-                $fav_data[] = array_change_key_case($fav, CASE_UPPER);
+                $fav_data[] = $fav;
             }
 
             $favorites_html = empty($fav_data)
@@ -130,49 +130,29 @@ class UserController extends Controller
             foreach ($my_issues as $issue) {
                 $issue['STATUS_FORMATTED'] = ucfirst(str_replace('_', ' ', $issue['issue_status']));
 
-                $iss_data[] = array_change_key_case($issue, CASE_UPPER);
+                $iss_data[] = $issue;
             }
 
             $my_issues_html = empty($iss_data)
                 ? '<p style="color: var(--text-gray);">Non hai aperto nessuna segnalazione.</p>'
                 : ComponentHelper::renderList('issueCard', $iss_data);
 
-            $student_section_html = '
-                <div class="student-dashboard">
-                    <div class="student-dashboard-section">
-                        <h3>Le mie Aule Preferite</h3>
-                        <div class="grid-aule">' . $favorites_html . '</div>
-                    </div>
-                    <div class="student-dashboard-section">
-                        <h3>Le mie Segnalazioni</h3>
-                        <div class="grid-aule">' . $my_issues_html . '</div>
-                    </div>
-                </div>
-            ';
+            $section = new \App\Core\Template('components/studentHomeSection');
+            $section->setPageData([
+                    'FAVORITES_CAROUSEL' => $favorites_html,
+                    'MY_ISSUES_CAROUSEL' => $my_issues_html,
+                ]);
+            $student_section_html = $section->getPage();
+
         }
+        $search_banner_temp = new \App\Core\Template('components/searchBanner');
+        $search_banner = $search_banner_temp->getPage();
 
-        $search_banner = '
-            <div class="hero">
-                <h2>Cerca un\'aula</h2>
-                <p>Verifica lo stato di un\'aula prima di recartici.</p>
-                <form action="/rooms" method="GET" class="search-box">
-                    <label for="search" class="visually-hidden">Nome aula</label>
-                    <input type="search" name="search" id="search" placeholder="Es. Aula Magna..." required>
-                    <button type="submit" class="btn-primary">Cerca</button>
-                </form>
-            </div>
-        ';
-
-        $create_banner = '
-            <div class="create-issue-banner">
-                <h3>Hai notato un problema?</h3>
-                <p>Aiutaci a mantenere il campus efficiente segnalando guasti o malfunzionamenti.</p>
-                <a href="/issues/new" class="btn-cta">Nuova Segnalazione</a>
-            </div>
-        ';
+        $create_banner_temp = new \App\Core\Template('components/createIssueBanner');
+        $create_banner = $create_banner_temp->getPage();
 
         $this->render('homePage', [
-            'NOME_UTENTE' => $utente['username'],
+            'NOME_UTENTE' => htmlspecialchars($utente['username']),
             'SEARCH_BANNER' => $search_banner,
             'CREATE_ISSUE_BANNER' => $create_banner,
             'STUDENT_SECTION' => $student_section_html
