@@ -22,7 +22,19 @@ class UserController extends Controller
 
         if (empty($username) || empty($password)) {
             $_SESSION['flash_error'] = "Tutti i campi sono obbligatori.";
-            $this->redirect('/login');
+            $this->redirect('/register');
+            return;
+        }
+
+        if (strlen($username) < 3 || strlen($username) > 50) {
+            $_SESSION['flash_error'] = "Il nome utente deve avere tra 3 e 50 caratteri.";
+            $this->redirect('/register');
+            return;
+        }
+
+        if (strlen($password) < 8) {
+            $_SESSION['flash_error'] = "La password deve contenere almeno 8 caratteri.";
+            $this->redirect('/register');
             return;
         }
 

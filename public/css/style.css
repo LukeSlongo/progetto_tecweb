@@ -406,7 +406,7 @@ footer {
     padding: 0.75rem 1rem;
     font-size: 1rem;
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 0.5rem;
     box-sizing: border-box;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -625,10 +625,10 @@ footer {
 /* Contenitore a forma di scheda (Card) per far risaltare il form rispetto allo sfondo */
 .auth-container {
     width: 100%;
-    max-width: 450px;
+    max-width: 28rem;
     background-color: var(--bg-card);
     padding: 2.5rem 2rem;
-    border-radius: 12px;
+    border-radius: 0.75rem;
     box-shadow: var(--shadow-md);
     border: 1px solid var(--border-color);
 }
@@ -662,6 +662,14 @@ footer {
 .auth-footer a:hover {
     color: var(--primary-hover);
     text-decoration: underline;
+}
+
+/* Testo di aiuto per i campi del form gestito al 100% via CSS */
+.form-hint {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-gray);
+    margin-top: 0.4rem;
 }
 
 
