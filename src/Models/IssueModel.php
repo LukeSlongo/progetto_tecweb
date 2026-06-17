@@ -131,6 +131,15 @@ class IssueModel extends Model
                 ORDER BY i.opened_at DESC";
 
         return $this->fetchAll($sql, [$user_id]);
+    public function registerIssue($user_id, $room_id, $title, $description)
+    {
+        $this->checkTable();
+
+        $sql = "INSERT INTO {$this->table} 
+                (user_id, room_id, title, description) 
+                VALUES (?, ?, ?, ?)";
+
+        return $this->query($sql, [$user_id, $room_id, $title, $description]);
     }
 
 }

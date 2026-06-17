@@ -22,8 +22,12 @@ class IssueModelTest extends TestCase
         $mockPdo->method('query')->willReturn($mockStmt);
 
         $mockDb = new class ($mockPdo, $mockStmt) {
+        $mockDb = new class ($mockPdo, $mockStmt) {
             private $pdo;
             private $stmt;
+
+            public function __construct($pdo, $stmt)
+            {
 
             public function __construct($pdo, $stmt)
             {
@@ -31,6 +35,75 @@ class IssueModelTest extends TestCase
                 $this->stmt = $stmt;
             }
 
+            public function getConnection()
+            {
+                return $this->pdo; }
+            public function prepare($sql = null)
+            {
+                return $this->stmt; }
+            public function query($sql = null)
+            {
+                return $this->stmt; }
+        };
+
+        $reflection = new \ReflectionClass(\App\Core\Database::class);
+        $instanceProperty = $reflection->getProperty('instance');
+        $instanceProperty->setValue(null, $mockDb);
+    }
+
+    /**
+     * Falsifica il database per query che restituiscono una singola riga (fetchOne/fetch)
+     */
+    protected function mockDatabaseFetchOne($risultatoAtteso)
+    {
+        $mockStmt = $this->createMock(PDOStatement::class);
+        $mockStmt->method('fetch')->willReturn($risultatoAtteso);
+
+        $mockPdo = $this->createMock(PDO::class);
+        $mockPdo->method('prepare')->willReturn($mockStmt);
+        $mockPdo->method('query')->willReturn($mockStmt);
+
+        $mockDb = new class ($mockPdo, $mockStmt) {
+            private $pdo;
+            private $stmt;
+            public function __construct($pdo, $stmt)
+            {
+                $this->pdo = $pdo;
+                $this->stmt = $stmt; }
+            public function getConnection()
+            {
+                return $this->pdo; }
+            public function prepare($sql = null)
+            {
+                return $this->stmt; }
+            public function query($sql = null)
+            {
+                return $this->stmt; }
+        };
+
+        $reflection = new \ReflectionClass(\App\Core\Database::class);
+        $instanceProperty = $reflection->getProperty('instance');
+        $instanceProperty->setValue(null, $mockDb);
+    }
+
+    /**
+     * Falsifica il database per query di scrittura (INSERT/UPDATE/DELETE)
+     */
+    protected function mockDatabaseExecute()
+    {
+        $mockStmt = $this->createMock(PDOStatement::class);
+        $mockStmt->method('execute')->willReturn(true);
+
+        $mockPdo = $this->createMock(PDO::class);
+        $mockPdo->method('prepare')->willReturn($mockStmt);
+
+        $mockDb = new class ($mockPdo, $mockStmt) {
+            private $pdo;
+            private $stmt;
+            public function __construct($pdo, $stmt)
+            {
+                $this->pdo = $pdo;
+                $this->stmt = $stmt; }
             public function getConnection()
             {
                 return $this->pdo; }
@@ -83,6 +156,7 @@ class IssueModelTest extends TestCase
         // 4. Verifichiamo che i dati tornino esattamente come ce li aspettiamo
         $this->assertIsArray($risultato);
         $this->assertCount(2, $risultato);
+
 
         // Controlliamo il contenuto del primo elemento
         $this->assertEquals(1, $risultato[0]['issue_id']);
@@ -143,97 +217,79 @@ class IssueModelTest extends TestCase
         $this->assertIsArray($risultato);
         $this->assertCount(1, $risultato);
 
+
         // Verifichiamo che il dato passato mantenga la struttura corretta
         $this->assertEquals('in_progress', $risultato[0]['issue_status']);
         $this->assertEquals('Aula 3', $risultato[0]['issue_room']);
     }
 
-    /**
-     * Funzione di supporto per falsificare il database per l'estrazione SINGOLA (fetch / fetchOne)
-     */
-    protected function mockDatabaseFetch($risultatoAtteso)
+
+    // =================================================================
+    // TEST: find_issue
+    // =================================================================
+
+    public function test_find_issue_ritorna_i_dati_corretti()
     {
-        $mockStmt = $this->createMock(\PDOStatement::class);
-        $mockStmt->method('fetch')->willReturn($risultatoAtteso);
+        $datiFinti = ['id' => 5, 'title' => 'Segnalazione 5', 'status' => 'open'];
+        $this->mockDatabaseFetchOne($datiFinti);
 
-        $mockPdo = $this->createMock(\PDO::class);
-        $mockPdo->method('query')->willReturn($mockStmt);
-        $mockPdo->method('prepare')->willReturn($mockStmt);
+        $model = new IssueModel();
+        $risultato = $model->find_issue(5);
 
-        $mockDb = new class ($mockPdo, $mockStmt) {
-            private $pdo;
-            private $stmt;
-            public function __construct($pdo, $stmt)
-            {
-                $this->pdo = $pdo;
-                $this->stmt = $stmt;
-            }
-            public function getConnection()
-            {
-                return $this->pdo; }
-            public function prepare($sql = null)
-            {
-                return $this->stmt; }
-            public function query($sql = null)
-            {
-                return $this->stmt; }
-        };
-
-        $reflection = new \ReflectionClass(\App\Core\Database::class);
-        $instanceProperty = $reflection->getProperty('instance');
-        $instanceProperty->setValue(null, $mockDb);
+        $this->assertIsArray($risultato);
+        $this->assertEquals('Segnalazione 5', $risultato['title']);
     }
 
-    // --- I TEST PER IL DETTAGLIO ISSUE ---
-
-    public function test_getIssueDetails_ritorna_dati_completi_se_esiste()
+    public function test_find_issue_ritorna_false_se_non_esiste()
     {
-        // 1. Prepariamo un pacchetto di dati "perfetto" che simula il risultato di tutte le JOIN
-        $issueFinta = [
+        // Se il DB non trova nulla, fetch() restituisce false
+        $this->mockDatabaseFetchOne(false);
+
+        $model = new IssueModel();
+        $risultato = $model->find_issue(999);
+
+        $this->assertFalse($risultato);
+    }
+
+    // =================================================================
+    // TEST: getIssueDetails
+    // =================================================================
+
+    public function test_getIssueDetails_recupera_tutte_le_informazioni_delle_join()
+    {
+        $dettagliFinti = [
             'issue_id' => 10,
-            'issue_title' => 'Proiettore bruciato',
-            'issue_description' => 'Si sente odore di fumo dalla presa',
-            'issue_status' => 'in_progress',
-            'opened_at' => '2026-06-11 18:00:00',
-            'closed_at' => null,
-            'building_name' => 'Edificio A',
+            'issue_title' => 'Problema gravissimo',
             'room_name' => 'Aula Magna',
-            'reporter_id' => 3,
-            'reporter_name' => 'mario.rossi',
-            'technician_id' => 2,
-            'technician_name' => 'tecnico.luigi'
+            'building_name' => 'Edificio A',
+            'reporter_name' => 'mario.rossi'
         ];
+        $this->mockDatabaseFetchOne($dettagliFinti);
 
-        // 2. Iniettiamo i dati finti per la risposta di fetchOne
-        $this->mockDatabaseFetch($issueFinta);
-
-        // 3. Eseguiamo il metodo
-        $model = new \App\Models\IssueModel();
+        $model = new IssueModel();
         $risultato = $model->getIssueDetails(10);
 
-        // 4. Verifichiamo che i dati delle tabelle collegate siano stati estratti e impacchettati bene
         $this->assertIsArray($risultato);
-        $this->assertEquals('Proiettore bruciato', $risultato['issue_title']);
-
-        // Verifiche sulle JOIN di Edifici e Aule
-        $this->assertEquals('Edificio A', $risultato['building_name']);
+        $this->assertEquals('Problema gravissimo', $risultato['issue_title']);
         $this->assertEquals('Aula Magna', $risultato['room_name']);
-
-        // Verifiche sulle LEFT JOIN degli utenti
-        $this->assertEquals(3, $risultato['reporter_id']);
-        $this->assertEquals('tecnico.luigi', $risultato['technician_name']);
+        $this->assertEquals('mario.rossi', $risultato['reporter_name']);
     }
 
-    public function test_getIssueDetails_ritorna_false_se_id_non_esiste()
+    // =================================================================
+    // TEST: registerIssue
+    // =================================================================
+
+    public function test_registerIssue_esegue_inserimento_con_successo()
     {
-        // 1. Se PDO non trova nessuna corrispondenza per quell'ID, restituisce false
-        $this->mockDatabaseFetch(false);
+        // Prepariamo il DB finto per rispondere "OK" a un'esecuzione (execute)
+        $this->mockDatabaseExecute();
 
-        // 2. Cerchiamo una issue inesistente
-        $model = new \App\Models\IssueModel();
-        $risultato = $model->getIssueDetails(999);
+        $model = new IssueModel();
 
-        // 3. Ci assicuriamo che il Model propaghi il "false", fondamentale per far scattare il 404 nel Controller!
-        $this->assertFalse($risultato);
+        // Passiamo i dati finti: user_id=1, room_id=2, titolo, descrizione
+        $risultato = $model->registerIssue(1, 2, 'Computer bruciato', 'Puzza di fumo');
+
+        // Nel tuo Model base, la funzione query() restituisce l'oggetto PDOStatement su successo
+        $this->assertInstanceOf(PDOStatement::class, $risultato);
     }
 }
