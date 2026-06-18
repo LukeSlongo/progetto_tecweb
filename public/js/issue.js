@@ -5,44 +5,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const buildingSelect = document.getElementById('building_id');
     const roomSelect = document.getElementById('room_id');
 
-    const buildings = JSON.parse(form.dataset.buildings || '[]');
-    const rooms = JSON.parse(form.dataset.rooms || '[]');
-
-    // Funzione di supporto per riempire la tendina degli edifici dinamicamente
-    function renderBuildings() {
-        buildingSelect.innerHTML = '<option value="">Seleziona</option>';
-        buildings.forEach(building => {
-            const opt = document.createElement('option');
-            opt.value = building.id;
-            opt.textContent = building.name;
-            buildingSelect.appendChild(opt);
-        });
-    }
-    // Funzione di supporto per riempire la tendina delle aule dinamicamente
-    function renderRooms(roomsToRender) {
-        roomSelect.innerHTML = '<option value="">Seleziona</option>';
-        roomsToRender.forEach(room => {
-            const opt = document.createElement('option');
-            opt.value = room.id;
-            opt.textContent = room.name;
-            roomSelect.appendChild(opt);
-        });
-    }
-
-    renderBuildings();
-    renderRooms(rooms);
+    const allOptGroups = Array.from(roomSelect.querySelectorAll('optgroup'));
 
     // CASO A: l'utente seleziona prima un edificio
     buildingSelect.addEventListener('change', (e) => {
         const selectedBuildingId = e.target.value;
+        const currentSelectedRoom = roomSelect.value; // Salva la stanza attualmente selezionata
+
+        // Svuota la tendina mantenendo solo l'opzione "Seleziona" di base
+        roomSelect.innerHTML = '<option value="">Seleziona</option>';
 
         if (selectedBuildingId === "") {
-            // Se rimette "Seleziona" mostra di nuovo tutte le aule
-            renderRooms(rooms);
+            // Se rimette "Seleziona" mostra di nuovo tutte le aule clonando gli optgroup originali
+            allOptGroups.forEach(optgroup => {
+                roomSelect.appendChild(optgroup.cloneNode(true));
+            });
         } else {
-            // filtra le aule tenendo solo quelle dell'edificio scelto
-            const filteredRooms = rooms.filter(room => room.building_id == selectedBuildingId);
-            renderRooms(filteredRooms);
+            // filtra le aule aggiungendo solo l'optgroup dell'edificio scelto
+            const matchingGroup = allOptGroups.find(group => group.dataset.buildingId === selectedBuildingId);
+            if (matchingGroup) {
+                roomSelect.appendChild(matchingGroup.cloneNode(true));
+            }
+        }
+
+        // Tenta di mantenere la stanza selezionata se è ancora valida dopo il filtro
+        if (currentSelectedRoom) {
+            roomSelect.value = currentSelectedRoom;
+            if (roomSelect.value === "") { // Se non esiste più tra le opzioni filtrate, resetta
+                roomSelect.value = "";
+            }
         }
     });
 
@@ -51,18 +42,26 @@ document.addEventListener("DOMContentLoaded", () => {
         const selectedRoomId = e.target.value;
         if (selectedRoomId === "") return;
 
-        // Cerca l'oggetto aula corrispondente per scoprire a che edificio appartiene
-        const selectedRoom = rooms.find(room => room.id == selectedRoomId);
+        // Cerca l'optgroup corrispondente per scoprire a che edificio appartiene
+        let targetBuildingId = null;
+        for (const optgroup of allOptGroups) {
+            const option = optgroup.querySelector(`option[value="${selectedRoomId}"]`);
+            if (option) {
+                targetBuildingId = optgroup.dataset.buildingId;
+                break;
+            }
+        }
 
-        if (selectedRoom) {
+        if (targetBuildingId) {
             // autocpmpleta la prima tendina con l'edificio corretto
-            buildingSelect.value = selectedRoom.building_id;
-            // riduce la lista delle aule a quelle di questo edificio
-            const filteredRooms = rooms.filter(room => room.building_id == selectedRoom.building_id);
-            renderRooms(filteredRooms);
+            buildingSelect.value = targetBuildingId;
 
-            // rimette l'aula selezionata visto che renderRooms ha azzerato le option
-            roomSelect.value = selectedRoom.id;
+            // riduce la lista delle aule a quelle di questo edificio scatenando l'evento 'change'
+            const event = new Event('change');
+            buildingSelect.dispatchEvent(event);
+
+            // rimette l'aula selezionata visto che il reset precedente ha azzerato le option
+            roomSelect.value = selectedRoomId;
         }
     });
 });

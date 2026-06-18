@@ -31,16 +31,25 @@ class IssueController extends Controller
         $buildings = $buildingModel->findAll();
         $rooms = $roomModel->findAll();
 
-        $buildingsJson = htmlspecialchars(json_encode($buildings), ENT_QUOTES, 'UTF-8');
-        $roomsJson = htmlspecialchars(json_encode($rooms), ENT_QUOTES, 'UTF-8');
+        $buildingsHtml = '';
+        foreach ($buildings as $building) {
+            $buildingsHtml .= '<option value="' . $building['id'] . '">' . htmlspecialchars($building['name'], ENT_QUOTES, 'UTF-8') . '</option>';
+        }
 
-        $buildingsHtml = ComponentHelper::renderList('buildingOptionItem', $buildings);
+        $roomsHtml = '';
+        foreach ($buildings as $building) {
+            $roomsHtml .= '<optgroup label="' . htmlspecialchars($building['name'], ENT_QUOTES, 'UTF-8') . '" data-building-id="' . $building['id'] . '">';
+            foreach ($rooms as $room) {
+                if ($room['building_id'] == $building['id']) {
+                    $roomsHtml .= '<option value="' . $room['id'] . '">' . htmlspecialchars($room['name'], ENT_QUOTES, 'UTF-8') . '</option>';
+                }
+            }
+            $roomsHtml .= '</optgroup>';
+        }
 
         $this->render('issueFormPage', [
-            'BUILDINGS_JSON' => $buildingsJson,
-            'ROOMS_JSON' => $roomsJson,
             'BUILDING_OPTIONS' => $buildingsHtml,
-            'ROOM_OPTIONS' => ''
+            'ROOM_OPTIONS' => $roomsHtml
         ]);
     }
 
