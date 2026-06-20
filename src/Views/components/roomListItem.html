@@ -1,16 +1,23 @@
 <tr>
-    <td>##ROOM_NAME##</td>
-    <td>##BUILDING##</td>
+    <th scope="row">##ROOM_NAME##</th>
     <td>##NUM_REPORTS##</td>
     <td>
-        <a href="/rooms/##ROOM_ID##" class="btn-view">Visualizza</a>
+        <a href="/rooms/##ROOM_ID##" class="btn-view" aria-label="Visualizza ##ROOM_NAME##">Visualizza</a>
     </td>
     <td>
-        <form action="/api/favorites/##ROOM_ID##/add" method="POST" class="favorite-form" data-room-id="##ROOM_ID##" data-is-favorite="false">
-            <button type="submit" id="btn-favorite-##ROOM_ID##" class="btn-favorite" title="Aggiungi ai preferiti">
+        <form action="/api/favorites/##ROOM_ID##/add"
+              method="POST"
+              class="favorite-form"
+              data-room-id="##ROOM_ID##"
+              data-room-name="##ROOM_NAME##"
+              data-is-favorite="false">
+            <button type="submit"
+                    id="btn-favorite-##ROOM_ID##"
+                    class="btn-favorite"
+                    title="Aggiungi ai preferiti"
+                    aria-label="Azione preferiti aula: ##ROOM_NAME##">
                 Preferiti
             </button>
         </form>
     </td>
 </tr>
-    
