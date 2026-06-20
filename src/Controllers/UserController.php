@@ -7,6 +7,7 @@ use App\Models\UserModel;
 use App\Models\IssueModel;
 use App\Models\RoomModel;
 use \App\Helpers\ComponentHelper;
+use \App\Helpers\BreadcrumbHelper;
 use Exception;
 
 class UserController extends Controller
@@ -94,6 +95,8 @@ class UserController extends Controller
         $items_html = ComponentHelper::renderList('userListItem', $users);
 
         $this->page_title = "Gestione Utenti - UniFix";
+        BreadcrumbHelper::add('Home', '/');
+        BreadcrumbHelper::add('Utenti');
         $this->render('userListPage', [
             'USER_LIST_ITEMS' => $items_html
         ]);
@@ -151,6 +154,11 @@ class UserController extends Controller
 
         $create_banner_temp = new \App\Core\Template('components/createIssueBanner');
         $create_banner = $create_banner_temp->getPage();
+
+
+        BreadcrumbHelper::reset();
+        BreadcrumbHelper::add('Home', '/');
+
 
         $this->render('homePage', [
             'NOME_UTENTE' => htmlspecialchars($utente['username']),
