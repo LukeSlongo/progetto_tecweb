@@ -166,6 +166,7 @@ class UserController extends Controller
 
         $create_banner_temp = new \App\Core\Template('components/createIssueBanner');
         $create_banner = $create_banner_temp->getPage();
+        $this->scriptPathList[] = 'home';
 
         $this->render('homePage', [
             'NOME_UTENTE' => htmlspecialchars($utente['username']),
