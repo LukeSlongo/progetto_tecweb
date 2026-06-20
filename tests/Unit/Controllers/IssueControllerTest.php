@@ -176,12 +176,12 @@ class IssueControllerTest extends TestCase
     // TEST: viewIssueForm
     // =================================================================
 
-    public function test_viewIssueForm_renderizza_pagina_con_dati_json()
+    public function test_viewIssueForm_renderizza_pagina_con_optgroup_html()
     {
         // 1. Usiamo la tua funzione esistente: BuildingModel e RoomModel 
         // chiameranno fetchAll() e riceveranno questo array.
         $datiFinti = [
-            ['id' => 1, 'name' => 'Edificio/Aula Test']
+            ['id' => 1, 'name' => 'Edificio/Aula Test', 'building_id' => 1]
         ];
         $this->mockDatabase($datiFinti);
 
@@ -190,18 +190,28 @@ class IssueControllerTest extends TestCase
             ->onlyMethods(['render'])
             ->getMock();
 
-        // 3. Verifichiamo che i dati siano stati convertiti in JSON
+        // 3. Verifichiamo che i dati siano passati correttamente nel layout
         $controller->expects($this->once())
             ->method('render')
             ->with(
                 $this->equalTo('issueFormPage'),
-                $this->callback(function ($dati) {
-                    $haBuildings = isset($dati['BUILDINGS_JSON']) && strpos($dati['BUILDINGS_JSON'], 'Edificio\/Aula Test') !== false;
-                    $haRooms = isset($dati['ROOMS_JSON']) && strpos($dati['ROOMS_JSON'], 'Edificio\/Aula Test') !== false;
-                    return $haBuildings && $haRooms;
+                $this->callback(function ($data) {
+                    // 1. Verifichiamo che i vecchi JSON non esistano più
+                    $this->assertArrayNotHasKey('BUILDINGS_JSON', $data);
+                    $this->assertArrayNotHasKey('ROOMS_JSON', $data);
+
+                    // 2. Verifichiamo che le chiavi HTML siano presenti
+                    $this->assertArrayHasKey('BUILDING_OPTIONS', $data);
+                    $this->assertArrayHasKey('ROOM_OPTIONS', $data);
+
+                    // 3. Verifichiamo che ROOM_OPTIONS contenga i nuovi tag nativi per l'accessibilità
+                    $this->assertStringContainsString('<optgroup label=', $data['ROOM_OPTIONS']);
+
+                    return true;
                 })
             );
 
+        // Eseguiamo la funzione
         $controller->viewIssueForm();
     }
 

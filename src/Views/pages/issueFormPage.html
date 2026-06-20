@@ -1,44 +1,47 @@
-<section class="container">
+<form action="/issues" method="POST" class="report-form" id="issue-form">
 
-    <div class="error-message" role="alert">##FLASH_ERROR##</div>
+    <fieldset class="form-gray-box">
+        
+        <legend>Segnala un problema</legend>
 
-    <form action="/issues" method="POST" class="report-form" id="issue-form" data-buildings='##BUILDINGS_JSON##'
-        data-rooms='##ROOMS_JSON##'>
+        <p class="mandatory-note">Tutti i campi indicati con un asterisco (<span aria-hidden="true">*</span>) sono obbligatori.</p>
 
-        <div class="form-gray-box">
-            <h2>Segnala un problema</h2>
+        <div class="form-horizontal-group">
+            <label for="building_id">edificio <span class="required-asterisk" aria-hidden="true">*</span></label>
+            <select name="building_id" id="building_id" required>
+                <option value="">Seleziona</option>
+                ##BUILDING_OPTIONS##
+            </select>
+        </div>
 
-            <div class="form-horizontal-group">
-                <label for="building_id">edificio</label>
-                <select name="building_id" id="building_id" required>
-                    <option value="">Seleziona</option>
-                    ##BUILDING_OPTIONS##
-                </select>
-            </div>
+        <div class="form-horizontal-group">
+            <label for="room_id">nome aula <span class="required-asterisk" aria-hidden="true">*</span></label>
+            <select name="room_id" id="room_id" required>
+                <option value="">Seleziona</option>
+                ##ROOM_OPTIONS##
+            </select>
+        </div>
 
-            <div class="form-horizontal-group">
-                <label for="room_id">nome aula</label>
-                <select name="room_id" id="room_id" required>
-                    <option value="">Seleziona</option>
-                    ##ROOM_OPTIONS##
-                </select>
-            </div>
-
-            <div class="form-horizontal-group spacer-group">
-                <label for="issue_title">titolo segnalazione</label>
-                <input type="text" name="issue_title" id="issue_title" required>
-            </div>
-
-            <div class="form-horizontal-group align-top">
-                <label for="issue_description">descrizione segnalazione</label>
-                <textarea name="issue_description" id="issue_description" rows="5" required></textarea>
+        <div class="form-horizontal-group spacer-group">
+            <label for="issue_title">titolo segnalazione <span class="required-asterisk" aria-hidden="true">*</span></label>
+            <div class="input-wrapper">
+                <input type="text" name="issue_title" id="issue_title" maxlength="150" required
+                    aria-describedby="title-hint">
+                <span id="title-hint" class="form-hint">Massimo 150 caratteri.</span>
             </div>
         </div>
 
-        <div class="submit-row">
-            <button type="submit" class="btn-primary btn-invia">invia</button>
+        <div class="form-horizontal-group align-top">
+            <label for="issue_description">descrizione segnalazione <span class="required-asterisk" aria-hidden="true">*</span></label>
+            <div class="input-wrapper">
+                <textarea name="issue_description" id="issue_description" rows="5" maxlength="1000" required
+                    aria-describedby="desc-hint"></textarea>
+                <span id="desc-hint" class="form-hint">Massimo 1000 caratteri. Specifica bene il problema.</span>
+            </div>
         </div>
 
-    </form>
+    </fieldset> <div class="submit-row">
+        <button type="submit" class="btn-primary btn-invia">invia</button>
+    </div>
 
-</section>
+</form>
