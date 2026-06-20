@@ -95,6 +95,7 @@ class UserController extends Controller
         $items_html = ComponentHelper::renderList('userListItem', $users);
 
         $this->page_title = "Gestione Utenti - UniFix";
+        BreadcrumbHelper::reset();
         BreadcrumbHelper::add('Home', '/');
         BreadcrumbHelper::add('Utenti');
         $this->render('userListPage', [
