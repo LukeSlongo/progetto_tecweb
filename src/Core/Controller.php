@@ -35,6 +35,19 @@ abstract class Controller
         $layout_file = new Template("layouts/{$layout}");
 
         if ($layout === 'main') {
+
+            $current_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+            $nav_home = ($current_uri === '/' || $current_uri === '/home')
+                ? '<span class="active-page" aria-current="page">Home</span>'
+                : '<a href="/">Home</a>';
+
+            $nav_issue = ($current_uri === '/issues/new')
+                ? '<span class="active-page" aria-current="page">Nuova issue</span>'
+                : '<a href="/issues/new">Nuova issue</a>';
+
+
+
             $layout_data = [
                 'CLASSE_PAGINA' => strtolower($view),
                 'LINK_UTENTE' => Auth::getHeaderLinks(),
@@ -42,7 +55,9 @@ abstract class Controller
                 'IMPORT_SCRIPTS' => ScriptHelper::import_script($this->scriptPathList),
                 'TITOLO_PAGINA' => $this->page_title,
                 'DESCRIZIONE_PAGINA' => $this->page_description,
-                'UTENTE_LOGGATO' => (Auth::isLogged()) ? "true" : "false"
+                'UTENTE_LOGGATO' => (Auth::isLogged()) ? "true" : "false",
+                'NAV_HOME' => $nav_home,
+                'NAV_NUOVA_ISSUE' => $nav_issue,
             ];
             $layout_file->setPageData($layout_data);
         } else {

@@ -22,12 +22,8 @@ class IssueModelTest extends TestCase
         $mockPdo->method('query')->willReturn($mockStmt);
 
         $mockDb = new class ($mockPdo, $mockStmt) {
-        $mockDb = new class ($mockPdo, $mockStmt) {
             private $pdo;
             private $stmt;
-
-            public function __construct($pdo, $stmt)
-            {
 
             public function __construct($pdo, $stmt)
             {
@@ -37,13 +33,18 @@ class IssueModelTest extends TestCase
 
             public function getConnection()
             {
-                return $this->pdo; }
+                return $this->pdo; 
+            }
+            
             public function prepare($sql = null)
             {
-                return $this->stmt; }
+                return $this->stmt; 
+            }
+            
             public function query($sql = null)
             {
-                return $this->stmt; }
+                return $this->stmt; 
+            }
         };
 
         $reflection = new \ReflectionClass(\App\Core\Database::class);
@@ -66,19 +67,27 @@ class IssueModelTest extends TestCase
         $mockDb = new class ($mockPdo, $mockStmt) {
             private $pdo;
             private $stmt;
+            
             public function __construct($pdo, $stmt)
             {
                 $this->pdo = $pdo;
-                $this->stmt = $stmt; }
+                $this->stmt = $stmt; 
+            }
+            
             public function getConnection()
             {
-                return $this->pdo; }
+                return $this->pdo; 
+            }
+            
             public function prepare($sql = null)
             {
-                return $this->stmt; }
+                return $this->stmt; 
+            }
+            
             public function query($sql = null)
             {
-                return $this->stmt; }
+                return $this->stmt; 
+            }
         };
 
         $reflection = new \ReflectionClass(\App\Core\Database::class);
@@ -100,19 +109,27 @@ class IssueModelTest extends TestCase
         $mockDb = new class ($mockPdo, $mockStmt) {
             private $pdo;
             private $stmt;
+            
             public function __construct($pdo, $stmt)
             {
                 $this->pdo = $pdo;
-                $this->stmt = $stmt; }
+                $this->stmt = $stmt; 
+            }
+            
             public function getConnection()
             {
-                return $this->pdo; }
+                return $this->pdo; 
+            }
+            
             public function prepare($sql = null)
             {
-                return $this->stmt; }
+                return $this->stmt; 
+            }
+            
             public function query($sql = null)
             {
-                return $this->stmt; }
+                return $this->stmt; 
+            }
         };
 
         $reflection = new \ReflectionClass(\App\Core\Database::class);

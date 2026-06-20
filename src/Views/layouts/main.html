@@ -16,19 +16,18 @@
     ##IMPORT_SCRIPTS##
 
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-    <link rel="icon" type="image/svg+xml" href="/img/logo1.svg">
 </head>
 
 <body class="##CLASSE_PAGINA##" data-logged-in="##UTENTE_LOGGATO##">
     <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
 
-    <header role="banner">
+    <header>
         <div class="container header-flex">
             <h1>UniFix</h1>
             <nav aria-label="Menu principale">
                 <ul>
-                    <li><a href="/" aria-current="page">Home</a></li>
-                    <li><a href="/issues/new">Nuova issue</a></li>
+                    <li>##NAV_HOME##</li>
+                    <li>##NAV_NUOVA_ISSUE##</li>
                     <li>
                         <form action="/logout" method="POST">
                             <button type="submit" class="btn-logout">Logout</button>
@@ -39,17 +38,26 @@
         </div>
     </header>
 
-    <div class="breadcrumb-nav">
+    <nav aria-label="Breadcrumb" class="breadcrumb-nav">
         ##BREADCRUMB##
-    </div>
+    </nav>
 
     <main id="main-content" class="main-container" tabindex="-1">
         ##CONTENUTO_PRINCIPALE##
     </main>
 
-    <footer role="contentinfo">
-        <div class="container">
-            <p>&copy; 2026 Università degli Studi di Padova - UniFix</p>
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-info">
+                <p>&copy; 2026 Università degli Studi di Padova - UniFix</p>
+            </div>
+
+            <div class="footer-logos">
+                <img src="https://www.w3.org/html/logo/badge/html5-badge-h-solo.png" alt="HTML5 Valido" width="63"
+                    height="64">
+
+                <img src="https://jigsaw.w3.org/css-validator/images/vcss-blue" alt="CSS Valido" width="88" height="31">
+            </div>
         </div>
     </footer>
 </body>

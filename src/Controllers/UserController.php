@@ -102,6 +102,7 @@ class UserController extends Controller
     public function viewHome()
     {
         $this->page_title = "Home - UniFix";
+        $this->page_description = "UniFix è il portale ufficiale dell'Università di Padova per la segnalazione, il monitoraggio e la risoluzione dei guasti nelle aule e negli edifici.";
         $utente = Auth::getUser();
         $role = $utente['role'] ?? 'guest';
 
