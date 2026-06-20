@@ -89,9 +89,24 @@ class UserController extends Controller
         $user_model = new UserModel();
         $users = $user_model->findAll();
 
+        $role_translations = [
+            'admin' => 'Amministratore',
+            'technician' => 'Tecnico',
+            'student' => 'Studente'
+        ];
+        foreach ($users as &$user) {
+            $ruolo_inglese = $user['role'];
+            
+            if (isset($role_translations[$ruolo_inglese])) {
+                $user['role'] = $role_translations[$ruolo_inglese];
+            }
+        }
+        unset($user);
+
         $items_html = ComponentHelper::renderList('userListItem', $users);
 
         $this->page_title = "Gestione Utenti - UniFix";
+        $this->scriptPathList[] = 'user';
         $this->render('userListPage', [
             'USER_LIST_ITEMS' => $items_html
         ]);
