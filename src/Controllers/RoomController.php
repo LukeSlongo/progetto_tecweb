@@ -5,6 +5,8 @@ use App\Core\Controller;
 use App\Models\IssueModel;
 use App\Models\RoomModel;
 use App\Helpers\ComponentHelper;
+use \App\Helpers\BreadcrumbHelper;
+
 use App\Core\Auth;
 
 class RoomController extends Controller
@@ -15,7 +17,8 @@ class RoomController extends Controller
     public function __construct()
     {
         $this->Room = new RoomModel();
-        //BreadcrumbHelper::reset();
+        BreadcrumbHelper::reset();
+        BreadcrumbHelper::add('Home', '/');
     }
 
     // esegue la ricerca con la funzione searchRoom e carica la pagina con i dati ricercati
@@ -27,6 +30,7 @@ class RoomController extends Controller
 
         $this->page_title = "Aule - UniFix";
         $this->scriptPathList[] = 'room';
+        BreadcrumbHelper::add('Aule', '/rooms');
         $this->render('roomListPage', ['ROOM_LIST_ITEMS' => $items_html]);
     }
 
@@ -72,7 +76,8 @@ class RoomController extends Controller
             $issues_html = ComponentHelper::renderList('issueListItemRoomPage', $issues_of_room);
         }
         $this->scriptPathList[] = 'room';
-
+        BreadcrumbHelper::add('Aule', '/rooms');
+        BreadcrumbHelper::add($room_data['room_name']);
         $this->render('roomDetailPage', [
             'ROOM_NAME' => $room_data['room_name'],
             'ROOM_ID' => $room_data['room_id'],
