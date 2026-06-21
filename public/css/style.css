@@ -11,6 +11,7 @@
     4.3 Cards
     4.4 Error
     4.5 Tabelle e Liste
+    4.6 Breadcrumb
    5. PAGES
     5.1 Autenticazione (Login/Register)
     5.2 UserListPage
@@ -635,6 +636,74 @@ footer {
 .data-table td form {
     margin: 0;
 }
+
+
+
+/* 
+===============================================
+    4.6 BREADCRUMB
+===============================================
+*/
+
+/* Mette delle margini nel contenetore del breadcrumb*/
+.breadcrumb-nav {
+    margin: 0.5rem auto 0.5rem auto; 
+    font-size: 1rem;
+    position: relative;
+    z-index: 5;
+}
+
+/*permette di formare la box del breadcrumb e mette shadow*/
+.breadcrumb-nav ol {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 2px 1rem;
+    margin: 0;
+    gap: 0.5rem;
+    background-color: var(--bg-card);
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+
+}
+
+/*colore per il testo e centra gli elementi*/
+.breadcrumb-nav li {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: var(--primary-blue);
+}
+
+/*mette ">" tra pagine che non sono l'ultima per avere sneso de dove veniamo*/
+.breadcrumb-nav li:not(:last-child)::after {
+    content: ">";
+    margin-left: 0.5rem;
+    font-size: 1.1rem;
+    color: black;
+}
+
+/*elimina colore dei link*/
+.breadcrumb-nav a {
+    color: var(--accent-yellow);
+}
+
+/*mette colore giallo quando passiamo cursor per i link*/
+.breadcrumb-nav a:hover {
+    color: var(--accent-yellow-hover);
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
