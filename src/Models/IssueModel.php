@@ -132,4 +132,30 @@ class IssueModel extends Model
         return $this->query($sql, [$issue_id]);
     }
 
+    public function getIssuesByUser($user_id)
+    {
+        $sql = "SELECT 
+                    i.id AS issue_id,
+                    i.title AS issue_title,
+                    i.status AS issue_status,
+                    r.name AS room_name
+                FROM issue i
+                JOIN room r ON i.room_id = r.id
+                WHERE i.user_id = ?
+                ORDER BY i.opened_at DESC";
+
+        return $this->fetchAll($sql, [$user_id]);
+    }
+
+    public function registerIssue($user_id, $room_id, $title, $description)
+    {
+        $this->checkTable();
+
+        $sql = "INSERT INTO {$this->table} 
+                (user_id, room_id, title, description) 
+                VALUES (?, ?, ?, ?)";
+
+        return $this->query($sql, [$user_id, $room_id, $title, $description]);
+    }
+
 }

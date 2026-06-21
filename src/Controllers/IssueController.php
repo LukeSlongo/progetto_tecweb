@@ -6,6 +6,8 @@ use App\Core\Template;
 use App\Models\IssueModel;
 use App\Helpers\ComponentHelper;
 use App\Core\Auth;
+use \App\Models\BuildingModel;
+use \App\Models\RoomModel;
 
 class IssueController extends Controller
 {
@@ -19,50 +21,75 @@ class IssueController extends Controller
         //BreadcrumbHelper::reset();
     }
 
-    public function nuova_issue()
+    public function viewIssueForm()
     {
-        $this->page_title = "Nuova Issue";
-        $this->page_description = "Crea una nuova issue di guasto o problema.";
-        $this->render('new_issue');
+        $this->page_title = "Nuova Segnalazione - UniFix";
+
+        $buildingModel = new BuildingModel();
+        $roomModel = new RoomModel();
+
+        $buildings = $buildingModel->findAll();
+        $rooms = $roomModel->findAll();
+
+        $buildingsHtml = '';
+        foreach ($buildings as $building) {
+            $buildingsHtml .= '<option value="' . $building['id'] . '">' . htmlspecialchars($building['name'], ENT_QUOTES, 'UTF-8') . '</option>';
+        }
+
+        $roomsHtml = '';
+        foreach ($buildings as $building) {
+            $roomsHtml .= '<optgroup label="' . htmlspecialchars($building['name'], ENT_QUOTES, 'UTF-8') . '" data-building-id="' . $building['id'] . '">';
+            foreach ($rooms as $room) {
+                if ($room['building_id'] == $building['id']) {
+                    $roomsHtml .= '<option value="' . $room['id'] . '">' . htmlspecialchars($room['name'], ENT_QUOTES, 'UTF-8') . '</option>';
+                }
+            }
+            $roomsHtml .= '</optgroup>';
+        }
+
+        $this->render('issueFormPage', [
+            'BUILDING_OPTIONS' => $buildingsHtml,
+            'ROOM_OPTIONS' => $roomsHtml
+        ]);
     }
 
-    public function salva_issue()
+    public function saveIssue()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = [
-                'titolo' => trim($_POST['titolo'] ?? ''),
-                'priorita' => trim($_POST['priorita'] ?? null),
-                'room_id' => trim($_POST['room'] ?? null),
-                'descrizione' => trim($_POST['descrizione'] ?? ''),
-                'utente_id' => $_SESSION['user_id'] ?? null
-            ];
+        $room_id = $this->post('room_id');
+        $title = $this->post('issue_title');
+        $description = $this->post('issue_description');
 
-            $errors = $this->Issue->validate($data);
+        if (empty($room_id) || empty($title) || empty($description)) {
+            $_SESSION['flash_error'] = "Tutti i campi (Aula, Titolo, Descrizione) sono obbligatori.";
+            $this->redirect('/issues/new');
+            return;
+        }
 
-            if (!empty($errors)) {
-                // Se ci sono errori, reindirizza indietro con messaggi di errore
-                $_SESSION['form_errors'] = $errors;
-                $_SESSION['form_data'] = $data;
-                header('Location: /nuova_issue');
-                exit;
-            }
+        $user = Auth::getUser();
+        if (!$user) {
+            $_SESSION['flash_error'] = "Sessione scaduta, effettua nuovamente il login.";
+            $this->redirect('/login');
+            return;
+        }
 
-            // Salva la issue nel database
-            $this->Issue->insert($data);
+        $issueModel = new \App\Models\IssueModel();
 
-            // Reindirizza alla home o a una pagina di successo
-            header('Location: /');
-            exit;
-        } else {
-            // Se non è POST, reindirizza alla form
-            header('Location: /nuova_issue');
-            exit;
+        try {
+            $issueModel->registerIssue($user['id'], $room_id, $title, $description);
+
+            $_SESSION['flash_success'] = "Segnalazione inviata con successo!";
+            $this->redirect('/');
+
+        } catch (\Exception $e) {
+            $_SESSION['flash_error'] = "Errore durante l'invio della segnalazione. Riprova.";
+            $this->redirect('/issues/new');
         }
     }
 
     public function viewIssueList()
     {
         $this->page_title = "Issue List - UniFix";
+        $this->scriptPathList = ["issue"];
 
         $status = $this->get('status');
         $issues = $this->searchIssues($status);
@@ -89,11 +116,7 @@ class IssueController extends Controller
         $this->page_title = "Dettaglio Issue - UniFix";
         $issue = $this->Issue->getIssueDetails($id);
 
-        if (!$issue) {
-            $this->abort(404, "La segnalazione richiesta non esiste.");
-        }
 
-        // creazione delle variabili per controllare i permessi
         $role = $_SESSION['user']['role'] ?? '';
         $has_privileges = $role === 'admin' || $role === 'technician';
         $is_owner = Auth::isLogged() && Auth::isOwner($issue['reporter_id']);
@@ -128,8 +151,9 @@ class IssueController extends Controller
 
         $this->render('issueDetailPage', [
             'ISSUE_TITLE' => $issue['issue_title'],
-            'ISSUE_DESCRIPTION' => $issue['issue_description'],
             'STATUS' => ucfirst(str_replace('_', ' ', $issue['issue_status'])),
+
+            //informazione sulla direzione
             'BUILDING_NAME' => $issue['building_name'],
             'ROOM_NAME' => $issue['room_name'],
             'OPEN_DATE' => date('d/m/Y', strtotime($issue['opened_at'])),
