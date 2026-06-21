@@ -5,6 +5,7 @@ use App\Core\Controller;
 use App\Core\Template;
 use App\Models\IssueModel;
 use App\Helpers\ComponentHelper;
+use \App\Helpers\BreadcrumbHelper;
 use App\Core\Auth;
 use \App\Models\BuildingModel;
 use \App\Models\RoomModel;
@@ -18,7 +19,8 @@ class IssueController extends Controller
     {
         $this->Issue = new IssueModel();
         $this->scriptPathList[] = 'issue';
-        //BreadcrumbHelper::reset();
+        BreadcrumbHelper::reset();
+        BreadcrumbHelper::add('Home', '/');
     }
 
     public function viewIssueForm()
@@ -46,7 +48,7 @@ class IssueController extends Controller
             }
             $roomsHtml .= '</optgroup>';
         }
-
+        BreadcrumbHelper::add('Nuovo guasto');
         $this->render('issueFormPage', [
             'BUILDING_OPTIONS' => $buildingsHtml,
             'ROOM_OPTIONS' => $roomsHtml
@@ -72,7 +74,7 @@ class IssueController extends Controller
             return;
         }
 
-        $issueModel = new \App\Models\IssueModel();
+        $issueModel = new IssueModel();
 
         try {
             $issueModel->registerIssue($user['id'], $room_id, $title, $description);
@@ -95,6 +97,7 @@ class IssueController extends Controller
         $issues = $this->searchIssues($status);
 
         $items_html = ComponentHelper::renderList('issueListItem', $issues);
+        BreadcrumbHelper::add('Guasti', '/issues');
         $this->render('issueListPage', [
             'ISSUE_LIST_ITEMS' => $items_html,
             'CHECKED_ALL' => empty($status) ? 'checked' : '',
@@ -149,6 +152,8 @@ class IssueController extends Controller
             }
         }
 
+        BreadcrumbHelper::add('Guasti', '/issues');
+        BreadcrumbHelper::add($issue['issue_title']);
         $this->render('issueDetailPage', [
             'ISSUE_TITLE' => $issue['issue_title'],
             'STATUS' => ucfirst(str_replace('_', ' ', $issue['issue_status'])),
