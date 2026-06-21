@@ -48,7 +48,7 @@ class IssueController extends Controller
             }
             $roomsHtml .= '</optgroup>';
         }
-        BreadcrumbHelper::add('Nuova Issue');
+        BreadcrumbHelper::add('Nuovo guasto');
         $this->render('issueFormPage', [
             'BUILDING_OPTIONS' => $buildingsHtml,
             'ROOM_OPTIONS' => $roomsHtml
@@ -74,7 +74,7 @@ class IssueController extends Controller
             return;
         }
 
-        $issueModel = new \App\Models\IssueModel();
+        $issueModel = new IssueModel();
 
         try {
             $issueModel->registerIssue($user['id'], $room_id, $title, $description);
@@ -97,7 +97,7 @@ class IssueController extends Controller
         $issues = $this->searchIssues($status);
 
         $items_html = ComponentHelper::renderList('issueListItem', $issues);
-        BreadcrumbHelper::add('Issues', '/issues');
+        BreadcrumbHelper::add('Guasti', '/issues');
         $this->render('issueListPage', [
             'ISSUE_LIST_ITEMS' => $items_html,
             'CHECKED_ALL' => empty($status) ? 'checked' : '',
@@ -127,7 +127,7 @@ class IssueController extends Controller
             . '<button class="btn btn-primary" type="submit">Elimina segnalazione</button>'
             . '</form>'
             : '';
-        BreadcrumbHelper::add('Issues', '/issues');
+        BreadcrumbHelper::add('Guasti', '/issues');
         BreadcrumbHelper::add($issue['issue_title']);
         $this->render('issueDetailPage', [
             'ISSUE_TITLE' => $issue['issue_title'],

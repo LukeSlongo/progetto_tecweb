@@ -43,8 +43,8 @@ abstract class Controller
                 : '<a href="/">Home</a>';
 
             $nav_issue = ($current_uri === '/issues/new')
-                ? '<span class="active-page" aria-current="page">Nuova issue</span>'
-                : '<a href="/issues/new">Nuova issue</a>';
+                ? '<span class="active-page" aria-current="page">Nuovo guasto</span>'
+                : '<a href="/issues/new">Nuovo guasto</a>';
 
 
 

@@ -20,11 +20,12 @@ class BreadcrumbHelper
 
     public static function render(): string
     {
-        if (empty(self::$items)) {
+        // Se c'è solo "Home", non stampiamo nulla per non essere ridondanti
+        if (empty(self::$items) || count(self::$items) === 1) {
             return '';
         }
 
-        $html = '<nav class="breadcrumb" aria-label="breadcrumb">';
+        $html = '<nav class="breadcrumb-nav" aria-label="Percorso di navigazione">';
         $html .= '<ol>';
 
         $last = array_key_last(self::$items);
@@ -32,8 +33,10 @@ class BreadcrumbHelper
         foreach (self::$items as $i => $item) {
             $label = htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8');
             
-            $langAttr = ($item['label'] === 'Home') ? ' lang="en"' : '';
+            $english_words = ['Home'];
+            $langAttr = in_array($item['label'], $english_words) ? ' lang="en"' : '';
 
+            // Se è l'ultimo elemento o non ha URL, niente link circolare e aggiungiamo aria-current
             if ($i === $last || empty($item['url'])) {
                 $html .= '<li aria-current="page"' . $langAttr . '>' . $label . '</li>';
             } else {
