@@ -116,25 +116,22 @@ class IssueController extends Controller
 
     public function viewIssueDetail($id)
     {
-        $this->page_title = "Dettaglio Issue - UniFix";
+        $this->page_title = "Dettaglio Segnalazione - UniFix";
+        $this->scriptPathList = ["issue"];
+        
         $issue = $this->Issue->getIssueDetails($id);
 
+        $clean_title = htmlspecialchars(strip_tags($issue['issue_title']), ENT_QUOTES, 'UTF-8');
+        $this->page_description = "Dettaglio della segnalazione " . $clean_title . " - UniFix";
 
         $role = $_SESSION['user']['role'] ?? '';
         $has_privileges = $role === 'admin' || $role === 'technician';
         $is_owner = Auth::isLogged() && Auth::isOwner($issue['reporter_id']);
 
-        // mostra il bottone se ha i permessi o se è il proprietario
         $delete_issue_button = (Auth::isAdmin() || $is_owner)
-            ? '<form action="/issues/' . $issue['issue_id'] . '/delete" method="POST" onsubmit="return confirm(\'Vuoi eliminare questa segnalazione?\')">'
+            ? '<form action="/issues/' . $issue['issue_id'] . '/delete" method="POST" class="delete-issue-form">'
             . '<button class="btn-danger" type="submit">Elimina segnalazione</button>'
             . '</form>'
-            : '';
-
-        // ricava il reporter id se esist
-        $reporter_id = $issue['reporter_id'] ?? 'Utente eliminato';
-        $reporter = ($has_privileges)
-            ? '<li>Id utente segnalatore:' . $reporter_id . '</li>'
             : '';
 
         $takeIssueButton = '';
@@ -142,29 +139,63 @@ class IssueController extends Controller
 
         if ($role === 'technician') {
             if ($issue['issue_status'] === 'open') {
-                $takeIssueButton = '<form action="/issues/' . $issue['issue_id'] . '/take" method="POST">'
+                $takeIssueButton = '<form action="/issues/' . $issue['issue_id'] . '/take" method="POST" class="take-issue-form">'
                     . '<button class="btn-primary" type="submit">Prendi in carico</button>'
                     . '</form>';
             } elseif ($issue['issue_status'] === 'in_progress') {
-                $closeIssueButton = '<form action="/issues/' . $issue['issue_id'] . '/close" method="POST" onsubmit="return confirm(\'Confermi di aver risolto il problema e voler chiudere la segnalazione?\')">'
+                // Rimosso onsubmit, aggiunta classe
+                $closeIssueButton = '<form action="/issues/' . $issue['issue_id'] . '/close" method="POST" class="close-issue-form">'
                     . '<button class="btn-success" type="submit">Risolvi</button>'
                     . '</form>';
             }
         }
 
+        $status_translations = [
+            'open' => 'Aperto',
+            'in_progress' => 'In lavorazione',
+            'closed' => 'Chiuso',
+            'resolved' => 'Risolto'
+        ];
+        $status_en = $issue['issue_status'] ?? '';
+        $status_it = $status_translations[$status_en] ?? ucfirst($status_en);
+
+
+        $open_timestamp = strtotime($issue['opened_at']);
+        $open_datetime = date('Y-m-d\TH:i', $open_timestamp);
+        $open_date_human = date('d/m/Y H:i', $open_timestamp);
+
+        if (!empty($issue['closed_at'])) {
+            $close_timestamp = strtotime($issue['closed_at']);
+            $close_datetime = date('Y-m-d\TH:i', $close_timestamp);
+            $close_date_human = date('d/m/Y H:i', $close_timestamp);
+            $close_date_html = '<time datetime="' . $close_datetime . '">' . $close_date_human . '</time>';
+        } else {
+            $close_date_html = 'Non ancora chiusa';
+        }
+
+    
+        $reporter_id = $issue['reporter_id'] ?? 'Utente eliminato';
+        $reporter_html = ($has_privileges)
+            ? '<dt>Id utente segnalatore:</dt> <dd>' . $reporter_id . '</dd>'
+            : '';
+
         BreadcrumbHelper::add('Guasti', '/issues');
         BreadcrumbHelper::add($issue['issue_title']);
+
         $this->render('issueDetailPage', [
             'ISSUE_TITLE' => $issue['issue_title'],
-            'STATUS' => ucfirst(str_replace('_', ' ', $issue['issue_status'])),
-
-            //informazione sulla direzione
+            'STATUS' => $status_it,
+            'ISSUE_DESCRIPTION' => $issue['issue_description'],
             'BUILDING_NAME' => $issue['building_name'],
             'ROOM_NAME' => $issue['room_name'],
-            'OPEN_DATE' => date('d/m/Y', strtotime($issue['opened_at'])),
-            'CLOSE_DATE' => $issue['closed_at'] ? date('d/m/Y', strtotime($issue['closed_at'])) : 'Non ancora chiusa',
-            'TECHNICIAN_ID' => $issue['technician_id'] ?? 'Nessun tecnico assegnato',
-            'REPORTER_ID' => $reporter,
+
+            'OPEN_DATETIME' => $open_datetime,
+            'OPEN_DATE' => $open_date_human,
+            'CLOSE_DATE_HTML' => $close_date_html,
+
+            'TECHNICIAN_ID' => $issue['technician_id'] ?? 'Nessuno',
+            'REPORTER_HTML' => $reporter_html,
+
             'DELETE_ISSUE_BUTTON' => $delete_issue_button,
             'TAKE_ISSUE_BUTTON' => $takeIssueButton,
             'CLOSE_ISSUE_BUTTON' => $closeIssueButton
