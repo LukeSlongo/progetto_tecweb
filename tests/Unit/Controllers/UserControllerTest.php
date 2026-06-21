@@ -223,7 +223,20 @@ class UserControllerTest extends TestCase
 
         $controller->expects($this->once())
             ->method('render')
-            ->with('homePage', ['NOME_UTENTE' => 'mario_rossi']);
+            ->with(
+                $this->equalTo('homePage'),
+                $this->callback(function ($data) {
+                    // 1. Verifica fondamentale: il nome utente c'è ed è corretto?
+                    $this->assertEquals('mario_rossi', $data['NOME_UTENTE']);
+
+                    // 2. Verifichiamo che i nuovi componenti della UI siano stati passati
+                    $this->assertArrayHasKey('SEARCH_BANNER', $data);
+                    $this->assertArrayHasKey('CREATE_ISSUE_BANNER', $data);
+                    $this->assertArrayHasKey('STUDENT_SECTION', $data);
+
+                    return true;
+                })
+            );
 
         $controller->viewHome();
     }
