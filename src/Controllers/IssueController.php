@@ -90,14 +90,42 @@ class IssueController extends Controller
 
     public function viewIssueList()
     {
-        $this->page_title = "Issue List - UniFix";
+        $this->page_title = "Elenco Guasti - UniFix";
         $this->scriptPathList = ["issue"];
 
         $status = $this->get('status');
         $issues = $this->searchIssues($status);
 
-        $items_html = ComponentHelper::renderList('issueListItem', $issues);
+       if (empty($issues)) {
+            $messaggio = "Nessuna segnalazione trovata per i criteri selezionati.";
+            $items_html = '<tr><td colspan="5" style="text-align: center; padding: 2.5rem; color: var(--text-gray);"><span role="status">' . $messaggio . '</span></td></tr>';
+        } else {
+            $status_translations = [
+                'open' => 'Aperto',
+                'in_progress' => 'In lavorazione',
+                'closed' => 'Chiuso',
+                'resolved' => 'Risolto'
+            ];
+
+            foreach ($issues as &$issue) {
+                $status_en = $issue['issue_status'] ?? '';
+                if (isset($status_translations[$status_en])) {
+                    $issue['issue_status'] = $status_translations[$status_en];
+                }
+
+                if (isset($issue['opened_at'])) {
+                    $timestamp = strtotime($issue['opened_at']);
+                    $issue['DATETIME_ATTR'] = date('Y-m-d', $timestamp);
+                    $issue['OPENED_AT'] = date('d/m/Y', $timestamp);
+                }
+            }
+            unset($issue);
+
+            $items_html = ComponentHelper::renderList('issueListItem', $issues);
+        }
+
         BreadcrumbHelper::add('Guasti', '/issues');
+        
         $this->render('issueListPage', [
             'ISSUE_LIST_ITEMS' => $items_html,
             'CHECKED_ALL' => empty($status) ? 'checked' : '',
