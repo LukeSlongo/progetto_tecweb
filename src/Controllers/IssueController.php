@@ -116,35 +116,89 @@ class IssueController extends Controller
 
     public function viewIssueDetail($id)
     {
-        $this->page_title = "Dettaglio Issue - UniFix";
+        $this->page_title = "Dettaglio Segnalazione - UniFix";
+        $this->scriptPathList = ["issue"];
+        
         $issue = $this->Issue->getIssueDetails($id);
 
+        $clean_title = htmlspecialchars(strip_tags($issue['issue_title']), ENT_QUOTES, 'UTF-8');
+        $this->page_description = "Dettaglio della segnalazione " . $clean_title . " - UniFix";
 
         $role = $_SESSION['user']['role'] ?? '';
-        $can_see_reporter = ($role === 'admin' || $role === 'technician');
-        $deleteIssueButton = (Auth::isAdmin() || (Auth::isLogged() && Auth::isOwner($issue['reporter_id'])))
-            ? '<form action="/issues/' . $issue['issue_id'] . '/delete" method="POST" onsubmit="return confirm(\'Vuoi eliminare questa segnalazione?\')">'
-            . '<button class="btn btn-primary" type="submit">Elimina segnalazione</button>'
+        $has_privileges = $role === 'admin' || $role === 'technician';
+        $is_owner = Auth::isLogged() && Auth::isOwner($issue['reporter_id']);
+
+        $delete_issue_button = (Auth::isAdmin() || $is_owner)
+            ? '<form action="/issues/' . $issue['issue_id'] . '/delete" method="POST" class="delete-issue-form">'
+            . '<button class="btn-danger" type="submit">Elimina segnalazione</button>'
             . '</form>'
             : '';
+
+        $takeIssueButton = '';
+        $closeIssueButton = '';
+
+        if ($role === 'technician') {
+            if ($issue['issue_status'] === 'open') {
+                $takeIssueButton = '<form action="/issues/' . $issue['issue_id'] . '/take" method="POST" class="take-issue-form">'
+                    . '<button class="btn-primary" type="submit">Prendi in carico</button>'
+                    . '</form>';
+            } elseif ($issue['issue_status'] === 'in_progress') {
+                // Rimosso onsubmit, aggiunta classe
+                $closeIssueButton = '<form action="/issues/' . $issue['issue_id'] . '/close" method="POST" class="close-issue-form">'
+                    . '<button class="btn-success" type="submit">Risolvi</button>'
+                    . '</form>';
+            }
+        }
+
+        $status_translations = [
+            'open' => 'Aperto',
+            'in_progress' => 'In lavorazione',
+            'closed' => 'Chiuso',
+            'resolved' => 'Risolto'
+        ];
+        $status_en = $issue['issue_status'] ?? '';
+        $status_it = $status_translations[$status_en] ?? ucfirst($status_en);
+
+
+        $open_timestamp = strtotime($issue['opened_at']);
+        $open_datetime = date('Y-m-d\TH:i', $open_timestamp);
+        $open_date_human = date('d/m/Y H:i', $open_timestamp);
+
+        if (!empty($issue['closed_at'])) {
+            $close_timestamp = strtotime($issue['closed_at']);
+            $close_datetime = date('Y-m-d\TH:i', $close_timestamp);
+            $close_date_human = date('d/m/Y H:i', $close_timestamp);
+            $close_date_html = '<time datetime="' . $close_datetime . '">' . $close_date_human . '</time>';
+        } else {
+            $close_date_html = 'Non ancora chiusa';
+        }
+
+    
+        $reporter_id = $issue['reporter_id'] ?? 'Utente eliminato';
+        $reporter_html = ($has_privileges)
+            ? '<dt>Id utente segnalatore:</dt> <dd>' . $reporter_id . '</dd>'
+            : '';
+
         BreadcrumbHelper::add('Guasti', '/issues');
         BreadcrumbHelper::add($issue['issue_title']);
+
         $this->render('issueDetailPage', [
             'ISSUE_TITLE' => $issue['issue_title'],
-            'STATUS' => ucfirst(str_replace('_', ' ', $issue['issue_status'])),
-
-            //informazione sulla direzione
+            'STATUS' => $status_it,
+            'ISSUE_DESCRIPTION' => $issue['issue_description'],
             'BUILDING_NAME' => $issue['building_name'],
             'ROOM_NAME' => $issue['room_name'],
 
-            //data di inizio e di fine, con formatto
-            'OPEN_DATE' => date('d/m/Y H:i', strtotime($issue['opened_at'])),
-            'CLOSE_DATE' => $issue['closed_at'] ? date('d/m/Y H:i', strtotime($issue['closed_at'])) : 'Non ancora chiusa',
+            'OPEN_DATETIME' => $open_datetime,
+            'OPEN_DATE' => $open_date_human,
+            'CLOSE_DATE_HTML' => $close_date_html,
 
-            // Controlla se il tecnico è assegnato, altrimenti mostra un messaggio di default, e se il reporter è visibile in base al ruolo dell'utente
-            'TECHNICIAN_NAME' => $issue['technician_name'] ?? 'Nessun tecnico assegnato',
-            'REPORTER_NAME' => $can_see_reporter ? ($issue['reporter_name'] ?? 'Utente eliminato') : 'Nascosto (Solo Admin/Tecnico)',
-            'DELETE_ISSUE_BUTTON' => $deleteIssueButton
+            'TECHNICIAN_ID' => $issue['technician_id'] ?? 'Nessuno',
+            'REPORTER_HTML' => $reporter_html,
+
+            'DELETE_ISSUE_BUTTON' => $delete_issue_button,
+            'TAKE_ISSUE_BUTTON' => $takeIssueButton,
+            'CLOSE_ISSUE_BUTTON' => $closeIssueButton
         ]);
     }
 
@@ -155,5 +209,47 @@ class IssueController extends Controller
         }
         $this->Issue->delete($id);
         $this->redirect('/issues');
+    }
+
+    public function takeIssue($id)
+    {
+        $user = Auth::getUser();
+
+        // Controllo di sicurezza: solo i tecnici possono prendere in carico le issue
+        if (!$user || $user['role'] !== 'technician') {
+            $_SESSION['flash_error'] = "Azione non consentita. Solo i tecnici possono prendere in carico le segnalazioni.";
+            $this->redirect("/issues/{$id}");
+            return;
+        }
+
+        try {
+            $this->Issue->takeIssue($id, $user['id']);
+            $_SESSION['flash_success'] = "Hai preso in carico la segnalazione con successo.";
+        } catch (\Exception $e) {
+            $_SESSION['flash_error'] = "Errore durante la presa in carico della segnalazione.";
+        }
+
+        $this->redirect("/issues/{$id}");
+    }
+
+    public function closeIssue($id)
+    {
+        $user = Auth::getUser();
+
+        // Controllo di sicurezza: solo i tecnici possono chiudere le issue
+        if (!$user || $user['role'] !== 'technician') {
+            $_SESSION['flash_error'] = "Azione non consentita. Solo i tecnici possono risolvere le segnalazioni.";
+            $this->redirect("/issues/{$id}");
+            return;
+        }
+
+        try {
+            $this->Issue->closeIssue($id);
+            $_SESSION['flash_success'] = "Segnalazione risolta e chiusa con successo.";
+        } catch (\Exception $e) {
+            $_SESSION['flash_error'] = "Errore durante la chiusura della segnalazione.";
+        }
+
+        $this->redirect("/issues/{$id}");
     }
 }

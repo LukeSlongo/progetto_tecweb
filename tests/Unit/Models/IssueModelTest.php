@@ -105,6 +105,7 @@ class IssueModelTest extends TestCase
 
         $mockPdo = $this->createMock(PDO::class);
         $mockPdo->method('prepare')->willReturn($mockStmt);
+        $mockPdo->method('query')->willReturn($mockStmt);
 
         $mockDb = new class ($mockPdo, $mockStmt) {
             private $pdo;
@@ -147,7 +148,6 @@ class IssueModelTest extends TestCase
 
     public function test_getIssuesByRoom_ritorna_lista_segnalazioni_se_esistono()
     {
-        // 1. Prepariamo i dati finti che il database dovrebbe restituire
         $segnalazioniFinte = [
             [
                 'issue_id' => 1,
@@ -163,19 +163,13 @@ class IssueModelTest extends TestCase
             ]
         ];
 
-        // 2. Iniettiamo i dati finti
         $this->mockDatabase($segnalazioniFinte);
 
-        // 3. Istanziamo il Model e chiamiamo la funzione
         $model = new IssueModel();
-        $risultato = $model->getIssuesByRoom(1); // L'ID non importa davvero perché il DB è finto
+        $risultato = $model->getIssuesByRoom(1);
 
-        // 4. Verifichiamo che i dati tornino esattamente come ce li aspettiamo
         $this->assertIsArray($risultato);
         $this->assertCount(2, $risultato);
-
-
-        // Controlliamo il contenuto del primo elemento
         $this->assertEquals(1, $risultato[0]['issue_id']);
         $this->assertEquals('Proiettore non funzionante', $risultato[0]['issue_title']);
         $this->assertEquals('open', $risultato[0]['issue_status']);
@@ -183,34 +177,27 @@ class IssueModelTest extends TestCase
 
     public function test_getIssuesByRoom_ritorna_array_vuoto_se_non_ci_sono_segnalazioni()
     {
-        // 1. Se la stanza non ha issue, fetchAll restituisce un array vuoto
         $this->mockDatabase([]);
 
-        // 2. Istanziamo il Model e chiamiamo la funzione (es. una stanza appena creata)
         $model = new IssueModel();
         $risultato = $model->getIssuesByRoom(99);
 
-        // 3. Verifichiamo che il risultato sia un array vuoto, e non false o null
         $this->assertIsArray($risultato);
         $this->assertEmpty($risultato);
     }
 
     public function test_getIssuesByStatus_senza_parametro_ritorna_tutte_le_segnalazioni()
     {
-        // 1. Prepariamo un mix di segnalazioni finte (es. una aperta e una chiusa)
         $segnalazioniMiste = [
             ['issue_id' => 1, 'issue_title' => 'Computer rotto', 'issue_status' => 'open', 'issue_room' => 'Aula 1'],
             ['issue_id' => 2, 'issue_title' => 'Luce guasta', 'issue_status' => 'closed', 'issue_room' => 'Aula 2']
         ];
 
-        // 2. Iniettiamo i dati nel database finto
         $this->mockDatabase($segnalazioniMiste);
 
-        // 3. Chiamiamo il metodo SENZA passare nulla
         $model = new IssueModel();
-        $risultato = $model->getIssuesByStatus(); // o getIssuesByStatus(null)
+        $risultato = $model->getIssuesByStatus();
 
-        // 4. Verifichiamo che ci torni esattamente tutto il blocco intero
         $this->assertIsArray($risultato);
         $this->assertCount(2, $risultato);
         $this->assertEquals('Computer rotto', $risultato[0]['issue_title']);
@@ -218,28 +205,20 @@ class IssueModelTest extends TestCase
 
     public function test_getIssuesByStatus_con_parametro_ritorna_solo_quelle_richieste()
     {
-        // 1. Prepariamo solo segnalazioni "in_progress"
         $segnalazioniFiltrate = [
             ['issue_id' => 3, 'issue_title' => 'Sedia rotta', 'issue_status' => 'in_progress', 'issue_room' => 'Aula 3']
         ];
 
-        // 2. Iniettiamo i dati
         $this->mockDatabase($segnalazioniFiltrate);
 
-        // 3. Chiamiamo il metodo PASSANDO il filtro
         $model = new IssueModel();
         $risultato = $model->getIssuesByStatus('in_progress');
 
-        // 4. Verifiche
         $this->assertIsArray($risultato);
         $this->assertCount(1, $risultato);
-
-
-        // Verifichiamo che il dato passato mantenga la struttura corretta
         $this->assertEquals('in_progress', $risultato[0]['issue_status']);
         $this->assertEquals('Aula 3', $risultato[0]['issue_room']);
     }
-
 
     // =================================================================
     // TEST: find_issue
@@ -259,7 +238,6 @@ class IssueModelTest extends TestCase
 
     public function test_find_issue_ritorna_false_se_non_esiste()
     {
-        // Se il DB non trova nulla, fetch() restituisce false
         $this->mockDatabaseFetchOne(false);
 
         $model = new IssueModel();
@@ -279,7 +257,10 @@ class IssueModelTest extends TestCase
             'issue_title' => 'Problema gravissimo',
             'room_name' => 'Aula Magna',
             'building_name' => 'Edificio A',
-            'reporter_name' => 'mario.rossi'
+            'reporter_id' => 3,
+            'reporter_name' => 'mario.rossi',
+            'technician_id' => 2,
+            'technician_name' => 'tecnico.luigi'
         ];
         $this->mockDatabaseFetchOne($dettagliFinti);
 
@@ -298,15 +279,33 @@ class IssueModelTest extends TestCase
 
     public function test_registerIssue_esegue_inserimento_con_successo()
     {
-        // Prepariamo il DB finto per rispondere "OK" a un'esecuzione (execute)
         $this->mockDatabaseExecute();
 
         $model = new IssueModel();
-
-        // Passiamo i dati finti: user_id=1, room_id=2, titolo, descrizione
         $risultato = $model->registerIssue(1, 2, 'Computer bruciato', 'Puzza di fumo');
 
-        // Nel tuo Model base, la funzione query() restituisce l'oggetto PDOStatement su successo
+        $this->assertInstanceOf(PDOStatement::class, $risultato);
+    }
+
+    // --- I TEST PER LA GESTIONE DELLE ISSUE (TECNICO) ---
+
+    public function test_takeIssue_esegue_update_correttamente()
+    {
+        $this->mockDatabaseExecute();
+
+        $model = new IssueModel();
+        $risultato = $model->takeIssue(10, 2);
+
+        $this->assertInstanceOf(PDOStatement::class, $risultato);
+    }
+
+    public function test_closeIssue_esegue_update_correttamente()
+    {
+        $this->mockDatabaseExecute();
+
+        $model = new IssueModel();
+        $risultato = $model->closeIssue(10);
+
         $this->assertInstanceOf(PDOStatement::class, $risultato);
     }
 }
