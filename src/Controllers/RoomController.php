@@ -33,6 +33,18 @@ class RoomController extends Controller
 
             $items_html = '<tr><td colspan="4" style="text-align: center; padding: 2.5rem; color: var(--text-gray);">' . $messaggio . '</td></tr>';
         } else {
+            $role = $_SESSION['user']['role'] ?? '';
+
+            foreach ($rooms as &$room) {
+                if ($role === 'student') {
+                    $room['HIDE_FAVORITE'] = ''; 
+                    $room['SHOW_ADMIN_TEXT'] = 'display: none;';
+                } else {
+                    $room['HIDE_FAVORITE'] = 'display: none;';
+                    $room['SHOW_ADMIN_TEXT'] = '';
+                }
+            }
+            unset($room);
             $items_html = ComponentHelper::renderList('roomListItem', $rooms);
         }
 
@@ -83,6 +95,10 @@ class RoomController extends Controller
         } else {
             $issues_html = ComponentHelper::renderList('issueListItemRoomPage', $issues_of_room);
         }
+
+        $role = $_SESSION['user']['role'] ?? '';
+        $hide_favorite_class = ($role === 'student') ? '' : 'display: none;';
+
         $this->scriptPathList[] = 'room';
         BreadcrumbHelper::add('Aule', '/rooms');
         BreadcrumbHelper::add($room_data['room_name']);
@@ -91,7 +107,8 @@ class RoomController extends Controller
             'ROOM_ID' => $room_data['room_id'],
             'BUILDING_NAME' => $room_data['building_name'],
             'BUILDING_ADDRESS' => $room_data['building_address'],
-            'ISSUES_LIST' => $issues_html
+            'ISSUES_LIST' => $issues_html,
+            'HIDE_FAVORITE_CLASS' => $hide_favorite_class
         ]);
     }
 

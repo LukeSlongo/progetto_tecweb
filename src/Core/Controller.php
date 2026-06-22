@@ -17,6 +17,7 @@ abstract class Controller
 
     public function render($view, $data = [], $layout = 'main')
     {
+        $role = $_SESSION['user']['role'] ?? '';
 
         if (isset($_SESSION['flash_error'])) {
             $data['FLASH_ERROR'] = $_SESSION['flash_error'];
@@ -43,10 +44,18 @@ abstract class Controller
                 : '<a href="/">Home</a>';
 
             $nav_issue = ($current_uri === '/issues/new')
-                ? '<span class="active-page" aria-current="page">Nuovo guasto</span>'
-                : '<a href="/issues/new">Nuovo guasto</a>';
+                ? '<span class="active-page" aria-current="page">Nuovo Guasto</span>'
+                : '<a href="/issues/new">Nuovo Guasto</a>';
 
-
+            $nav_aule = ($current_uri === '/rooms')
+                ? '<span class="active-page" aria-current="page">Lista Aule</span>'
+                : '<a href="/rooms">Lista Aule</a>';
+ 
+            $nav_utenti = ($current_uri === '/users')
+                ? '<span class="active-page" aria-current="page">Gestione Utenti</span>'
+                : '<a href="/users">Gestione Utenti</a>';
+            
+            $nascondere_utenti= ($role === 'admin') ? '' : 'display: none;';
 
             $layout_data = [
                 'CLASSE_PAGINA' => strtolower($view),
@@ -59,6 +68,9 @@ abstract class Controller
                 'UTENTE_LOGGATO' => (Auth::isLogged()) ? "true" : "false",
                 'NAV_HOME' => $nav_home,
                 'NAV_NUOVA_ISSUE' => $nav_issue,
+                'NAV_LISTA_AULE' => $nav_aule,
+                'NAV_LISTA_UTENTI' => $nav_utenti,
+                'NASCONDERE_UTENTI' => $nascondere_utenti,
             ];
             $layout_file->setPageData($layout_data);
         } else {

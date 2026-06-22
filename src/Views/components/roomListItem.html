@@ -5,6 +5,7 @@
         <a href="/rooms/##ROOM_ID##" class="btn-view" aria-label="Visualizza ##ROOM_NAME##">Visualizza</a>
     </td>
     <td>
+        <div style="##HIDE_FAVORITE##">
         <form action="/api/favorites/##ROOM_ID##/add"
               method="POST"
               class="favorite-form"
@@ -19,5 +20,9 @@
                 Preferiti
             </button>
         </form>
+        </div>
+        <span style="##SHOW_ADMIN_TEXT## color: var(--text-black); font-size: 0.9em, font-weight: 600;">
+        Solo Studenti
+        </span>
     </td>
 </tr>
