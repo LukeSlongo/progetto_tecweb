@@ -26,7 +26,15 @@ class RoomController extends Controller
     {
         $query = $this->get('search');
         $rooms = $this->searchRoom($query);
-        $items_html = ComponentHelper::renderList('roomListItem', $rooms);
+        if (empty($rooms)) {
+            $messaggio = !empty($query) 
+                ? "Nessuna corrispondenza trovata per la ricerca: <strong>" . htmlspecialchars($query) . "</strong>" 
+                : "Nessuna aula disponibile al momento.";
+
+            $items_html = '<tr><td colspan="4" style="text-align: center; padding: 2.5rem; color: var(--text-gray);">' . $messaggio . '</td></tr>';
+        } else {
+            $items_html = ComponentHelper::renderList('roomListItem', $rooms);
+        }
 
         $this->page_title = "Aule - UniFix";
         $this->scriptPathList[] = 'room';

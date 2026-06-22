@@ -217,11 +217,11 @@ class UserControllerTest extends TestCase
         // Simuliamo un utente loggato in sessione
         $_SESSION['user'] = ['username' => 'mario_rossi'];
 
-        $controller = $this->getMockBuilder(UserController::class)
+        $controllerMock = $this->getMockBuilder(UserController::class)
             ->onlyMethods(['render'])
             ->getMock();
 
-        $controller->expects($this->once())
+        $controllerMock->expects($this->once())
             ->method('render')
             ->with(
                 $this->equalTo('homePage'),
@@ -238,7 +238,7 @@ class UserControllerTest extends TestCase
                 })
             );
 
-        $controller->viewHome();
+        $controllerMock->viewHome();
     }
 
     public function test_viewUserList_recupera_utenti_e_renderizza_lista()
