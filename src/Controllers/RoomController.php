@@ -5,6 +5,8 @@ use App\Core\Controller;
 use App\Models\IssueModel;
 use App\Models\RoomModel;
 use App\Helpers\ComponentHelper;
+use \App\Helpers\BreadcrumbHelper;
+
 use App\Core\Auth;
 
 class RoomController extends Controller
@@ -15,7 +17,8 @@ class RoomController extends Controller
     public function __construct()
     {
         $this->Room = new RoomModel();
-        //BreadcrumbHelper::reset();
+        BreadcrumbHelper::reset();
+        BreadcrumbHelper::add('Home', '/');
     }
 
     // esegue la ricerca con la funzione searchRoom e carica la pagina con i dati ricercati
@@ -35,6 +38,7 @@ class RoomController extends Controller
 
         $this->page_title = "Aule - UniFix";
         $this->scriptPathList[] = 'room';
+        BreadcrumbHelper::add('Aule', '/rooms');
         $this->render('roomListPage', ['ROOM_LIST_ITEMS' => $items_html]);
     }
 
@@ -56,9 +60,32 @@ class RoomController extends Controller
 
         $issue_model = new IssueModel();
         $issues_of_room = $issue_model->getIssuesByRoom($room_id);
-        $issues_html = ComponentHelper::renderList('issueListItem', $issues_of_room);
-        $this->scriptPathList[] = 'room';
 
+        $status_translations = [
+            'open' => 'Aperto',
+            'in_progress' => 'In riparazione',
+            'closed' => 'Chiuso',
+            'resolved' => 'Risolto'
+        ];
+
+        foreach ($issues_of_room as &$issue) {
+            $status_en = $issue['issue_status'] ?? ''; 
+            
+            if (isset($status_translations[$status_en])) {
+                $issue['issue_status'] = $status_translations[$status_en];
+            }
+        }
+        unset($issue);
+
+        if (empty($issues_of_room)) {
+            $messaggio = "Nessuna segnalazione presente per questa aula. Tutto funziona correttamente!";
+            $issues_html = '<tr><td colspan="4" style="text-align: center; padding: 2.5rem; color: var(--success-green); font-weight: 600;">' . $messaggio . '</td></tr>';
+        } else {
+            $issues_html = ComponentHelper::renderList('issueListItemRoomPage', $issues_of_room);
+        }
+        $this->scriptPathList[] = 'room';
+        BreadcrumbHelper::add('Aule', '/rooms');
+        BreadcrumbHelper::add($room_data['room_name']);
         $this->render('roomDetailPage', [
             'ROOM_NAME' => $room_data['room_name'],
             'ROOM_ID' => $room_data['room_id'],

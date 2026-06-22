@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Core\Template;
 use App\Models\BuildingModel;
+use \App\Helpers\BreadcrumbHelper;
 
 class BuildingController extends Controller {
 
@@ -12,7 +13,7 @@ class BuildingController extends Controller {
     public function __construct()
     {
         $this->Building = new BuildingModel();
-        //BreadcrumbHelper::reset();
+        BreadcrumbHelper::reset();
     }
 
     public function get_edifici_by_dipartimento() {

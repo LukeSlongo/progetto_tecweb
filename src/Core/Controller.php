@@ -4,7 +4,7 @@ use App\Core\Template;
 use App\Helpers\ScriptHelper;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\ForbiddenException;
-
+use App\Helpers\BreadcrumbHelper;
 use Exception;
 
 
@@ -43,8 +43,8 @@ abstract class Controller
                 : '<a href="/">Home</a>';
 
             $nav_issue = ($current_uri === '/issues/new')
-                ? '<span class="active-page" aria-current="page">Nuova issue</span>'
-                : '<a href="/issues/new">Nuova issue</a>';
+                ? '<span class="active-page" aria-current="page">Nuovo guasto</span>'
+                : '<a href="/issues/new">Nuovo guasto</a>';
 
 
 
@@ -55,6 +55,7 @@ abstract class Controller
                 'IMPORT_SCRIPTS' => ScriptHelper::import_script($this->scriptPathList),
                 'TITOLO_PAGINA' => $this->page_title,
                 'DESCRIZIONE_PAGINA' => $this->page_description,
+                'BREADCRUMB' => BreadCrumbHelper::render(),
                 'UTENTE_LOGGATO' => (Auth::isLogged()) ? "true" : "false",
                 'NAV_HOME' => $nav_home,
                 'NAV_NUOVA_ISSUE' => $nav_issue,
