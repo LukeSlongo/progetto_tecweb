@@ -102,8 +102,10 @@ class IssueModel extends Model
                 i.status AS issue_status,
                 i.opened_at AS opened_at,
                 i.closed_at AS closed_at,     
-                b.name AS building_name,      
+                b.name AS building_name,
+                b.id AS building_id,      
                 r.name AS room_name,
+                r.id AS room_id,
                 u.id AS reporter_id,
                 u.username AS reporter_name, 
                 t.id AS technician_id,  
@@ -156,6 +158,13 @@ class IssueModel extends Model
                 VALUES (?, ?, ?, ?)";
 
         return $this->query($sql, [$user_id, $room_id, $title, $description]);
+    }
+
+    public function updateIssue($issue_id, $room_id, $title, $description)
+    {
+        $this->checkTable();
+        $sql = "UPDATE {$this->table} SET room_id = ?, title = ?, description = ? WHERE id = ?";
+        return $this->query($sql, [$room_id, $title, $description, $issue_id]);
     }
 
 }
