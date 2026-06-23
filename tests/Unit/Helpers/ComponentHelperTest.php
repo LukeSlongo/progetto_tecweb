@@ -72,4 +72,29 @@ class ComponentHelperTest extends TestCase
         $this->assertStringContainsString('&lt;script&gt;', $risultato);
         $this->assertStringNotContainsString('<script>', $risultato);
     }
+
+    public function test_renderList_lascia_intatto_l_html_dei_placeholder_button()
+    {
+        $componentName = 'test_dummy_component_button';
+        $file = $this->componentsPath . '/' . $componentName . '.html';
+        file_put_contents($file, "<div class='user'>Nome: ##NOME## ##CONTENT_BUTTON##</div>\n");
+
+        try {
+            $dati = [
+                [
+                    'nome' => '<b>Mario</b>',
+                    'content_button' => '<form action="/test"><button type="submit">Preferiti</button></form>'
+                ]
+            ];
+
+            $risultato = ComponentHelper::renderList($componentName, $dati);
+
+            $this->assertStringContainsString('&lt;b&gt;Mario&lt;/b&gt;', $risultato);
+            $this->assertStringContainsString('<form action="/test"><button type="submit">Preferiti</button></form>', $risultato);
+        } finally {
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
+    }
 }

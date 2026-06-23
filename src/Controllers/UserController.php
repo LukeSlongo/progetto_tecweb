@@ -15,6 +15,7 @@ class UserController extends Controller
     public function viewRegister()
     {
         $this->page_title = "Registrazione - UniFix";
+        $this->page_description = "Crea un nuovo account su UniFix per accedere alle funzionalità di segnalazione e monitoraggio.";
         $this->render('registerPage', [], 'auth');
     }
 
@@ -44,6 +45,7 @@ class UserController extends Controller
     public function viewLogin()
     {
         $this->page_title = "Login - UniFix";
+        $this->page_description = "Accedi al tuo account UniFix per gestire le segnalazioni e le aule.";
         $this->render('loginPage', [], 'auth');
     }
 
@@ -109,6 +111,7 @@ class UserController extends Controller
         $items_html = ComponentHelper::renderList('userListItem', $users);
 
         $this->page_title = "Gestione Utenti - UniFix";
+        $this->page_description = "Visualizza l'elenco degli utenti registrati al sistema UniFix e i loro ruoli.";
         BreadcrumbHelper::reset();
         BreadcrumbHelper::add('Home', '/');
         BreadcrumbHelper::add('Utenti');

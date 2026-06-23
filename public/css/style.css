@@ -110,6 +110,10 @@ main {
     top: 0;
 }
 
+/*per occultare gli elementi*/
+.hidden {
+    display: none !important;
+}
 
 /*
 =========================================
@@ -663,7 +667,7 @@ footer {
     padding: 2px 1rem;
     margin: 0;
     gap: 0.5rem;
-    background-color: var(--bg-card);
+    background-color: var(--primary-blue);
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 
@@ -674,7 +678,7 @@ footer {
     display: flex;
     align-items: center;
     font-weight: 600;
-    color: var(--primary-blue);
+    color: var(--text-white);
 }
 
 /*mette ">" tra pagine che non sono l'ultima per avere sneso de dove veniamo*/
@@ -682,7 +686,7 @@ footer {
     content: ">";
     margin-left: 0.5rem;
     font-size: 1.1rem;
-    color: black;
+    color: var(--text-white);
 }
 
 /*elimina colore dei link*/
@@ -801,6 +805,7 @@ footer {
     display: flex;
     align-items: center;
     gap: 1rem;
+    border-radius: 6px;
 }
 
 .room-header h2 {
@@ -944,7 +949,7 @@ fieldset.form-gray-box legend {
 /* Stile per la nota introduttiva */
 .mandatory-note {
     font-size: 0.9rem;
-    color: var(--text-gray);
+    color: var(--text-black);
     margin-top: 0;
     margin-bottom: 2rem;
 }
@@ -1045,7 +1050,7 @@ fieldset.form-gray-box legend {
 
 /* Testo della descrizione */
 .issue-description p {
-    color: var(--text-gray);
+    color: var(--text-blue);
     line-height: 1.6;
     font-size: 1.05rem;
 }

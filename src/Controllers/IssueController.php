@@ -26,6 +26,7 @@ class IssueController extends Controller
     public function viewIssueForm()
     {
         $this->page_title = "Nuova Segnalazione - UniFix";
+        $this->page_description = "Compila il modulo per creare una nuova segnalazione di guasto o problema in un'aula.";
 
         $buildingModel = new BuildingModel();
         $roomModel = new RoomModel();
@@ -48,7 +49,7 @@ class IssueController extends Controller
             }
             $roomsHtml .= '</optgroup>';
         }
-        BreadcrumbHelper::add('Nuovo guasto');
+        BreadcrumbHelper::add('Nuova segnalazione');
         $this->render('issueFormPage', [
             'BUILDING_OPTIONS' => $buildingsHtml,
             'ROOM_OPTIONS' => $roomsHtml
@@ -90,7 +91,8 @@ class IssueController extends Controller
 
     public function viewIssueList()
     {
-        $this->page_title = "Elenco Guasti - UniFix";
+        $this->page_title = "Elenco Segnalazioni - UniFix";
+        $this->page_description = "Visualizza tutte le segnalazioni presenti nel sistema UniFix.";
         $this->scriptPathList = ["issue"];
 
         $status = $this->get('status');
@@ -124,7 +126,7 @@ class IssueController extends Controller
             $items_html = ComponentHelper::renderList('issueListItem', $issues);
         }
 
-        BreadcrumbHelper::add('Guasti', '/issues');
+        BreadcrumbHelper::add('Segnalazioni', '/issues');
         
         $this->render('issueListPage', [
             'ISSUE_LIST_ITEMS' => $items_html,
@@ -207,7 +209,7 @@ class IssueController extends Controller
             ? '<dt>Id utente segnalatore:</dt> <dd>' . $reporter_id . '</dd>'
             : '';
 
-        BreadcrumbHelper::add('Guasti', '/issues');
+        BreadcrumbHelper::add('Segnalazioni', '/issues');
         BreadcrumbHelper::add($issue['issue_title']);
 
         $this->render('issueDetailPage', [
