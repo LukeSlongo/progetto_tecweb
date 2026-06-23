@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Core\Auth;
+use App\Core\Template;
 use App\Models\UserModel;
 use App\Models\IssueModel;
 use App\Models\RoomModel;
@@ -113,7 +114,7 @@ class UserController extends Controller
         ];
         foreach ($users as &$user) {
             $ruolo_inglese = $user['role'];
-            
+
             if (isset($role_translations[$ruolo_inglese])) {
                 $user['role'] = $role_translations[$ruolo_inglese];
             }
@@ -140,6 +141,7 @@ class UserController extends Controller
         $role = $utente['role'] ?? 'guest';
 
         $student_section_html = '';
+        $technician_section_html = '';
 
         if ($role === 'student') {
             $room_model = new RoomModel();
@@ -171,18 +173,52 @@ class UserController extends Controller
                 ? '<p style="color: var(--text-gray);">Non hai aperto nessuna segnalazione.</p>'
                 : ComponentHelper::renderList('issueCard', $iss_data);
 
-            $section = new \App\Core\Template('components/studentHomeSection');
+            $section = new Template('components/studentHomeSection');
             $section->setPageData([
-                    'FAVORITES_CAROUSEL' => $favorites_html,
-                    'MY_ISSUES_CAROUSEL' => $my_issues_html,
-                ]);
+                'FAVORITES_CAROUSEL' => $favorites_html,
+                'MY_ISSUES_CAROUSEL' => $my_issues_html,
+            ]);
             $student_section_html = $section->getPage();
 
+        } elseif ($role === 'technician') {
+            $issue_model = new IssueModel();
+
+            $my_tasks = $issue_model->getIssuesByTechnician($utente['id']);
+            $tasks_data = [];
+            foreach ($my_tasks as $issue) {
+                $issue['STATUS_FORMATTED'] = 'In lavorazione';
+                $tasks_data[] = $issue;
+            }
+
+            $my_tasks_html = empty($tasks_data)
+                ? '<p style="color: var(--text-gray);">Ottimo lavoro! Non hai segnalazioni in carico al momento.</p>'
+                : ComponentHelper::renderList('issueCard', $tasks_data);
+
+            $open_issues = $issue_model->getIssuesByStatus('open');
+            $open_issues = array_slice($open_issues, 0, 5);
+            $open_data = [];
+            foreach ($open_issues as $issue) {
+                $issue['STATUS_FORMATTED'] = 'Aperto';
+                $open_data[] = $issue;
+            }
+
+            $open_issues_html = empty($open_data)
+                ? '<p style="color: var(--text-gray);">Nessuna nuova segnalazione in attesa.</p>'
+                : ComponentHelper::renderList('issueCard', $open_data);
+
+            $section = new Template('components/technicianHomeSection');
+            $section->setPageData([
+                'MY_TASKS_CAROUSEL' => $my_tasks_html,
+                'OPEN_ISSUES_CAROUSEL' => $open_issues_html,
+            ]);
+            $technician_section_html = $section->getPage();
         }
-        $search_banner_temp = new \App\Core\Template('components/searchBanner');
+
+
+        $search_banner_temp = new Template('components/searchBanner');
         $search_banner = $search_banner_temp->getPage();
 
-        $create_banner_temp = new \App\Core\Template('components/createIssueBanner');
+        $create_banner_temp = new Template('components/createIssueBanner');
         $create_banner = $create_banner_temp->getPage();
         $this->scriptPathList[] = 'home';
 
@@ -195,7 +231,8 @@ class UserController extends Controller
             'NOME_UTENTE' => htmlspecialchars($utente['username']),
             'SEARCH_BANNER' => $search_banner,
             'CREATE_ISSUE_BANNER' => $create_banner,
-            'STUDENT_SECTION' => $student_section_html
+            'STUDENT_SECTION' => $student_section_html,
+            'TECHNICIAN_SECTION' => $technician_section_html
         ]);
     }
 
