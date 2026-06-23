@@ -168,11 +168,12 @@ class IssueController extends Controller
         $closeIssueButton = '';
 
         if ($role === 'technician') {
+            $user_id = $_SESSION['user']['id'];
             if ($issue['issue_status'] === 'open') {
                 $takeIssueButton = '<form action="/issues/' . $issue['issue_id'] . '/take" method="POST" class="take-issue-form">'
                     . '<button class="btn-primary" type="submit">Prendi in carico</button>'
                     . '</form>';
-            } elseif ($issue['issue_status'] === 'in_progress') {
+            } elseif ($issue['issue_status'] === 'in_progress' && $issue['technician_id'] == $user_id) {
                 // Rimosso onsubmit, aggiunta classe
                 $closeIssueButton = '<form action="/issues/' . $issue['issue_id'] . '/close" method="POST" class="close-issue-form">'
                     . '<button class="btn-success" type="submit">Risolvi</button>'
@@ -269,6 +270,14 @@ class IssueController extends Controller
         // Controllo di sicurezza: solo i tecnici possono chiudere le issue
         if (!$user || $user['role'] !== 'technician') {
             $_SESSION['flash_error'] = "Azione non consentita. Solo i tecnici possono risolvere le segnalazioni.";
+            $this->redirect("/issues/{$id}");
+            return;
+        }
+
+        // Controllo tecnico proprietario
+        $issue = $this->Issue->getIssueDetails($id);
+        if (!$issue || $issue['technician_id'] != $user['id']) {
+            $_SESSION['flash_error'] = "Azione negata: puoi chiudere solo le segnalazioni che hai preso in carico tu.";
             $this->redirect("/issues/{$id}");
             return;
         }
