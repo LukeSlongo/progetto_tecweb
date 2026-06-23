@@ -4,7 +4,7 @@ use App\Core\Template;
 use App\Helpers\ScriptHelper;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\ForbiddenException;
-
+use App\Helpers\BreadcrumbHelper;
 use Exception;
 
 
@@ -17,6 +17,7 @@ abstract class Controller
 
     public function render($view, $data = [], $layout = 'main')
     {
+        $role = $_SESSION['user']['role'] ?? '';
 
         if (isset($_SESSION['flash_error'])) {
             $data['FLASH_ERROR'] = $_SESSION['flash_error'];
@@ -39,14 +40,37 @@ abstract class Controller
             $current_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
             $nav_home = ($current_uri === '/' || $current_uri === '/home')
-                ? '<span class="active-page" aria-current="page">Home</span>'
-                : '<a href="/">Home</a>';
+                ? '<li><span class="active-page" aria-current="page">Home</span></li>'
+                : '<li><a href="/">Home</a></li>';
 
             $nav_issue = ($current_uri === '/issues/new')
-                ? '<span class="active-page" aria-current="page">Nuova issue</span>'
-                : '<a href="/issues/new">Nuova issue</a>';
+                ? '<li><span class="active-page" aria-current="page">Nuova Segnalazione</span></li>'
+                : '<li><a href="/issues/new">Nuova Segnalazione</a></li>';
 
+            $nav_aule = ($current_uri === '/rooms')
+                ? '<li><span class="active-page" aria-current="page">Aule</span></li>'
+                : '<li><a href="/rooms">Aule</a></li>';
 
+            $nav_segnalazioni = ($current_uri === '/issues')
+                ? '<li><span class="active-page" aria-current="page">Segnalazioni</span></li>'
+                : '<li><a href="/issues">Segnalazioni</a></li>';
+
+            $nav_utenti = ($current_uri === '/users')
+                ? '<li><span class="active-page" aria-current="page">Gestione Utenti</span></li>'
+                : '<li><a href="/users">Gestione Utenti</a></li>';
+
+            if($role === 'admin') {
+                $nav_issue = '';
+            }
+
+            if ($role === 'technician') {
+                $nav_utenti = '';
+            }
+
+            if ($role === 'student') {
+                $nav_utenti = '';
+                $nav_segnalazioni = '';
+            }
 
             $layout_data = [
                 'CLASSE_PAGINA' => strtolower($view),
@@ -55,9 +79,13 @@ abstract class Controller
                 'IMPORT_SCRIPTS' => ScriptHelper::import_script($this->scriptPathList),
                 'TITOLO_PAGINA' => $this->page_title,
                 'DESCRIZIONE_PAGINA' => $this->page_description,
+                'BREADCRUMB' => BreadCrumbHelper::render(),
                 'UTENTE_LOGGATO' => (Auth::isLogged()) ? "true" : "false",
                 'NAV_HOME' => $nav_home,
                 'NAV_NUOVA_ISSUE' => $nav_issue,
+                'NAV_LISTA_AULE' => $nav_aule,
+                'NAV_LISTA_SEGNALAZIONI' => $nav_segnalazioni,
+                'NAV_LISTA_UTENTI' => $nav_utenti
             ];
             $layout_file->setPageData($layout_data);
         } else {

@@ -4,7 +4,10 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Core\Auth;
 use App\Models\UserModel;
+use App\Models\IssueModel;
+use App\Models\RoomModel;
 use \App\Helpers\ComponentHelper;
+use \App\Helpers\BreadcrumbHelper;
 use Exception;
 
 class UserController extends Controller
@@ -12,6 +15,7 @@ class UserController extends Controller
     public function viewRegister()
     {
         $this->page_title = "Registrazione - UniFix";
+        $this->page_description = "Crea un nuovo account su UniFix per accedere alle funzionalità di segnalazione e monitoraggio.";
         $this->render('registerPage', [], 'auth');
     }
 
@@ -53,6 +57,7 @@ class UserController extends Controller
     public function viewLogin()
     {
         $this->page_title = "Login - UniFix";
+        $this->page_description = "Accedi al tuo account UniFix per gestire le segnalazioni e le aule.";
         $this->render('loginPage', [], 'auth');
     }
 
@@ -101,9 +106,27 @@ class UserController extends Controller
         $user_model = new UserModel();
         $users = $user_model->findAll();
 
+        $role_translations = [
+            'admin' => 'Amministratore',
+            'technician' => 'Tecnico',
+            'student' => 'Studente'
+        ];
+        foreach ($users as &$user) {
+            $ruolo_inglese = $user['role'];
+            
+            if (isset($role_translations[$ruolo_inglese])) {
+                $user['role'] = $role_translations[$ruolo_inglese];
+            }
+        }
+        unset($user);
+
         $items_html = ComponentHelper::renderList('userListItem', $users);
 
         $this->page_title = "Gestione Utenti - UniFix";
+        $this->page_description = "Visualizza l'elenco degli utenti registrati al sistema UniFix e i loro ruoli.";
+        BreadcrumbHelper::reset();
+        BreadcrumbHelper::add('Home', '/');
+        BreadcrumbHelper::add('Utenti');
         $this->render('userListPage', [
             'USER_LIST_ITEMS' => $items_html
         ]);
@@ -114,9 +137,65 @@ class UserController extends Controller
         $this->page_title = "Home - UniFix";
         $this->page_description = "UniFix è il portale ufficiale dell'Università di Padova per la segnalazione, il monitoraggio e la risoluzione dei guasti nelle aule e negli edifici.";
         $utente = Auth::getUser();
+        $role = $utente['role'] ?? 'guest';
+
+        $student_section_html = '';
+
+        if ($role === 'student') {
+            $room_model = new RoomModel();
+            $issue_model = new IssueModel();
+
+            // 1. Aule Preferite
+            $favorites = $room_model->getFavoritesByUser($utente['id']);
+            $fav_data = [];
+            foreach ($favorites as $fav) {
+                $fav['ROOM_STATUS_CLASS'] = ($fav['active_issues'] > 0) ? 'status-warning' : 'status-ok';
+                $fav['ROOM_STATUS_TEXT'] = ($fav['active_issues'] > 0) ? 'Guasta (' . $fav['active_issues'] . ' attive)' : 'Ok (Nessun problema)';
+
+                $fav_data[] = $fav;
+            }
+
+            $favorites_html = empty($fav_data)
+                ? '<p style="color: var(--text-gray);">Non hai ancora aggiunto nessuna aula ai preferiti.</p>'
+                : ComponentHelper::renderList('favoriteRoomCard', $fav_data);
+
+            $my_issues = $issue_model->getIssuesByUser($utente['id']);
+            $iss_data = [];
+            foreach ($my_issues as $issue) {
+                $issue['STATUS_FORMATTED'] = ucfirst(str_replace('_', ' ', $issue['issue_status']));
+
+                $iss_data[] = $issue;
+            }
+
+            $my_issues_html = empty($iss_data)
+                ? '<p style="color: var(--text-gray);">Non hai aperto nessuna segnalazione.</p>'
+                : ComponentHelper::renderList('issueCard', $iss_data);
+
+            $section = new \App\Core\Template('components/studentHomeSection');
+            $section->setPageData([
+                    'FAVORITES_CAROUSEL' => $favorites_html,
+                    'MY_ISSUES_CAROUSEL' => $my_issues_html,
+                ]);
+            $student_section_html = $section->getPage();
+
+        }
+        $search_banner_temp = new \App\Core\Template('components/searchBanner');
+        $search_banner = $search_banner_temp->getPage();
+
+        $create_banner_temp = new \App\Core\Template('components/createIssueBanner');
+        $create_banner = $create_banner_temp->getPage();
+        $this->scriptPathList[] = 'home';
+
+
+        BreadcrumbHelper::reset();
+        BreadcrumbHelper::add('Home', '/');
+
 
         $this->render('homePage', [
-            'NOME_UTENTE' => $utente['username']
+            'NOME_UTENTE' => htmlspecialchars($utente['username']),
+            'SEARCH_BANNER' => $search_banner,
+            'CREATE_ISSUE_BANNER' => $create_banner,
+            'STUDENT_SECTION' => $student_section_html
         ]);
     }
 

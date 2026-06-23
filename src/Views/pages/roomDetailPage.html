@@ -3,12 +3,7 @@
 
         <header class="room-header">
             <h2>##ROOM_NAME##</h2>
-
-            <form action="/api/favorites/##ROOM_ID##/add" method="POST" class="favorite-form" data-room-id="##ROOM_ID##" data-is-favorite="false">
-                <button type="submit" id="btn-favorite-##ROOM_ID##" class="btn-favorite" title="Aggiungi ai preferiti">
-                    Preferiti
-                </button>
-            </form>
+            ##ADD_TO_FAVORITES_BUTTON##
         </header>
 
         <div class="room-content-wrapper">
@@ -22,13 +17,18 @@
             </aside>
 
             <div class="table-responsive">
-                <table class="data-table">
+                <p id="sum-issues" class="visually-hidden">Elenco delle segnalazioni, tabella organizzata per colonne
+                    con il titolo, l'aula, la data di apertura, lo stato attuale e il bottone per visualizzare i
+                    dettagli.</p>
+
+                <table class="data-table" aria-describedby="sum-issues">
+                    <caption class="visually-hidden">Elenco segnalazioni</caption>
                     <thead>
                         <tr>
-                            <th>Titolo</th>
-                            <th>Data</th>
-                            <th>Stato</th>
-                            <th>Azioni</th>
+                            <th scope="col">Titolo</th>
+                            <th scope="col">Data</th>
+                            <th scope="col">Stato</th>
+                            <th scope="col">Azioni</th>
                         </tr>
                     </thead>
                     <tbody>

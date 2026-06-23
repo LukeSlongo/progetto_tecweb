@@ -33,13 +33,62 @@ class IssueControllerTest extends TestCase
 
             public function getConnection()
             {
-                return $this->pdo; }
+                return $this->pdo; 
+            }
+            
             public function prepare($sql = null)
             {
-                return $this->stmt; }
+                return $this->stmt; 
+            }
+            
             public function query($sql = null)
             {
-                return $this->stmt; }
+                return $this->stmt; 
+            }
+        };
+
+        $reflection = new \ReflectionClass(\App\Core\Database::class);
+        $instanceProperty = $reflection->getProperty('instance');
+        $instanceProperty->setValue(null, $mockDb);
+    }
+
+    /**
+     * Falsifica il database per query di scrittura (INSERT/UPDATE/DELETE)
+     * e permette di simulare un'eccezione
+     */
+    protected function mockDatabaseInsert($simulaErrore = false)
+    {
+        $mockStmt = $this->createMock(PDOStatement::class);
+        $mockStmt->method('execute')->willReturn(true);
+
+        $mockPdo = $this->createMock(PDO::class);
+
+        if ($simulaErrore) {
+            $mockPdo->method('prepare')->willThrowException(new \Exception("Errore DB"));
+        } else {
+            $mockPdo->method('prepare')->willReturn($mockStmt);
+        }
+
+        $mockDb = new class ($mockPdo, $mockStmt) {
+            private $pdo;
+            private $stmt;
+            public function __construct($pdo, $stmt)
+            {
+                $this->pdo = $pdo;
+                $this->stmt = $stmt;
+            }
+            public function getConnection()
+            {
+                return $this->pdo; 
+            }
+            public function prepare($sql = null)
+            {
+                return $this->pdo->prepare($sql); 
+            }
+            public function query($sql = null)
+            {
+                return $this->stmt; 
+            }
         };
 
         $reflection = new \ReflectionClass(\App\Core\Database::class);
@@ -134,54 +183,16 @@ class IssueControllerTest extends TestCase
         $controller->viewIssueList();
     }
 
-    protected function mockDatabaseInsert($simulaErrore = false)
-    {
-        $mockStmt = $this->createMock(PDOStatement::class);
-        $mockStmt->method('execute')->willReturn(true);
-
-        $mockPdo = $this->createMock(PDO::class);
-
-        if ($simulaErrore) {
-            $mockPdo->method('prepare')->willThrowException(new \Exception("Errore DB"));
-        } else {
-            $mockPdo->method('prepare')->willReturn($mockStmt);
-        }
-
-        $mockDb = new class ($mockPdo, $mockStmt) {
-            private $pdo;
-            private $stmt;
-            public function __construct($pdo, $stmt)
-            {
-                $this->pdo = $pdo;
-                $this->stmt = $stmt;
-            }
-            public function getConnection()
-            {
-                return $this->pdo; }
-            // Nel Model, query() fa: $stmt = $this->db->prepare($sql); $stmt->execute();
-            public function prepare($sql = null)
-            {
-                return $this->pdo->prepare($sql); }
-            public function query($sql = null)
-            {
-                return $this->stmt; }
-        };
-
-        $reflection = new \ReflectionClass(\App\Core\Database::class);
-        $instanceProperty = $reflection->getProperty('instance');
-        $instanceProperty->setValue(null, $mockDb);
-    }
-
     // =================================================================
     // TEST: viewIssueForm
     // =================================================================
 
-    public function test_viewIssueForm_renderizza_pagina_con_dati_json()
+    public function test_viewIssueForm_renderizza_pagina_con_optgroup_html()
     {
         // 1. Usiamo la tua funzione esistente: BuildingModel e RoomModel 
         // chiameranno fetchAll() e riceveranno questo array.
         $datiFinti = [
-            ['id' => 1, 'name' => 'Edificio/Aula Test']
+            ['id' => 1, 'name' => 'Edificio/Aula Test', 'building_id' => 1]
         ];
         $this->mockDatabase($datiFinti);
 
@@ -190,18 +201,28 @@ class IssueControllerTest extends TestCase
             ->onlyMethods(['render'])
             ->getMock();
 
-        // 3. Verifichiamo che i dati siano stati convertiti in JSON
+        // 3. Verifichiamo che i dati siano passati correttamente nel layout
         $controller->expects($this->once())
             ->method('render')
             ->with(
                 $this->equalTo('issueFormPage'),
-                $this->callback(function ($dati) {
-                    $haBuildings = isset($dati['BUILDINGS_JSON']) && strpos($dati['BUILDINGS_JSON'], 'Edificio\/Aula Test') !== false;
-                    $haRooms = isset($dati['ROOMS_JSON']) && strpos($dati['ROOMS_JSON'], 'Edificio\/Aula Test') !== false;
-                    return $haBuildings && $haRooms;
+                $this->callback(function ($data) {
+                    // 1. Verifichiamo che i vecchi JSON non esistano più
+                    $this->assertArrayNotHasKey('BUILDINGS_JSON', $data);
+                    $this->assertArrayNotHasKey('ROOMS_JSON', $data);
+
+                    // 2. Verifichiamo che le chiavi HTML siano presenti
+                    $this->assertArrayHasKey('BUILDING_OPTIONS', $data);
+                    $this->assertArrayHasKey('ROOM_OPTIONS', $data);
+
+                    // 3. Verifichiamo che ROOM_OPTIONS contenga i nuovi tag nativi per l'accessibilità
+                    $this->assertStringContainsString('<optgroup label=', $data['ROOM_OPTIONS']);
+
+                    return true;
                 })
             );
 
+        // Eseguiamo la funzione
         $controller->viewIssueForm();
     }
 
@@ -239,15 +260,17 @@ class IssueControllerTest extends TestCase
             ->onlyMethods(['post', 'redirect'])
             ->getMock();
 
-        // Compiliamo il form correttamente
+        // Passiamo dati validi nel form, così superiamo il primo controllo sui campi vuoti
         $controller->method('post')->willReturnMap([
             ['room_id', null, '3'],
             ['issue_title', null, 'Titolo Test'],
             ['issue_description', null, 'Descrizione Test']
         ]);
 
-        // Deve rimandare al login perché Auth::getUser() fallirà
-        $controller->expects($this->once())->method('redirect')->with('/login');
+        // Se l'utente non è loggato, il controller deve fare redirect al login
+        $controller->expects($this->once())
+            ->method('redirect')
+            ->with('/login');
 
         $controller->saveIssue();
 
@@ -303,5 +326,92 @@ class IssueControllerTest extends TestCase
         $controller->saveIssue();
 
         $this->assertEquals("Errore durante l'invio della segnalazione. Riprova.", $_SESSION['flash_error']);
+    }
+
+    // =================================================================
+    // TEST: takeIssue (Prendi in carico)
+    // =================================================================
+
+    public function test_takeIssue_fallisce_se_utente_non_tecnico()
+    {
+        // 1. Mettiamo in sessione un utente loggato ma con ruolo "student"
+        $_SESSION['user'] = ['id' => 3, 'username' => 'studente', 'role' => 'student'];
+
+        // AGGIUNTA FONDAMENTALE: Inseriamo il db finto per non far crashare il costruttore!
+        $this->mockDatabaseInsert(false);
+
+        // 2. Mockiamo il controller per intercettare il redirect
+        $controller = $this->getMockBuilder(IssueController::class)
+            ->onlyMethods(['redirect'])
+            ->getMock();
+
+        // 3. Ci aspettiamo che venga bloccato e rimbalzato sulla pagina della issue
+        $controller->expects($this->once())->method('redirect')->with('/issues/10');
+
+        $controller->takeIssue(10);
+
+        // 4. Verifichiamo che il messaggio di errore sia stato impostato correttamente
+        $this->assertEquals("Azione non consentita. Solo i tecnici possono prendere in carico le segnalazioni.", $_SESSION['flash_error']);
+    }
+
+    public function test_takeIssue_esegue_con_successo_per_tecnico()
+    {
+        // 1. Utente loggato con ruolo "technician"
+        $_SESSION['user'] = ['id' => 2, 'username' => 'tecnico', 'role' => 'technician'];
+
+        // 2. Prepariamo il DB a rispondere "OK" (senza errori)
+        $this->mockDatabaseInsert(false);
+
+        $controller = $this->getMockBuilder(IssueController::class)
+            ->onlyMethods(['redirect'])
+            ->getMock();
+
+        // Deve fare redirect alla stessa pagina per ricaricare i dati aggiornati
+        $controller->expects($this->once())->method('redirect')->with('/issues/10');
+
+        $controller->takeIssue(10);
+
+        // Verifichiamo il messaggio di successo
+        $this->assertEquals("Hai preso in carico la segnalazione con successo.", $_SESSION['flash_success']);
+    }
+
+    // =================================================================
+    // TEST: closeIssue (Risolvi)
+    // =================================================================
+
+    public function test_closeIssue_fallisce_se_utente_non_tecnico()
+    {
+        // 1. Sessione vuota (simula utente sloggato) oppure utente base
+        $_SESSION['user'] = ['id' => 3, 'username' => 'studente', 'role' => 'student'];
+
+        // AGGIUNTA FONDAMENTALE: Inseriamo il db finto per non far crashare il costruttore!
+        $this->mockDatabaseInsert(false);
+
+        $controller = $this->getMockBuilder(IssueController::class)
+            ->onlyMethods(['redirect'])
+            ->getMock();
+
+        $controller->expects($this->once())->method('redirect')->with('/issues/10');
+
+        $controller->closeIssue(10);
+
+        $this->assertEquals("Azione non consentita. Solo i tecnici possono risolvere le segnalazioni.", $_SESSION['flash_error']);
+    }
+
+    public function test_closeIssue_esegue_con_successo_per_tecnico()
+    {
+        $_SESSION['user'] = ['id' => 2, 'username' => 'tecnico', 'role' => 'technician'];
+
+        $this->mockDatabaseInsert(false);
+
+        $controller = $this->getMockBuilder(IssueController::class)
+            ->onlyMethods(['redirect'])
+            ->getMock();
+
+        $controller->expects($this->once())->method('redirect')->with('/issues/10');
+
+        $controller->closeIssue(10);
+
+        $this->assertEquals("Segnalazione risolta e chiusa con successo.", $_SESSION['flash_success']);
     }
 }

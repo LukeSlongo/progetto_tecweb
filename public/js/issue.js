@@ -1,68 +1,78 @@
 document.addEventListener("DOMContentLoaded", () => {
+    
+    // logica dettaglio form
     const form = document.getElementById('issue-form');
-    if (!form) return;
+    
+    if (form) {
+        const buildingSelect = document.getElementById('building_id');
+        const roomSelect = document.getElementById('room_id');
 
-    const buildingSelect = document.getElementById('building_id');
-    const roomSelect = document.getElementById('room_id');
+        const allOptGroups = Array.from(roomSelect.querySelectorAll('optgroup'));
 
-    const buildings = JSON.parse(form.dataset.buildings || '[]');
-    const rooms = JSON.parse(form.dataset.rooms || '[]');
+        buildingSelect.addEventListener('change', (e) => {
+            const selectedBuildingId = e.target.value;
+            const currentSelectedRoom = roomSelect.value; 
 
-    // Funzione di supporto per riempire la tendina degli edifici dinamicamente
-    function renderBuildings() {
-        buildingSelect.innerHTML = '<option value="">Seleziona</option>';
-        buildings.forEach(building => {
-            const opt = document.createElement('option');
-            opt.value = building.id;
-            opt.textContent = building.name;
-            buildingSelect.appendChild(opt);
+            roomSelect.innerHTML = '<option value="">Seleziona</option>';
+
+            if (selectedBuildingId === "") {
+                allOptGroups.forEach(optgroup => {
+                    roomSelect.appendChild(optgroup.cloneNode(true));
+                });
+            } else {
+                const matchingGroup = allOptGroups.find(group => group.dataset.buildingId === selectedBuildingId);
+                if (matchingGroup) {
+                    roomSelect.appendChild(matchingGroup.cloneNode(true));
+                }
+            }
+
+            if (currentSelectedRoom) {
+                roomSelect.value = currentSelectedRoom;
+                if (roomSelect.value === "") { 
+                    roomSelect.value = "";
+                }
+            }
+        });
+
+        roomSelect.addEventListener('change', (e) => {
+            const selectedRoomId = e.target.value;
+            if (selectedRoomId === "") return;
+
+            let targetBuildingId = null;
+            for (const optgroup of allOptGroups) {
+                const option = optgroup.querySelector(`option[value="${selectedRoomId}"]`);
+                if (option) {
+                    targetBuildingId = optgroup.dataset.buildingId;
+                    break;
+                }
+            }
+
+            if (targetBuildingId) {
+                buildingSelect.value = targetBuildingId;
+                const event = new Event('change');
+                buildingSelect.dispatchEvent(event);
+                roomSelect.value = selectedRoomId;
+            }
         });
     }
-    // Funzione di supporto per riempire la tendina delle aule dinamicamente
-    function renderRooms(roomsToRender) {
-        roomSelect.innerHTML = '<option value="">Seleziona</option>';
-        roomsToRender.forEach(room => {
-            const opt = document.createElement('option');
-            opt.value = room.id;
-            opt.textContent = room.name;
-            roomSelect.appendChild(opt);
+
+   // logica dettaglio segnalazione
+
+    const deleteForms = document.querySelectorAll('.delete-issue-form');
+    deleteForms.forEach(function (deleteForm) {
+        deleteForm.addEventListener('submit', function (event) {
+            if (!confirm('Vuoi eliminare definitivamente questa segnalazione?')) {
+                event.preventDefault(); // Ferma l'invio
+            }
         });
-    }
-
-    renderBuildings();
-    renderRooms(rooms);
-
-    // CASO A: l'utente seleziona prima un edificio
-    buildingSelect.addEventListener('change', (e) => {
-        const selectedBuildingId = e.target.value;
-
-        if (selectedBuildingId === "") {
-            // Se rimette "Seleziona" mostra di nuovo tutte le aule
-            renderRooms(rooms);
-        } else {
-            // filtra le aule tenendo solo quelle dell'edificio scelto
-            const filteredRooms = rooms.filter(room => room.building_id == selectedBuildingId);
-            renderRooms(filteredRooms);
-        }
     });
 
-    // CASO B: L'utente seleziona direttamente un aula
-    roomSelect.addEventListener('change', (e) => {
-        const selectedRoomId = e.target.value;
-        if (selectedRoomId === "") return;
-
-        // Cerca l'oggetto aula corrispondente per scoprire a che edificio appartiene
-        const selectedRoom = rooms.find(room => room.id == selectedRoomId);
-
-        if (selectedRoom) {
-            // autocpmpleta la prima tendina con l'edificio corretto
-            buildingSelect.value = selectedRoom.building_id;
-            // riduce la lista delle aule a quelle di questo edificio
-            const filteredRooms = rooms.filter(room => room.building_id == selectedRoom.building_id);
-            renderRooms(filteredRooms);
-
-            // rimette l'aula selezionata visto che renderRooms ha azzerato le option
-            roomSelect.value = selectedRoom.id;
-        }
+    const closeForms = document.querySelectorAll('.close-issue-form');
+    closeForms.forEach(function (closeForm) {
+        closeForm.addEventListener('submit', function (event) {
+            if (!confirm('Confermi di aver risolto il problema e voler chiudere la segnalazione?')) {
+                event.preventDefault();
+            }
+        });
     });
 });

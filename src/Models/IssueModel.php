@@ -118,6 +118,35 @@ class IssueModel extends Model
         return $this->fetchOne($sql, [$issue_id]);
     }
 
+    public function takeIssue($issue_id, $technician_id)
+    {
+        $this->checkTable();
+        $sql = "UPDATE {$this->table} SET status = 'in_progress', technician_id = ? WHERE id = ?";
+        return $this->query($sql, [$technician_id, $issue_id]);
+    }
+
+    public function closeIssue($issue_id)
+    {
+        $this->checkTable();
+        $sql = "UPDATE {$this->table} SET status = 'closed', closed_at = CURRENT_DATE WHERE id = ?";
+        return $this->query($sql, [$issue_id]);
+    }
+
+    public function getIssuesByUser($user_id)
+    {
+        $sql = "SELECT 
+                    i.id AS issue_id,
+                    i.title AS issue_title,
+                    i.status AS issue_status,
+                    r.name AS room_name
+                FROM issue i
+                JOIN room r ON i.room_id = r.id
+                WHERE i.user_id = ?
+                ORDER BY i.opened_at DESC";
+
+        return $this->fetchAll($sql, [$user_id]);
+    }
+
     public function registerIssue($user_id, $room_id, $title, $description)
     {
         $this->checkTable();

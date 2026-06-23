@@ -1,11 +1,10 @@
 <section class="room-list">
     <div class="container">
         <h2>Lista Aule</h2>
-
-        <!--ricarica la pagina con i dati ricercati-->
         <form action="/rooms" method="GET" class="search-form">
 
             <div class="form-group">
+                <label for="search">Cerca aula per nome</label>
                 <input type="text" id="search" name="search" placeholder="Cerca per..." required>
             </div>
 
@@ -14,10 +13,23 @@
             </div>
         </form>
 
-        <div class="error-message">##FLASH_ERROR##</div>
+        <div class="error-message" role="alert">##FLASH_ERROR##</div>
 
         <div class="table-responsive">
-            <table class="data-table">
+            <p id="sum-rooms" class="visually-hidden">Elenco delle aule dell'università, tabella organizzata per colonne 
+                con il nome dell'aula, il numero di segnalazioni attive, il bottone che permette di visualizzare il dettaglio dell'aula
+                e il bottone che permette di aggiungere ai preferiti l'aula.
+            </p>
+            <table class="data-table" aria-describedby="sum-rooms">
+                <caption class="visually-hidden">Elenco aule</caption>
+                <thead>
+                    <tr>
+                        <th scope="col" abbr="aula">Nome aula</th>
+                        <th scope="col" abbr="segnalazioni">Numero segnalazioni attive</th>
+                        <th scope="col" abbr="dettaglio">Azione visualizza dettaglio</th>
+                        <th scope="col" abbr="preferiti">Azione preferiti</th>
+                    </tr>
+                </thead>
                 <tbody>
                     ##ROOM_LIST_ITEMS##
                 </tbody>
