@@ -1,6 +1,6 @@
 <section class="auth-section">
     <div class="auth-container">
-        <h2 class="auth-title">Benvenuto su<br>UniFix</h2>
+        <h1 class="auth-title">Benvenuto su<br>UniFix</h1>
 
         <div class="error-message" role="alert">##FLASH_ERROR##</div>
 
@@ -8,12 +8,22 @@
 
             <div class="form-group">
                 <label for="username">Nome utente</label>
-                <input type="text" id="username" name="username" required aria-required="true" autocomplete="username">
+                <input type="text" id="username" name="username" required 
+                       minlength="3"
+                       maxlength="50"
+                       aria-describedby="username-hint"
+                       autocomplete="username">
+                <span id="username-hint" class="form-hint">Scegli un nome tra 3 e 50 caratteri.</span>
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required aria-required="true" autocomplete="new-password">
+                <input type="password" id="password" name="password" required
+                       minlength="8"
+                       maxlength="50" 
+                       aria-describedby="password-hint" 
+                       autocomplete="new-password">
+                <span id="password-hint" class="form-hint">La password deve contenere almeno 8 caratteri.</span>
             </div>
 
             <div class="form-actions">
