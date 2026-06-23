@@ -22,7 +22,11 @@ class ComponentHelper
             // Es: $row['username'] -> sostituisce ##USERNAME##
             foreach ($row as $key => $value) {
                 $placeholder = "##" . strtoupper($key) . "##";
-                $item_html = str_replace($placeholder, htmlspecialchars((string)$value), $item_html);
+                $replacement = (is_string($value) && preg_match('/_(BUTTON|HTML|LIST)$/', strtoupper($key)))
+                    ? $value
+                    : htmlspecialchars((string)$value);
+
+                $item_html = str_replace($placeholder, $replacement, $item_html);
             }
             
             $output .= $item_html;

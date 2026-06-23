@@ -5,24 +5,6 @@
         <a href="/rooms/##ROOM_ID##" class="btn-view" aria-label="Visualizza ##ROOM_NAME##">Visualizza</a>
     </td>
     <td>
-        <div style="##HIDE_FAVORITE##">
-        <form action="/api/favorites/##ROOM_ID##/add"
-              method="POST"
-              class="favorite-form"
-              data-room-id="##ROOM_ID##"
-              data-room-name="##ROOM_NAME##"
-              data-is-favorite="false">
-            <button type="submit"
-                    id="btn-favorite-##ROOM_ID##"
-                    class="btn-favorite"
-                    title="Aggiungi ai preferiti"
-                    aria-label="Azione preferiti aula: ##ROOM_NAME##">
-                Preferiti
-            </button>
-        </form>
-        </div>
-        <span style="##SHOW_ADMIN_TEXT## color: var(--text-black); font-size: 0.9em, font-weight: 600;">
-        Solo Studenti
-        </span>
+        ##ADD_TO_FAVORITES_BUTTON##
     </td>
 </tr>

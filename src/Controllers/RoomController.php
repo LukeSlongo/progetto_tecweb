@@ -37,11 +37,24 @@ class RoomController extends Controller
 
             foreach ($rooms as &$room) {
                 if ($role === 'student') {
-                    $room['HIDE_FAVORITE'] = ''; 
-                    $room['SHOW_ADMIN_TEXT'] = 'display: none;';
+                    $room['ADD_TO_FAVORITES_BUTTON'] = <<<HTML
+                        <form action="/api/favorites/{$room['room_id']}/add"
+                            method="POST"
+                            class="favorite-form"
+                            data-room-id="{$room['room_id']}"
+                            data-room-name="{$room['room_name']}"
+                            data-is-favorite="false">
+                            <button type="submit"
+                                    id="btn-favorite-{$room['room_id']}"
+                                    class="btn-favorite"
+                                    title="Aggiungi ai preferiti"
+                                    aria-label="Azione preferiti aula: {$room['room_name']}">
+                                Preferiti
+                            </button>
+                        </form>
+                        HTML;
                 } else {
-                    $room['HIDE_FAVORITE'] = 'display: none;';
-                    $room['SHOW_ADMIN_TEXT'] = '';
+                    $room['ADD_TO_FAVORITES_BUTTON'] = '<span class="solo-studenti">Solo Studenti</span>';
                 }
             }
             unset($room);
@@ -49,6 +62,7 @@ class RoomController extends Controller
         }
 
         $this->page_title = "Aule - UniFix";
+        $this->page_description = "Visualizza l'elenco delle aule disponibili all'Università di Padova e il loro stato attuale.";
         $this->scriptPathList[] = 'room';
         BreadcrumbHelper::add('Aule', '/rooms');
         $this->render('roomListPage', ['ROOM_LIST_ITEMS' => $items_html]);
@@ -64,6 +78,10 @@ class RoomController extends Controller
     public function viewRoomDetail($room_id)
     {
         $this->page_title = "Dettaglio aula - UniFix";
+
+        $room = $this->Room->getRoomWithBuilding($room_id);
+        $clean_title = htmlspecialchars(strip_tags($room['room_name']), ENT_QUOTES, 'UTF-8');
+        $this->page_description = "Visualizza i dettagli dell'aula " . $clean_title . " comprese le segnalazioni attive e lo stato dell'aula.- UniFix";
 
         $room_data = $this->Room->getRoomWithBuilding($room_id);
         if (!$room_data) {
@@ -97,7 +115,13 @@ class RoomController extends Controller
         }
 
         $role = $_SESSION['user']['role'] ?? '';
-        $hide_favorite_class = ($role === 'student') ? '' : 'display: none;';
+        $add_to_favorites_button = ($role === 'student') ? 
+            '<form action="/api/favorites/##ROOM_ID##/add" method="POST" class="favorite-form" data-room-id="##ROOM_ID##" data-is-favorite="false">
+                <button type="submit" id="btn-favorite-##ROOM_ID##" class="btn-favorite" title="Aggiungi ai preferiti" aria-label="Azione preferiti aula: ##ROOM_NAME##">
+                    Preferiti
+                </button>
+            </form>' : 
+        '';
 
         $this->scriptPathList[] = 'room';
         BreadcrumbHelper::add('Aule', '/rooms');
@@ -108,7 +132,7 @@ class RoomController extends Controller
             'BUILDING_NAME' => $room_data['building_name'],
             'BUILDING_ADDRESS' => $room_data['building_address'],
             'ISSUES_LIST' => $issues_html,
-            'HIDE_FAVORITE_CLASS' => $hide_favorite_class
+            'ADD_TO_FAVORITES_BUTTON' => $add_to_favorites_button
         ]);
     }
 
