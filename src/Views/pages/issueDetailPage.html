@@ -2,22 +2,34 @@
     <div class="container">
 
         <header class="issue-header">
-            <h2>Detaglio segnalizazione</h2>
+            <h2>Dettaglio segnalazione</h2>
         </header>
-            
+
         <div class="issue-content-wrapper">
+            <div class="issue-description">
+                <h3>Descrizione</h3>
+                <p>##ISSUE_DESCRIPTION##</p>
+            </div>
+
             <aside class="issue-info-card">
-                <h3>Info segnalizazione</h3>
-                <ul>
-                    <li>Titolo: ##ISSUE_TITLE##</li>
-                    <li>Edificio: ##BUILDING_NAME##</li>
-                    <li>Aula: ##ROOM_NAME##</li>
-                    <li>Data apertura: ##OPEN_DATE##</li>
-                    <li>Data chiusura: ##CLOSE_DATE##</li>
-                    <li>Stato: ##STATUS##</li>
-                    <li>Tecnico in carica: ##TECHNICIAN_NAME##</li>
-                    <li>Utente segnalatore: ##REPORTER_NAME##</li>
-                </ul>
+                <h3>Info segnalazione</h3>
+                
+                <dl class="info-list">
+                    <dt>Titolo:</dt> <dd>##ISSUE_TITLE##</dd>
+                    <dt>Edificio:</dt> <dd>##BUILDING_NAME##</dd>
+                    <dt>Aula:</dt> <dd>##ROOM_NAME##</dd>
+                    <dt>Data apertura:</dt> <dd><time datetime="##OPEN_DATETIME##">##OPEN_DATE##</time></dd>
+                    <dt>Data chiusura:</dt> <dd>##CLOSE_DATE_HTML##</dd>
+                    <dt>Stato:</dt> <dd>##STATUS##</dd>
+                    <dt>Id Tecnico in carica:</dt> <dd>##TECHNICIAN_ID##</dd>
+                    ##REPORTER_HTML##
+                </dl>
+
+                <div class="issue-actions">
+                    ##TAKE_ISSUE_BUTTON##
+                    ##CLOSE_ISSUE_BUTTON##
+                    ##DELETE_ISSUE_BUTTON##
+                </div>
             </aside>
         </div>
     </div>

@@ -19,4 +19,26 @@ class UserModel extends Model
         $sql = "SELECT * FROM user WHERE username = ?";
         return $this->fetchOne($sql, [$username]);
     }
+
+    public function addFavorite($room_id, $user_id)
+    {
+        $sql = "INSERT INTO favorite (user_id, room_id) VALUES (?, ?)";
+        $this->query($sql, [$user_id, $room_id]);
+    }
+
+    public function removeFavorite($room_id, $user_id)
+    {
+        $sql = "DELETE FROM favorite WHERE user_id = ? AND room_id = ?";
+        $this->query($sql, [$user_id, $room_id]);
+    }
+
+    public function isFavorite($room_id, $user_id)
+    {
+        $sql = "SELECT COUNT(*) as count FROM favorite WHERE user_id = ? AND room_id = ?";
+        $result = $this->fetchOne($sql, [$user_id, $room_id]);
+        if ($result == null) {
+            return false;
+        }
+        return $result['count'] > 0;
+    }
 }

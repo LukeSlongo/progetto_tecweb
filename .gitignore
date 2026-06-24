@@ -17,4 +17,8 @@ build/
 # PHP / Composer
 vendor/
 .phpunit.result.cache
-coverage-report
+coverage-report/
+
+#CLAUDE
+.claude/
+CLAUDE.md

@@ -11,6 +11,7 @@
     4.3 Cards
     4.4 Error
     4.5 Tabelle e Liste
+    4.6 Breadcrumb
    5. PAGES
     5.1 Autenticazione (Login/Register)
     5.2 UserListPage
@@ -37,7 +38,8 @@
     --primary-hover: #004488;
     --danger-red: #E31818;
     --danger-hover: #c91515;
-    --success-green: #28a745;
+    --success-green: #15812E;
+    --hover-success-green: #126b27;
     --bg-light: #fdfdfd;
     --bg-card: #ffffff;
     --text-blue: #2c3e50;
@@ -50,6 +52,7 @@
     --shadow-hover: 0 8px 24px rgba(0, 10, 40, 0.15);
     --shadow-cta: rgba(227, 24, 24, 0.3);
     --accent-yellow: #ffbf47;
+    --accent-yellow-hover: #fca510;
     --error-bg: #ffebee;
     --error-text: #c62828;
     --hero-bg-start: #f5f7fa;
@@ -95,11 +98,11 @@ main {
 /*salta al contenuto, nascosto fuori dallo schermo e compare grazie a focus al pigiare di tab*/
 .skip-link {
     position: absolute;
-    top: -40px;
+    top: -2.5rem;
     left: 0;
     background: var(--accent-yellow);
     color: var(--text-black);
-    padding: 8px;
+    padding: 0.5rem;
     z-index: 100;
 }
 
@@ -107,6 +110,10 @@ main {
     top: 0;
 }
 
+/*per occultare gli elementi*/
+.hidden {
+    display: none !important;
+}
 
 /*
 =========================================
@@ -116,9 +123,9 @@ main {
 
 /*Crea il recinto per il testo, in modo che questo non si sparpagli, utilizzabile con <div class="container">*/
 .container {
-    max-width: 800px;
+    max-width: 50rem;
     margin: auto;
-    padding: 20px;
+    padding: 1.25rem;
 }
 
 /* Sfondo e impostazioni generali della barra di intestazione */
@@ -135,7 +142,7 @@ header {
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
-    padding: 0 20px;
+    padding: 0 1.25rem;
 }
 
 /* Stile del testo del logo*/
@@ -179,11 +186,51 @@ header {
     text-decoration: underline;
 }
 
+
+footer {
+    background-color: var(--primary-blue);
+    color: var(--text-white);
+    padding: 2rem 0;
+    margin-top: auto;
+    /* Spinge il footer sempre a fine pagina */
+}
+
+/* Flexbox per affiancare testi a sinistra e loghi a destra */
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.footer-info p {
+    margin: 0 0 0.5rem 0;
+}
+
+/* Stile per il link obbligatorio AgID */
+.a11y-link {
+    color: var(--accent-yellow);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.a11y-link:hover {
+    text-decoration: underline;
+}
+
+/* Contenitore per allineare i loghi W3C */
+.footer-logos {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 /* Layout per cellulari: impila titolo e menu uno sotto l'altro invece di affiancarli */
-@media (max-width: 600px) {
+@media (max-width: 37.5rem) {
     .header-flex {
         flex-direction: column;
-        gap: 15px;
+        gap: 1rem;
     }
 }
 
@@ -207,7 +254,7 @@ header {
     font-size: 1rem;
     padding: 0.6rem 2.5rem;
     border: none;
-    border-radius: 6px;
+    border-radius: 0.375rem;
     cursor: pointer;
     transition: background-color 0.2s;
 }
@@ -240,9 +287,9 @@ header {
     text-decoration: none;
     font-weight: 600;
     font-size: 1.1rem;
-    border-radius: 30px;
+    border-radius: 1.875rem;
     display: inline-block;
-    box-shadow: 0 4px 10px var(--shadow-cta);
+    box-shadow: 0 0.25rem 0.625rem var(--shadow-cta);
     transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
 }
 
@@ -258,9 +305,9 @@ header {
 .btn-logout {
     background-color: var(--accent-yellow);
     color: var(--text-black) !important;
-    border: 2px solid transparent;      
-    padding: 0.3rem 0.8rem !important;             
-    border-radius: 10px;              
+    border: 2px solid transparent;
+    padding: 0.3rem 0.8rem !important;
+    border-radius: 0.625rem;
     font-weight: 750 !important;
     text-shadow: var(--shadow-md);
     letter-spacing: 0.5px;
@@ -268,7 +315,7 @@ header {
 
 /* Effetto hover per il bottone di logout: cambia colore del testo e aggiunge un bordo nero */
 .btn-logout:hover {
-    color: var(--text-black)!important;
+    color: var(--text-black) !important;
     border-color: var(--text-black);
     transition: all 0.3s ease;
 
@@ -276,12 +323,15 @@ header {
 
 /* Bottone con azione che provoca azioni con side-effects */
 .btn-danger {
+    width: 100%;
     background-color: var(--danger-red);
     color: var(--text-white);
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
+    padding: 0.6rem 2.5rem;
+    font-size: 1rem;
     transition: background-color 0.2s;
 }
 
@@ -308,9 +358,71 @@ header {
     text-decoration: none;
     padding: 0.2rem 0.4rem;
 }
+
 /*hover del bottone di visualizzazione dei dettagli nelle tabelle*/
 .btn-view:hover {
     background-color: var(--primary-hover);
+}
+
+/* bottone preferiti usato sia nella lista sia nel dettaglio */
+.btn-favorite {
+    background-color: var(--accent-yellow);
+    color: var(--text-black);
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.2s;
+    padding: 0.2rem 0.5rem;
+}
+
+.btn-favorite:hover {
+    background-color: var(--accent-yellow-hover);
+}
+
+.btn-favorite.is-favorite {
+    background-color: var(--danger-red);
+    color: var(--text-white);
+}
+
+.btn-favorite.is-favorite:hover {
+    background-color: var(--danger-hover);
+}
+
+/* Bottone a forma di stella per i preferiti */
+.btn-fav {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-gray);
+    transition: color 0.2s;
+    padding: 0;
+    line-height: 1;
+    cursor: pointer;
+}
+
+/* Colora la stella di giallo quando ci passi sopra o è attiva */
+.btn-fav:hover,
+.btn-fav:focus {
+    color: var(--accent-yellow);
+}
+
+/* Bottone di successo */
+.btn-success {
+    width: 100%;
+    background-color: var(--success-green);
+    color: var(--text-white);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0.6rem 2.5rem;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+.btn-success:hover {
+    background-color: var(--hover-success-green);
 }
 
 
@@ -339,7 +451,7 @@ header {
     padding: 0.75rem 1rem;
     font-size: 1rem;
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 0.5rem;
     box-sizing: border-box;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -401,22 +513,18 @@ header {
     color: var(--text-blue);
 }
 
-/* Bottone a forma di stella per i preferiti */
-.btn-fav {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
+/* Sottotitolo della card (es. nome edificio o nome aula) */
+.card-subtitle {
+    margin: 0 0 1rem 0;
     color: var(--text-gray);
-    transition: color 0.2s;
-    padding: 0;
-    line-height: 1;
-    cursor: pointer;
+    font-size: 0.95rem;
 }
 
-/* Colora la stella di giallo quando ci passi sopra o è attiva */
-.btn-fav:hover,
-.btn-fav:focus {
-    color: var(--accent-yellow);
+/* Testo informativo per lo stato neutro/informativo (es. In Progress) */
+.status-info {
+    margin: 0;
+    font-weight: 600;
+    color: var(--primary-blue);
 }
 
 /* Corpo centrale della card (spinge il footer in basso) */
@@ -441,7 +549,7 @@ header {
 /* Lista formattata per l'elenco dei guasti interni alla card */
 .mini-list {
     font-size: 0.9rem;
-    padding-left: 20px;
+    padding-left: 1.25rem;
     color: var(--text-gray);
     margin: 0;
 }
@@ -470,6 +578,23 @@ header {
     border-left: 4px solid var(--error-text);
 }
 
+.success-message:empty {
+    display: none;
+}
+
+.success-message {
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto 2rem;
+    font-size: 1rem;
+    text-align: center;
+    background-color: #eaf7ee;
+    color: var(--success-green);
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid var(--success-green);
+}
+
 /* 
 ===============================================
     4.5 TABELLE E LISTE
@@ -483,7 +608,7 @@ header {
     text-align: left;
     margin-top: 1rem;
     background-color: var(--bg-card);
-    border-radius: 8px;
+    border-radius: 0.5rem;
     overflow: hidden;
     box-shadow: var(--shadow-sm);
 }
@@ -495,9 +620,9 @@ header {
 }
 
 /* Spaziatura e bordi delle celle */
-.data-table th, 
+.data-table th,
 .data-table td {
-    padding: 12px 16px;
+    padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -515,6 +640,74 @@ header {
 .data-table td form {
     margin: 0;
 }
+
+
+
+/* 
+===============================================
+    4.6 BREADCRUMB
+===============================================
+*/
+
+/* Mette delle margini nel contenetore del breadcrumb*/
+.breadcrumb-nav {
+    margin: 0.5rem auto 0.5rem auto; 
+    font-size: 1rem;
+    position: relative;
+    z-index: 5;
+}
+
+/*permette di formare la box del breadcrumb e mette shadow*/
+.breadcrumb-nav ol {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 2px 1rem;
+    margin: 0;
+    gap: 0.5rem;
+    background-color: var(--primary-blue);
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+
+}
+
+/*colore per il testo e centra gli elementi*/
+.breadcrumb-nav li {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: var(--text-white);
+}
+
+/*mette ">" tra pagine che non sono l'ultima per avere sneso de dove veniamo*/
+.breadcrumb-nav li:not(:last-child)::after {
+    content: ">";
+    margin-left: 0.5rem;
+    font-size: 1.1rem;
+    color: var(--text-white);
+}
+
+/*elimina colore dei link*/
+.breadcrumb-nav a {
+    color: var(--accent-yellow);
+}
+
+/*mette colore giallo quando passiamo cursor per i link*/
+.breadcrumb-nav a:hover {
+    color: var(--accent-yellow-hover);
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -541,10 +734,10 @@ header {
 /* Contenitore a forma di scheda (Card) per far risaltare il form rispetto allo sfondo */
 .auth-container {
     width: 100%;
-    max-width: 450px;
+    max-width: 28rem;
     background-color: var(--bg-card);
     padding: 2.5rem 2rem;
-    border-radius: 12px;
+    border-radius: 0.75rem;
     box-shadow: var(--shadow-md);
     border: 1px solid var(--border-color);
 }
@@ -580,6 +773,14 @@ header {
     text-decoration: underline;
 }
 
+/* Testo di aiuto per i campi del form gestito al 100% via CSS */
+.form-hint {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-gray);
+    margin-top: 0.4rem;
+}
+
 
 /* 
 =================================================================
@@ -608,12 +809,206 @@ header {
 =================================================================
 */
 
+.room-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 6px;
+}
+
+.room-header h2 {
+    margin-left: 2rem;
+    flex: 1;
+}
+
+.room-header .favorite-form {
+    margin-right: 2rem;
+}
+
+.room-header .btn-favorite {
+    padding: 0.4rem 0.8rem;
+}
 
 /* 
 =================================================================
     5.5 IssueFormPage
 =================================================================
 */
+
+/* Contenitore principale del form */
+.report-form {
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+/* Riquadro grigio centrale: sfrutto il tuo hero-bg-end per un grigio coerente con la palette */
+.form-gray-box {
+    background-color: var(--hero-bg-end);
+    padding: 2.5rem 3rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Titolo dentro il riquadro */
+.form-gray-box h2 {
+    margin-top: 0;
+    margin-bottom: 2.5rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-blue);
+}
+
+/* Riga flessibile per allineare etichetta a sinistra e input a destra */
+.form-horizontal-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.2rem;
+}
+
+/* Variante per la textarea: allinea il testo in alto invece che al centro */
+.form-horizontal-group.align-top {
+    align-items: flex-start;
+}
+
+/* Distanza extra tra le select (aule) e l'input di testo (titolo) */
+.spacer-group {
+    margin-top: 3rem;
+}
+
+/* Stile delle etichette (sinistra) */
+.form-horizontal-group label {
+    width: 220px;
+    /* Larghezza fissa per farle incolonnare perfettamente */
+    text-align: right;
+    margin-right: 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-blue);
+}
+
+/* Stile dei campi di inserimento (destra) */
+.form-horizontal-group select,
+.form-horizontal-group input,
+.form-horizontal-group textarea {
+    flex: 1;
+    /* Occupa lo spazio rimanente */
+    max-width: 400px;
+    /* Evita che diventino larghissimi su schermi grandi */
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    box-sizing: border-box;
+    border-radius: 0.375rem;
+    font-family: inherit;
+    font-size: 1rem;
+    background-color: var(--bg-card);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-horizontal-group select {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* Permette alla textarea di essere ridimensionata solo in verticale */
+.form-horizontal-group textarea {
+    resize: vertical;
+}
+
+/* Effetto focus coerente con le tue regole globali */
+.form-horizontal-group select:focus,
+.form-horizontal-group input:focus,
+.form-horizontal-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(var(--primary-blue-rgb), 0.15);
+}
+
+/* Contenitore per impilare verticalmente input e testo di aiuto */
+.input-wrapper {
+    flex: 1;
+    max-width: 25rem;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Assicura che gli input dentro al wrapper si allarghino correttamente */
+.input-wrapper input,
+.input-wrapper textarea {
+    max-width: 100%;
+}
+
+/* Ripristina lo stile visivo del fieldset per farlo sembrare un normale blocco */
+fieldset.form-gray-box {
+    border: none;
+    margin: 0;
+    /* padding e background sono già ereditati dalla tua classe .form-gray-box! */
+}
+
+/* Fa comportare il legend esattamente come il tuo vecchio h2 */
+fieldset.form-gray-box legend {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-blue);
+    margin-bottom: 0.5rem;
+    padding: 0;
+}
+
+/* Stile per la nota introduttiva */
+.mandatory-note {
+    font-size: 0.9rem;
+    color: var(--text-black);
+    margin-top: 0;
+    margin-bottom: 2rem;
+}
+
+/* Rende l'asterisco rosso per attirare l'attenzione */
+.required-asterisk {
+    color: var(--danger-red);
+    margin-left: 0.2rem;
+}
+
+/* Contenitore per spingere il bottone a destra (fuori dal riquadro grigio) */
+.submit-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+/* Variante leggermente più larga per il bottone di invio */
+.btn-invia {
+    padding: 0.7rem 3.5rem;
+    font-size: 1.1rem;
+}
+
+/* --- RESPONSIVITÀ PER CELLULARI --- */
+@media (max-width: 600px) {
+    .form-gray-box {
+        padding: 1.5rem;
+    }
+
+    .form-horizontal-group {
+        flex-direction: column;
+        /* Impila etichetta e campo uno sull'altro */
+        align-items: flex-start;
+    }
+
+    .form-horizontal-group label {
+        width: 100%;
+        text-align: left;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-horizontal-group select,
+    .form-horizontal-group input,
+    .form-horizontal-group textarea {
+        max-width: 100%;
+    }
+
+    .spacer-group {
+        margin-top: 1.5rem;
+    }
+}
 
 /* 
 =================================================================
@@ -626,6 +1021,94 @@ header {
     5.7 IssueDetailPage
 =================================================================
 */
+
+/* Intestazione blu della segnalazione (come da tuo screenshot) */
+.issue-header {
+    background-color: var(--primary-blue);
+    color: var(--text-white);
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    border-radius: 6px; 
+}
+
+.issue-header h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+/* Struttura a griglia per dividere descrizione e info su schermi grandi */
+.issue-content-wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* La descrizione occupa il doppio dello spazio delle info */
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+/* Titoli delle sezioni interne */
+.issue-description h3,
+.issue-info-card h3 {
+    color: var(--text-blue);
+    font-size: 1.3rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--hero-bg-end);
+}
+
+/* Testo della descrizione */
+.issue-description p {
+    color: var(--text-blue);
+    line-height: 1.6;
+    font-size: 1.05rem;
+}
+
+/* Lista delle informazioni */
+.issue-info-card ul {
+    list-style-type: none; /* Rimuoviamo i pallini base noiosi */
+    padding: 0;
+    margin: 0 0 2rem 0;
+}
+
+.issue-info-card li {
+    margin-bottom: 0.8rem;
+    padding-left: 1.5rem;
+    position: relative;
+    color: var(--text-blue);
+    line-height: 1.4;
+}
+
+/* Pallino giallo personalizzato per la lista */
+.issue-info-card li::before {
+    content: '•';
+    color: var(--accent-yellow);
+    font-weight: bold;
+    font-size: 1.5rem;
+    position: absolute;
+    left: 0;
+    top: -4px;
+}
+
+/* Contenitore per allineare correttamente i bottoni in fondo alla card */
+.issue-info-card form {
+    display: inline-block;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+
+/* --- RESPONSIVITÀ PER CELLULARI --- */
+@media (max-width: 768px) {
+    .issue-content-wrapper {
+        grid-template-columns: 1fr; /* Impila la descrizione sopra le info */
+        gap: 1.5rem;
+    }
+
+    .issue-info-card form {
+        width: 70%;
+        margin-left: 15%;
+    }
+}
 
 /* 
 =================================================================
@@ -642,7 +1125,7 @@ header {
 .hero {
     background: linear-gradient(135deg, var(--hero-bg-start) 0%, var(--hero-bg-end) 100%);
     padding: 3.5rem 2rem;
-    border-radius: 12px;
+    border-radius: 0.75rem;
     text-align: center;
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border-color);
@@ -668,8 +1151,8 @@ header {
 /* Contenitore della barra di ricerca nel banner */
 .search-box {
     display: flex;
-    gap: 10px;
-    max-width: 550px;
+    gap: 0.625rem;
+    max-width: 34.375rem;
     margin: 0 auto 2.5rem auto;
 }
 
@@ -678,7 +1161,7 @@ header {
     flex-grow: 1;
     padding: 0.8rem 1.2rem;
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: 0.375rem;
     font-size: 1rem;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -687,13 +1170,68 @@ header {
 .search-box input[type="search"]:focus {
     outline: none;
     border-color: var(--primary-blue);
-    box-shadow: 0 0 0 3px rgba(var(--primary-blue-rgb), 0.15); 
+    box-shadow: 0 0 0 3px rgba(var(--primary-blue-rgb), 0.15);
 }
 
 /* Griglia responsiva per impaginare le card delle aule */
 .grid-aule {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(18.75rem, 1fr));
     gap: 2rem;
     margin-top: 1.5rem;
+}
+
+/* Banner "Crea Segnalazione" */
+.create-issue-banner {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.create-issue-banner p {
+    color: var(--text-gray);
+    margin-bottom: 1.5rem;
+}
+
+/* Sezione dedicata allo studente (Preferiti e Mie Segnalazioni) */
+.student-dashboard {
+    margin-top: 3rem;
+    border-top: 2px solid var(--hero-bg-end);
+    padding-top: 2rem;
+}
+
+.student-dashboard-section {
+    margin-bottom: 3rem;
+}
+
+.student-dashboard h3 {
+    color: var(--text-blue);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 37.5rem) {
+    
+    /* 1. Riduciamo il padding (spazio interno) del riquadro grigio */
+    .hero {
+        padding: 2rem 1rem;
+    }
+
+    /* 2. Impiliamo la barra di ricerca e il tasto Cerca uno sull'altro */
+    .search-box {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    /* 3. Il bottone Cerca ora diventa largo quanto lo schermo (più facile da tappare!) */
+    .search-box .btn-primary {
+        width: 100%;
+        padding: 0.8rem;
+    }
+
+    /* 4. Permettiamo ai link del menu in alto di andare a capo se non ci stanno */
+    .header-flex nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.8rem;
+    }
 }

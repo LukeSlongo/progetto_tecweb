@@ -35,15 +35,17 @@ class AuthTest extends TestCase
         $this->assertTrue(Auth::isAdmin());
     }
 
-    public function test_isOwner_verifica_la_corrispondenza_dello_username()
+    public function test_isOwner_verifica_la_corrispondenza_dell_id()
     {
-        $_SESSION['user'] = ['username' => 'luigi.verdi'];
+        // Simuliamo la sessione con un ID utente
+        $_SESSION['user'] = ['id' => 5];
 
-        // È il proprietario? (Sì)
-        $this->assertTrue(Auth::isOwner('luigi.verdi'));
+        // Verifichiamo che riconosca l'ID corretto (sia come intero che come stringa del DB)
+        $this->assertTrue(Auth::isOwner(5));
+        $this->assertTrue(Auth::isOwner('5')); 
 
-        // È il proprietario? (No, stiamo chiedendo di un altro utente)
-        $this->assertFalse(Auth::isOwner('mario.rossi'));
+        // Verifichiamo che blocchi gli estranei
+        $this->assertFalse(Auth::isOwner(99));
     }
 
     public function test_getHeaderLinks_ritorna_html_corretto_per_admin()

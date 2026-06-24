@@ -179,7 +179,7 @@ class RoomControllerTest extends TestCase
         $controller->expects($this->once())
             ->method('render')
             ->with(
-                $this->equalTo('roomPage'), // NOTA: assicurati che sia il nome corretto della tua view!
+                $this->equalTo('roomDetailPage'),
                 $this->callback(function ($dati) {
                     $nomeAulaOk = $dati['ROOM_NAME'] === 'Laboratorio Chimica';
                     $edificioOk = $dati['BUILDING_NAME'] === 'Edificio C';

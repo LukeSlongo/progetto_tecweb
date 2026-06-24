@@ -217,15 +217,28 @@ class UserControllerTest extends TestCase
         // Simuliamo un utente loggato in sessione
         $_SESSION['user'] = ['username' => 'mario_rossi'];
 
-        $controller = $this->getMockBuilder(UserController::class)
+        $controllerMock = $this->getMockBuilder(UserController::class)
             ->onlyMethods(['render'])
             ->getMock();
 
-        $controller->expects($this->once())
+        $controllerMock->expects($this->once())
             ->method('render')
-            ->with('homePage', ['NOME_UTENTE' => 'mario_rossi']);
+            ->with(
+                $this->equalTo('homePage'),
+                $this->callback(function ($data) {
+                    // 1. Verifica fondamentale: il nome utente c'è ed è corretto?
+                    $this->assertEquals('mario_rossi', $data['NOME_UTENTE']);
 
-        $controller->viewHome();
+                    // 2. Verifichiamo che i nuovi componenti della UI siano stati passati
+                    $this->assertArrayHasKey('SEARCH_BANNER', $data);
+                    $this->assertArrayHasKey('CREATE_ISSUE_BANNER', $data);
+                    $this->assertArrayHasKey('STUDENT_SECTION', $data);
+
+                    return true;
+                })
+            );
+
+        $controllerMock->viewHome();
     }
 
     public function test_viewUserList_recupera_utenti_e_renderizza_lista()
@@ -243,7 +256,7 @@ class UserControllerTest extends TestCase
         $mockPdo = $this->createMock(PDO::class);
         // Intercettiamo sia query() che prepare() perché non sappiamo esattamente come
         // è implementato findAll() nel tuo Model.php base
-        $mockPdo->method('query')->willReturn($mockStmt); 
+        $mockPdo->method('query')->willReturn($mockStmt);
         $mockPdo->method('prepare')->willReturn($mockStmt);
         $this->injectMockDatabase($mockPdo);
 
@@ -262,14 +275,14 @@ class UserControllerTest extends TestCase
                     if (!isset($datiPassati['USER_LIST_ITEMS'])) {
                         return false;
                     }
-                    
+
                     $html = $datiPassati['USER_LIST_ITEMS'];
-                    
+
                     // Se l'Helper ha funzionato bene, i nomi degli utenti finti 
                     // devono essere stati "stampati" dentro la stringa HTML
                     $trovatoMario = strpos($html, 'mario.rossi') !== false;
                     $trovatoLuigi = strpos($html, 'luigi.verdi') !== false;
-                    
+
                     return $trovatoMario && $trovatoLuigi;
                 })
             );
@@ -277,4 +290,115 @@ class UserControllerTest extends TestCase
         // 5. Eseguiamo l'azione
         $controller->viewUserList();
     }
+
+    public function test_api_addFavorite_blocca_utente_non_loggato()
+    {
+        $controller = new UserController();
+
+        // La sessione è già vuota grazie al setUp(), quindi non c'è nessun utente loggato
+
+        ob_start(); // Inizia a registrare quello che l'API stampa a schermo
+        $controller->addFavorite(3);
+        $output = ob_get_clean(); // Ferma la registrazione e salva il testo
+
+        $json = json_decode($output, true);
+
+        $this->assertArrayHasKey('error', $json);
+        $this->assertEquals('Devi essere loggato', $json['error']);
+    }
+
+    public function test_api_addFavorite_restituisce_json_di_successo()
+    {
+        $_SESSION['user'] = ['id' => 5, 'username' => 'mario_rossi', 'role' => 'student'];
+
+        $mockStmt = $this->createMock(\PDOStatement::class);
+        $mockStmt->method('execute')->willReturn(true);
+        $mockPdo = $this->createMock(\PDO::class);
+        $mockPdo->method('prepare')->willReturn($mockStmt);
+        $mockPdo->method('query')->willReturn($mockStmt);
+        $this->injectMockDatabase($mockPdo);
+
+        $controller = new UserController();
+
+        ob_start();
+        // L'operatore @ silenzia il Warning degli header scatenato da PHPUnit
+        @$controller->addFavorite(3);
+        $output = ob_get_clean();
+
+        $jsonStart = strpos($output, '{');
+        if ($jsonStart !== false) {
+            $output = substr($output, $jsonStart);
+        }
+
+        $json = json_decode($output, true);
+
+        $this->assertTrue($json['success']);
+        $this->assertEquals('added', $json['action']);
+    }
+
+    public function test_api_removeFavorite_restituisce_json_di_successo()
+    {
+        $_SESSION['user'] = ['id' => 5, 'username' => 'mario_rossi', 'role' => 'student'];
+
+        $mockStmt = $this->createMock(\PDOStatement::class);
+        $mockStmt->method('execute')->willReturn(true);
+        $mockPdo = $this->createMock(\PDO::class);
+        $mockPdo->method('prepare')->willReturn($mockStmt);
+        $mockPdo->method('query')->willReturn($mockStmt);
+        $this->injectMockDatabase($mockPdo);
+
+        $controller = new UserController();
+
+        ob_start();
+        @$controller->removeFavorite(3);
+        $output = ob_get_clean();
+
+        $jsonStart = strpos($output, '{');
+        if ($jsonStart !== false) {
+            $output = substr($output, $jsonStart);
+        }
+
+        $json = json_decode($output, true);
+
+        $this->assertTrue($json['success']);
+        $this->assertEquals('removed', $json['action']);
+    }
+
+    public function test_api_isFavorite_restituisce_stato_corretto()
+    {
+        $_SESSION['user'] = ['id' => 5, 'username' => 'mario_rossi', 'role' => 'student'];
+
+        $mockStmt = $this->createMock(\PDOStatement::class);
+        $mockStmt->method('execute')->willReturn(true);
+
+        // IL SUPER-MOCK: Qualsiasi colonna cerchi il Model (count, is_favorite, o indice 0), noi ce l'abbiamo e vale 1 (true)!
+        $fintoRisultato = ['room_id' => 3, 'count' => 1, 'COUNT(*)' => 1, 0 => 1, 'is_favorite' => 1];
+
+        $mockStmt->method('fetch')->willReturn($fintoRisultato);
+        $mockStmt->method('fetchAll')->willReturn([$fintoRisultato]);
+        $mockStmt->method('fetchColumn')->willReturn(1);
+        $mockStmt->method('rowCount')->willReturn(1);
+
+        $mockPdo = $this->createMock(\PDO::class);
+        $mockPdo->method('prepare')->willReturn($mockStmt);
+        $mockPdo->method('query')->willReturn($mockStmt);
+        $this->injectMockDatabase($mockPdo);
+
+        $controller = new UserController();
+
+        ob_start();
+        @$controller->isFavorite(3);
+        $output = ob_get_clean();
+
+        $jsonStart = strpos($output, '{');
+        if ($jsonStart !== false) {
+            $output = substr($output, $jsonStart);
+        }
+
+        $json = json_decode($output, true);
+
+        $this->assertArrayHasKey('isFavorite', $json);
+        $this->assertTrue($json['isFavorite']);
+    }
+
 }
