@@ -41,3 +41,7 @@ Prima di sovrascrivere i file, la action crea un backup:
 ```
 
 Il database non viene importato automaticamente: `db_init/init.sql` resta copiato sul server solo come riferimento.
+
+## Smoke test
+
+Questo file puo' essere aggiornato con modifiche innocue per verificare il deploy automatico dopo un merge su `develop`.
