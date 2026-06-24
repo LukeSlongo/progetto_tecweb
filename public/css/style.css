@@ -1261,3 +1261,48 @@ fieldset.form-gray-box legend {
         gap: 0.8rem;
     }
 }
+
+
+/* =================================================================
+    Dashboard Tecnico (Home)
+=================================================================
+*/
+
+.technician-dashboard {
+    margin-top: 3rem;
+    border-top: 2px solid var(--hero-bg-end);
+    padding-top: 2rem;
+}
+
+/* Griglia per affiancare le due sezioni (Mie Task e Aperte) */
+.dashboard-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
+
+.dashboard-column h3 {
+    color: var(--text-blue);
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+/* Allinea i bottoni delle scorciatoie */
+.dashboard-actions {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3rem;
+    flex-wrap: wrap; /* Manda a capo i bottoni su schermi molto stretti */
+}
+
+/* Modifica la visualizzazione su tablet/cellulari */
+@media (max-width: 768px) {
+    .dashboard-row {
+        grid-template-columns: 1fr; /* Le due colonne si impilano in verticale */
+        gap: 2rem;
+    }
+}

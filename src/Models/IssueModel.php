@@ -165,6 +165,20 @@ class IssueModel extends Model
         $this->checkTable();
         $sql = "UPDATE {$this->table} SET room_id = ?, title = ?, description = ? WHERE id = ?";
         return $this->query($sql, [$room_id, $title, $description, $issue_id]);
+      
+    public function getIssuesByTechnician($technician_id)
+    {
+        $sql = "SELECT 
+                    i.id AS issue_id,
+                    i.title AS issue_title,
+                    i.status AS issue_status,
+                    r.name AS room_name
+                FROM issue i
+                JOIN room r ON i.room_id = r.id
+                WHERE i.technician_id = ? AND i.status = 'in_progress'
+                ORDER BY i.opened_at DESC";
+
+        return $this->fetchAll($sql, [$technician_id]);
     }
 
 }
