@@ -72,6 +72,9 @@ abstract class Controller
                 $nav_utenti = '';
                 $nav_segnalazioni = '';
             }
+            if (!in_array('main', $this->scriptPathList)) {
+            array_unshift($this->scriptPathList, 'main'); 
+            }
 
             $layout_data = [
                 'CLASSE_PAGINA' => strtolower($view),
