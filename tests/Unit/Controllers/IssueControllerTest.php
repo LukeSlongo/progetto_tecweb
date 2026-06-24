@@ -56,10 +56,11 @@ class IssueControllerTest extends TestCase
      * Falsifica il database per query di scrittura (INSERT/UPDATE/DELETE)
      * e permette di simulare un'eccezione
      */
-    protected function mockDatabaseInsert($simulaErrore = false)
+    protected function mockDatabaseInsert($simulaErrore = false, $fetchResult = null)
     {
         $mockStmt = $this->createMock(PDOStatement::class);
         $mockStmt->method('execute')->willReturn(true);
+        $mockStmt->method('fetch')->willReturn($fetchResult);
 
         $mockPdo = $this->createMock(PDO::class);
 

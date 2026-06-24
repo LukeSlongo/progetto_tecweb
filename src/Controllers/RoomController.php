@@ -79,14 +79,13 @@ class RoomController extends Controller
     {
         $this->page_title = "Dettaglio aula - UniFix";
 
-        $room = $this->Room->getRoomWithBuilding($room_id);
-        $clean_title = htmlspecialchars(strip_tags($room['room_name']), ENT_QUOTES, 'UTF-8');
-        $this->page_description = "Visualizza i dettagli dell'aula " . $clean_title . " comprese le segnalazioni attive e lo stato dell'aula.- UniFix";
-
         $room_data = $this->Room->getRoomWithBuilding($room_id);
         if (!$room_data) {
             $this->abort(404, "L'aula richiesta non esiste.");
         }
+
+        $clean_title = htmlspecialchars(strip_tags($room_data['room_name']), ENT_QUOTES, 'UTF-8');
+        $this->page_description = "Visualizza i dettagli dell'aula " . $clean_title . " comprese le segnalazioni attive e lo stato dell'aula.- UniFix";
 
         $issue_model = new IssueModel();
         $issues_of_room = $issue_model->getIssuesByRoom($room_id);

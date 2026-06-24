@@ -1,0 +1,19 @@
+; -----------------------------------------------------------------------------
+; Configurazione d'ambiente di UniFix.
+;
+; Copia questo file in "unifix.ini" (che NON viene versionato) e compila i valori
+; reali. Va posizionato ACCANTO a config.php, cioè FUORI dalla webroot
+; (sul server TecWeb: ~/unifix.ini, sopra public_html).
+;
+; In locale con Docker NON serve: config.php usa le variabili d'ambiente del
+; docker-compose. Questo file serve soprattutto sul server.
+;
+; NOTA: se un valore contiene caratteri speciali (es. ? { } | & ! " ecc.),
+; racchiudilo tra virgolette doppie -> es. DB_PASSWORD = "p?ss!word"
+; -----------------------------------------------------------------------------
+
+DB_HOST = localhost
+DB_USER = NOME_UTENTE
+DB_PASSWORD = "password_dal_file_pwd_db_2024-25.txt"
+DB_NAME = NOME_UTENTE
+BASE_PATH = /NOME_UTENTE
