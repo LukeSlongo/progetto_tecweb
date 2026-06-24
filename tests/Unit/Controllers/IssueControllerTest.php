@@ -401,18 +401,39 @@ class IssueControllerTest extends TestCase
 
     public function test_closeIssue_esegue_con_successo_per_tecnico()
     {
+        // 1. Simula l'utente in sessione
         $_SESSION['user'] = ['id' => 2, 'username' => 'tecnico', 'role' => 'technician'];
 
-        $this->mockDatabaseInsert(false, ['technician_id' => 2]);
+        // AGGIUNTA FONDAMENTALE: Falsifichiamo il DB prima di creare il Controller, così il costruttore non crasha!
+        $this->mockDatabaseInsert(false);
 
         $controller = $this->getMockBuilder(IssueController::class)
             ->onlyMethods(['redirect'])
             ->getMock();
 
+        // 2. Creiamo un Mock diretto del Model per superare il blocco di sicurezza
+        $issueModelMock = $this->createMock(\App\Models\IssueModel::class);
+        
+        // Simuliamo che la issue esista e sia assegnata proprio a noi (tecnico_id = 2)
+        $issueModelMock->method('getIssueDetails')->willReturn([
+            'issue_id' => 10,
+            'technician_id' => 2
+        ]);
+        
+        // Simuliamo la chiusura con successo
+        $issueModelMock->method('closeIssue')->willReturn(true);
+
+        $reflection = new \ReflectionClass(IssueController::class);
+        $issueProperty = $reflection->getProperty('Issue');
+        $issueProperty = $reflection->getProperty('Issue');
+        $issueProperty->setValue($controller, $issueModelMock);
+
+        // 4. Eseguiamo le aspettative e l'azione
         $controller->expects($this->once())->method('redirect')->with('/issues/10');
 
         $controller->closeIssue(10);
 
+        // 5. Asserzione finale
         $this->assertEquals("Segnalazione risolta e chiusa con successo.", $_SESSION['flash_success']);
     }
 }
