@@ -1,0 +1,126 @@
+name: Deploy TecWeb
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+concurrency:
+  group: tecweb-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to TecWeb
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mysqli, pdo_mysql
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Check whitespace
+        run: git diff --check
+
+      - name: Run tests
+        run: ./vendor/bin/phpunit --display-warnings --display-deprecations
+
+      - name: Prepare SSH
+        env:
+          TECWEB_USER: ${{ secrets.TECWEB_USER }}
+          TECWEB_SSH_PRIVATE_KEY: ${{ secrets.TECWEB_SSH_PRIVATE_KEY }}
+        run: |
+          test -n "$TECWEB_USER"
+          test -n "$TECWEB_SSH_PRIVATE_KEY"
+
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$TECWEB_SSH_PRIVATE_KEY" > ~/.ssh/tecweb_deploy_key
+          chmod 600 ~/.ssh/tecweb_deploy_key
+
+          cat > ~/.ssh/config <<EOF
+          Host tecweb-jump
+            HostName sshpaolotti.studenti.math.unipd.it
+            User $TECWEB_USER
+            IdentityFile ~/.ssh/tecweb_deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking accept-new
+
+          Host tecweb-target
+            HostName tecweb
+            User $TECWEB_USER
+            ProxyJump tecweb-jump
+            IdentityFile ~/.ssh/tecweb_deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking accept-new
+          EOF
+
+      - name: Build deployment archive
+        run: |
+          tar \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.env' \
+            --exclude='.phpunit.result.cache' \
+            --exclude='coverage-report' \
+            --exclude='vendor' \
+            --exclude='unifix.ini' \
+            -czf /tmp/unifix_deploy.tar.gz .
+
+      - name: Upload archive
+        run: scp /tmp/unifix_deploy.tar.gz tecweb-target:~/unifix_deploy.tar.gz
+
+      - name: Deploy on TecWeb
+        run: |
+          ssh tecweb-target 'bash -s' <<'EOF'
+          set -euo pipefail
+
+          RELEASE_DIR="$HOME/unifix_release"
+          TMP_DIR="$HOME/unifix_release_tmp"
+          BACKUP_DIR="$HOME/unifix_backup_$(date +%Y%m%d_%H%M%S)"
+
+          test -f "$HOME/unifix.ini"
+
+          rm -rf "$TMP_DIR"
+          mkdir -p "$TMP_DIR"
+          tar -xzf "$HOME/unifix_deploy.tar.gz" -C "$TMP_DIR"
+
+          mkdir -p "$BACKUP_DIR"
+          if [ -d "$HOME/public_html" ]; then
+            cp -a "$HOME/public_html" "$BACKUP_DIR/public_html"
+          fi
+          if [ -d "$HOME/src" ]; then
+            cp -a "$HOME/src" "$BACKUP_DIR/src"
+          fi
+          if [ -f "$HOME/config.php" ]; then
+            cp -a "$HOME/config.php" "$BACKUP_DIR/config.php"
+          fi
+
+          mkdir -p "$HOME/public_html"
+          find "$HOME/public_html" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+          cp -a "$TMP_DIR/public/." "$HOME/public_html/"
+
+          rm -rf "$HOME/src"
+          cp -a "$TMP_DIR/src" "$HOME/src"
+
+          cp -a "$TMP_DIR/config.php" "$HOME/config.php"
+
+          rm -rf "$HOME/db_init"
+          cp -a "$TMP_DIR/db_init" "$HOME/db_init"
+
+          rm -rf "$RELEASE_DIR"
+          mv "$TMP_DIR" "$RELEASE_DIR"
+          rm -f "$HOME/unifix_deploy.tar.gz"
+
+          echo "Deploy completed. Backup: $BACKUP_DIR"
+          EOF
