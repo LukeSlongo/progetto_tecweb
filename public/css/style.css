@@ -53,6 +53,8 @@
     --shadow-cta: rgba(227, 24, 24, 0.3);
     --accent-yellow: #ffbf47;
     --accent-yellow-hover: #fca510;
+    --accent-yellow-breadcrumb: #ffbf47;
+    --accent-yellow-hover-breadcrumb: #fca510;
     --error-bg: #ffebee;
     --error-text: #c62828;
     --hero-bg-start: #f5f7fa;
@@ -88,6 +90,8 @@
     --shadow-cta: rgba(220, 38, 38, 0.2); 
     --accent-yellow: #D97706; 
     --accent-yellow-hover: #B45309;
+    --accent-yellow-breadcrumb: #fafa00;
+    --accent-yellow-hover-breadcrumb: #dcdc00;
     --error-bg: #450A0A; 
     --error-text: #FECACA; 
     --hero-bg-start: #111827;
@@ -136,7 +140,7 @@ main {
     top: -2.5rem;
     left: 0;
     background: var(--accent-yellow);
-    color: var(--text-black);
+    color: #000000;
     padding: 0.5rem;
     z-index: 100;
 }
@@ -748,12 +752,12 @@ footer {
 
 /*elimina colore dei link*/
 .breadcrumb-nav a {
-    color: var(--accent-yellow);
+    color: var(--accent-yellow-breadcrumb);
 }
 
 /*mette colore giallo quando passiamo cursor per i link*/
 .breadcrumb-nav a:hover {
-    color: var(--accent-yellow-hover);
+    color: var(--accent-yellow-hover-breadcrumb);
 }
 
 
