@@ -9,6 +9,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const allOptGroups = Array.from(roomSelect.querySelectorAll('optgroup'));
 
+        if (buildingSelect.value !== "") {
+            buildingSelect.dispatchEvent(new Event('change'));
+        }
+
         buildingSelect.addEventListener('change', (e) => {
             const selectedBuildingId = e.target.value;
             const currentSelectedRoom = roomSelect.value; 

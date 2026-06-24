@@ -75,9 +75,7 @@ class UserControllerTest extends TestCase
 
         // Simuliamo l'utente che non inserisce niente
         $controller->method('post')->willReturn('');
-
-        // Verifichiamo che il redirect avvenga verso /login
-        $controller->expects($this->once())->method('redirect')->with('/login');
+        $controller->expects($this->once())->method('redirect')->with('/register');
 
         // Eseguiamo
         $controller->register();

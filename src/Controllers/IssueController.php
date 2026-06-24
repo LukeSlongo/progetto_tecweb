@@ -28,32 +28,78 @@ class IssueController extends Controller
         $this->page_title = "Nuova Segnalazione - UniFix";
         $this->page_description = "Compila il modulo per creare una nuova segnalazione di guasto o problema in un'aula.";
 
-        $buildingModel = new BuildingModel();
-        $roomModel = new RoomModel();
+        list($buildingsHtml, $roomsHtml) = $this->getDropdownsHtml();
 
-        $buildings = $buildingModel->findAll();
-        $rooms = $roomModel->findAll();
-
-        $buildingsHtml = '';
-        foreach ($buildings as $building) {
-            $buildingsHtml .= '<option value="' . $building['id'] . '">' . htmlspecialchars($building['name'], ENT_QUOTES, 'UTF-8') . '</option>';
-        }
-
-        $roomsHtml = '';
-        foreach ($buildings as $building) {
-            $roomsHtml .= '<optgroup label="' . htmlspecialchars($building['name'], ENT_QUOTES, 'UTF-8') . '" data-building-id="' . $building['id'] . '">';
-            foreach ($rooms as $room) {
-                if ($room['building_id'] == $building['id']) {
-                    $roomsHtml .= '<option value="' . $room['id'] . '">' . htmlspecialchars($room['name'], ENT_QUOTES, 'UTF-8') . '</option>';
-                }
-            }
-            $roomsHtml .= '</optgroup>';
-        }
         BreadcrumbHelper::add('Nuova segnalazione');
         $this->render('issueFormPage', [
+            'FORM_ACTION' => '/issues',
+            'FORM_LEGEND' => 'Segnala un problema',
             'BUILDING_OPTIONS' => $buildingsHtml,
-            'ROOM_OPTIONS' => $roomsHtml
+            'ROOM_OPTIONS' => $roomsHtml,
+            'ISSUE_TITLE_VALUE' => '',
+            'ISSUE_DESC_VALUE' => '',
+            'SUBMIT_BUTTON_TEXT' => 'Invia'
         ]);
+    }
+
+    public function viewEditForm($id)
+    {
+        $issue = $this->Issue->getIssueDetails($id);
+        
+        // Controllo Sicurezza: Proprietario e Stato 'open'
+        $user = Auth::getUser();
+        if (!$issue || $issue['reporter_id'] !== $user['id'] || $issue['issue_status'] !== 'open') {
+             throw new \App\Exceptions\ForbiddenException("Azione non consentita. Puoi modificare solo le tue segnalazioni se sono ancora aperte.");
+        }
+
+        $this->page_title = "Modifica Segnalazione - UniFix";
+        $this->page_description = "Modifica i dettagli della tua segnalazione.";
+
+        list($buildingsHtml, $roomsHtml) = $this->getDropdownsHtml($issue['building_id'], $issue['room_id']);
+
+        BreadcrumbHelper::add('Segnalazioni', '/issues');
+        BreadcrumbHelper::add($issue['issue_title'], '/issues/' . $id);
+        BreadcrumbHelper::add('Modifica');
+
+        $this->render('issueFormPage', [
+            'FORM_ACTION' => '/issues/' . $id . '/edit',
+            'FORM_LEGEND' => 'Modifica segnalazione',
+            'BUILDING_OPTIONS' => $buildingsHtml,
+            'ROOM_OPTIONS' => $roomsHtml,
+            'ISSUE_TITLE_VALUE' => htmlspecialchars($issue['issue_title'], ENT_QUOTES, 'UTF-8'),
+            'ISSUE_DESC_VALUE' => htmlspecialchars($issue['issue_description'], ENT_QUOTES, 'UTF-8'),
+            'SUBMIT_BUTTON_TEXT' => 'Salva modifiche'
+        ]);
+    }
+
+    public function updateIssue($id)
+    {
+        $issue = $this->Issue->getIssueDetails($id);
+        $user = Auth::getUser();
+        
+        // Controllo Sicurezza Strict su POST
+        if (!$issue || $issue['reporter_id'] !== $user['id'] || $issue['issue_status'] !== 'open') {
+             throw new \App\Exceptions\ForbiddenException("Azione non consentita.");
+        }
+
+        $room_id = $this->post('room_id');
+        $title = $this->post('issue_title');
+        $description = $this->post('issue_description');
+
+        if (empty($room_id) || empty($title) || empty($description)) {
+            $_SESSION['flash_error'] = "Tutti i campi sono obbligatori.";
+            $this->redirect("/issues/{$id}/edit");
+            return;
+        }
+
+        try {
+            $this->Issue->updateIssue($id, $room_id, $title, $description);
+            $_SESSION['flash_success'] = "Segnalazione aggiornata con successo!";
+            $this->redirect("/issues/{$id}");
+        } catch (\Exception $e) {
+            $_SESSION['flash_error'] = "Errore durante l'aggiornamento. Riprova.";
+            $this->redirect("/issues/{$id}/edit");
+        }
     }
 
     public function saveIssue()
@@ -164,6 +210,10 @@ class IssueController extends Controller
             . '</form>'
             : '';
 
+        $edit_issue_button = ($is_owner && $issue['issue_status'] === 'open')
+            ? '<a href="/issues/' . $issue['issue_id'] . '/edit" class="btn-primary">Modifica</a>'
+            : '';
+
         $takeIssueButton = '';
         $closeIssueButton = '';
 
@@ -225,7 +275,8 @@ class IssueController extends Controller
 
             'TECHNICIAN_ID' => $issue['technician_id'] ?? 'Nessuno',
             'REPORTER_HTML' => $reporter_html,
-
+            
+            'EDIT_ISSUE_BUTTON' => $edit_issue_button,
             'DELETE_ISSUE_BUTTON' => $delete_issue_button,
             'TAKE_ISSUE_BUTTON' => $takeIssueButton,
             'CLOSE_ISSUE_BUTTON' => $closeIssueButton
@@ -281,5 +332,33 @@ class IssueController extends Controller
         }
 
         $this->redirect("/issues/{$id}");
+    }
+
+    private function getDropdownsHtml($selected_building_id = null, $selected_room_id = null)
+    {
+        $buildingModel = new BuildingModel();
+        $roomModel = new RoomModel();
+        $buildings = $buildingModel->findAll();
+        $rooms = $roomModel->findAll();
+
+        $buildingsHtml = '';
+        foreach ($buildings as $building) {
+            $selected = ($building['id'] == $selected_building_id) ? ' selected' : '';
+            $buildingsHtml .= '<option value="' . $building['id'] . '"' . $selected . '>' . htmlspecialchars($building['name'], ENT_QUOTES, 'UTF-8') . '</option>';
+        }
+
+        $roomsHtml = '';
+        foreach ($buildings as $building) {
+            $roomsHtml .= '<optgroup label="' . htmlspecialchars($building['name'], ENT_QUOTES, 'UTF-8') . '" data-building-id="' . $building['id'] . '">';
+            foreach ($rooms as $room) {
+                if ($room['building_id'] == $building['id']) {
+                    $selected = ($room['id'] == $selected_room_id) ? ' selected' : '';
+                    $roomsHtml .= '<option value="' . $room['id'] . '"' . $selected . '>' . htmlspecialchars($room['name'], ENT_QUOTES, 'UTF-8') . '</option>';
+                }
+            }
+            $roomsHtml .= '</optgroup>';
+        }
+
+        return [$buildingsHtml, $roomsHtml];
     }
 }
