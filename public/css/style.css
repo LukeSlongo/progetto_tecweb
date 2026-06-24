@@ -1097,7 +1097,33 @@ fieldset.form-gray-box legend {
     width: 100%;
 }
 
-/* --- RESPONSIVITÀ PER CELLULARI --- */
+.issue-actions {
+    display: flex;
+    flex-direction: column; /* Mette i bottoni uno sotto l'altro */
+    gap: 1rem; /* Crea lo spazio perfetto tra i bottoni (niente più collisioni!) */
+    margin-top: 2rem; /* Distanza dalle info testuali sopra */
+}
+
+/* Rimuove la sottolineatura dal link e lo fa comportare come un vero bottone */
+.issue-actions a.btn-primary {
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Assicura che anche i bottoni nei form occupino tutto lo spazio disponibile */
+.issue-actions form {
+    margin: 0;
+    width: 100%;
+}
+
+.issue-actions form button {
+    width: 100%;
+}
+
+/* --- RESPONSIVITÀ MOBILE --- */
 @media (max-width: 768px) {
     .issue-content-wrapper {
         grid-template-columns: 1fr; /* Impila la descrizione sopra le info */
@@ -1233,5 +1259,50 @@ fieldset.form-gray-box legend {
         flex-wrap: wrap;
         justify-content: center;
         gap: 0.8rem;
+    }
+}
+
+
+/* =================================================================
+    Dashboard Tecnico (Home)
+=================================================================
+*/
+
+.technician-dashboard {
+    margin-top: 3rem;
+    border-top: 2px solid var(--hero-bg-end);
+    padding-top: 2rem;
+}
+
+/* Griglia per affiancare le due sezioni (Mie Task e Aperte) */
+.dashboard-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
+
+.dashboard-column h3 {
+    color: var(--text-blue);
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+/* Allinea i bottoni delle scorciatoie */
+.dashboard-actions {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3rem;
+    flex-wrap: wrap; /* Manda a capo i bottoni su schermi molto stretti */
+}
+
+/* Modifica la visualizzazione su tablet/cellulari */
+@media (max-width: 768px) {
+    .dashboard-row {
+        grid-template-columns: 1fr; /* Le due colonne si impilano in verticale */
+        gap: 2rem;
     }
 }

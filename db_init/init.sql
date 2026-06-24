@@ -74,6 +74,7 @@ DELIMITER ;
 INSERT INTO `user` (username, password, role) VALUES 
 ('admin', '$2y$10$rTwKpKUBtWUq6QQKjVS/FuhEzFASXCpuekO2jsrY16wbaibHU0wtK', 'admin'),
 ('tecnico', '$2y$10$7nnn3YJsSpqn1O7VnWO50.n/CRCHlMagJEyhQ5TQe9m3J5vh3ihAO', 'technician'),
+('tecnico1', '$2y$10$7nnn3YJsSpqn1O7VnWO50.n/CRCHlMagJEyhQ5TQe9m3J5vh3ihAO', 'technician'),
 ('studente', '$2y$10$Fk53wBPCRiF3pt7GIhcWMe3UvgEbUsrJ/JqwLe4cDx9VYnnn/lzmO', 'student'),
 ('studente1', '$2y$10$Fk53wBPCRiF3pt7GIhcWMe3UvgEbUsrJ/JqwLe4cDx9VYnnn/lzmO', 'student'),
 ('studente2', '$2y$10$Fk53wBPCRiF3pt7GIhcWMe3UvgEbUsrJ/JqwLe4cDx9VYnnn/lzmO', 'student'),
@@ -96,9 +97,9 @@ INSERT INTO room (building_id, name) VALUES
 
 -- Inserimento di issue
 INSERT INTO issue (user_id, room_id, technician_id, title, description, status) VALUES
-(3, 1, NULL, 'Proiettore non funzionante', 'Il proiettore principale non si accende, cavo di alimentazione apparentemente collegato.', 'open'),
-(3, 1, 2, 'Sedie rotte', 'Tre sedie nella seconda fila hanno lo schienale rotto e sono pericolose.', 'in_progress'),
-(3, 1, NULL, 'Finestra bloccata', 'La finestra in fondo a destra non si apre.', 'open'),
-(3, 2, 2, 'Computer PC-05 non si avvia', 'Il computer PC-05 emette un beep lungo all''avvio ma lo schermo rimane nero.', 'in_progress'),
-(3, 2, NULL, 'Manca un mouse', 'Alla postazione PC-12 manca il mouse.', 'open'),
-(3, 3, NULL, 'Luce tremolante', 'La plafoniera centrale sfarfalla continuamente.', 'open');
+(4, 1, NULL, 'Proiettore non funzionante', 'Il proiettore principale non si accende, cavo di alimentazione apparentemente collegato.', 'open'),
+(5, 1, 2, 'Sedie rotte', 'Tre sedie nella seconda fila hanno lo schienale rotto e sono pericolose.', 'in_progress'),
+(6, 1, NULL, 'Finestra bloccata', 'La finestra in fondo a destra non si apre.', 'open'),
+(7, 2, 3, 'Computer PC-05 non si avvia', 'Il computer PC-05 emette un beep lungo all''avvio ma lo schermo rimane nero.', 'in_progress'),
+(8, 2, NULL, 'Manca un mouse', 'Alla postazione PC-12 manca il mouse.', 'open'),
+(4, 3, NULL, 'Luce tremolante', 'La plafoniera centrale sfarfalla continuamente.', 'open');

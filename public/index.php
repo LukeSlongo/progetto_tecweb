@@ -72,6 +72,8 @@ $router->get('/issues/{id:num}', 'IssueController', 'viewIssueDetail', ['auth'])
 $router->post('/issues/{id:num}/delete', 'IssueController', 'deleteIssue', ['auth', 'owner:issue']);
 $router->post('/issues/{issue_id:num}/take', 'IssueController', 'takeIssue', ['auth', 'technician']);
 $router->post('/issues/{issue_id:num}/close', 'IssueController', 'closeIssue', ['auth', 'technician']);
+$router->get('/issues/{id:num}/edit', 'IssueController', 'viewEditForm', ['auth']);
+$router->post('/issues/{id:num}/edit', 'IssueController', 'updateIssue', ['auth']);
 
 // Utenti (solo admin)
 $router->get('/users', 'UserController', 'viewUserList', ['auth', 'admin']);
