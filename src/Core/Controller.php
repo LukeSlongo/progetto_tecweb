@@ -5,6 +5,7 @@ use App\Helpers\ScriptHelper;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\ForbiddenException;
 use App\Helpers\BreadcrumbHelper;
+use App\Helpers\Url;
 use Exception;
 
 
@@ -37,7 +38,7 @@ abstract class Controller
 
         if ($layout === 'main') {
 
-            $current_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+            $current_uri = Url::stripBasePath(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 
             $nav_home = ($current_uri === '/' || $current_uri === '/home')
                 ? '<li><span class="active-page" aria-current="page">Home</span></li>'
@@ -79,6 +80,7 @@ abstract class Controller
                 'IMPORT_SCRIPTS' => ScriptHelper::import_script($this->scriptPathList),
                 'TITOLO_PAGINA' => $this->page_title,
                 'DESCRIZIONE_PAGINA' => $this->page_description,
+                'BASE_PATH_JSON' => Url::jsonBasePath(),
                 'BREADCRUMB' => BreadCrumbHelper::render(),
                 'UTENTE_LOGGATO' => (Auth::isLogged()) ? "true" : "false",
                 'NAV_HOME' => $nav_home,
@@ -89,16 +91,19 @@ abstract class Controller
             ];
             $layout_file->setPageData($layout_data);
         } else {
-            $layout_file->setPageData(['TITOLO_PAGINA' => $this->page_title]);
+            $layout_file->setPageData([
+                'TITOLO_PAGINA' => $this->page_title,
+                'BASE_PATH_JSON' => Url::jsonBasePath()
+            ]);
         }
 
         $layout_file->setPageData(['CONTENUTO_PRINCIPALE' => $content_view]);
-        echo $layout_file->getPage();
+        echo Url::rewriteHtml($layout_file->getPage());
     }
 
     public function redirect($url)
     {
-        header("Location: " . $url);
+        header("Location: " . Url::to($url));
         exit;
     }
 

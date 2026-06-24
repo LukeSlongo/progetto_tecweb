@@ -1,6 +1,8 @@
 <?php
 namespace App\Core;
 
+use App\Helpers\Url;
+
 class Router
 {
 
@@ -32,7 +34,7 @@ class Router
     public function dispatch($requestedUri, $httpMethod)
     {
 
-        $uri = parse_url($requestedUri, PHP_URL_PATH);
+        $uri = Url::stripBasePath(parse_url($requestedUri, PHP_URL_PATH));
 
         $matchedRoute = null;
         $params = [];
@@ -88,7 +90,7 @@ class Router
             // utente non loggato
             if ($mw === 'guest') {
                 if (\App\Core\Auth::isLogged()) {
-                    header('Location: /');
+                    header('Location: ' . Url::to('/'));
                     exit;
                 }
             }
@@ -96,7 +98,7 @@ class Router
             // utente loggato
             if ($mw === 'auth') {
                 if (!\App\Core\Auth::isLogged()) {
-                    header('Location: /login');
+                    header('Location: ' . Url::to('/login'));
                     exit;
                 }
             }
@@ -124,7 +126,7 @@ class Router
 
                 $user = \App\Core\Auth::getUser();
                 if (!$user) {
-                    header('Location: /login');
+                    header('Location: ' . Url::to('/login'));
                     exit;
                 }
 

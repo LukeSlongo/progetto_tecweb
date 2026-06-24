@@ -1,11 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
     const favoriteForms = document.querySelectorAll('.favorite-form');
 
+    function apiUrl(path) {
+        return `${window.UNIFIX_BASE_PATH || ''}${path}`;
+    }
+
     // Funzione di supporto per aggiornare visivamente e semanticamente il bottone
     function setButtonState(form, button, isFavorite, roomId, roomName) {
         // Aggiorna lo stato nel DOM
         form.dataset.isFavorite = isFavorite ? 'true' : 'false';
-        form.setAttribute('action', isFavorite ? `/api/favorites/${roomId}/remove` : `/api/favorites/${roomId}/add`);
+        form.setAttribute('action', isFavorite ? apiUrl(`/api/favorites/${roomId}/remove`) : apiUrl(`/api/favorites/${roomId}/add`));
 
         // Aggiorna interfaccia e accessibilità
         if (isFavorite) {
@@ -30,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 1. CARICAMENTO INIZIALE: Controlla se l'aula è tra i preferiti
         // (Chiama la funzione isFavorite del tuo UserController)
         // ---------------------------------------------------------
-        fetch(`/api/favorites/${roomId}/check`)
+        fetch(apiUrl(`/api/favorites/${roomId}/check`))
             .then(response => response.json())
             .then(data => {
                 // Se riceviamo una risposta, aggiorniamo il bottone
