@@ -166,7 +166,6 @@ class IssueModel extends Model
         $sql = "UPDATE {$this->table} SET room_id = ?, title = ?, description = ? WHERE id = ?";
         return $this->query($sql, [$room_id, $title, $description, $issue_id]);
     }
-    
     public function getIssuesByTechnician($technician_id)
     {
         $sql = "SELECT 
