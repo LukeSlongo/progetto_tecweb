@@ -21,6 +21,7 @@
     5.6 IssueListPage
     5.7 IssueDetailPage
     5.8 HomePage
+   6. STILE STAMPA
 ==========================================================================
 */
 
@@ -60,40 +61,43 @@
     --hero-bg-start: #f5f7fa;
     --hero-bg-end: #e4e8f0;
 }
+
 /*transizione per il cambio di tema*/
-*, *::before, *::after {
-    transition: background-color 0.1s ease, 
-                color 0.1s ease, 
-                border-color 0.1s ease, 
-                box-shadow 0.1s ease;
+*,
+*::before,
+*::after {
+    transition: background-color 0.1s ease,
+        color 0.1s ease,
+        border-color 0.1s ease,
+        box-shadow 0.1s ease;
 }
 
 /*colori per dark mode*/
 :root[data-theme="dark"] {
-    --primary-blue: #525967; 
-    --primary-blue-rgb: 82, 89, 103; 
+    --primary-blue: #525967;
+    --primary-blue-rgb: 82, 89, 103;
     --primary-hover: #444953;
-    --danger-red: #B91C1C; 
+    --danger-red: #B91C1C;
     --danger-hover: #991B1B;
     --success-green: #16A34A;
     --hover-success-green: #15803D;
-    --bg-light: #111827; 
-    --bg-card: #1F2937; 
-    --text-blue: #E5E7EB; 
-    --text-white: #FFFFFF; 
-    --text-black: #F3F4F6; 
-    --text-gray: #9CA3AF; 
+    --bg-light: #111827;
+    --bg-card: #1F2937;
+    --text-blue: #E5E7EB;
+    --text-white: #FFFFFF;
+    --text-black: #F3F4F6;
+    --text-gray: #9CA3AF;
     --border-color: #374151;
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.6);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.8);
     --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.9);
-    --shadow-cta: rgba(220, 38, 38, 0.2); 
-    --accent-yellow: #D97706; 
+    --shadow-cta: rgba(220, 38, 38, 0.2);
+    --accent-yellow: #D97706;
     --accent-yellow-hover: #B45309;
     --accent-yellow-breadcrumb: #fafa00;
     --accent-yellow-hover-breadcrumb: #dcdc00;
-    --error-bg: #450A0A; 
-    --error-text: #FECACA; 
+    --error-bg: #450A0A;
+    --error-text: #FECACA;
     --hero-bg-start: #111827;
     --hero-bg-end: #1F2937;
 }
@@ -343,7 +347,7 @@ footer {
 /*pulsante per logout (con contrasto con il header) (usati !important per differenziarli di gli altri elementi di navbar)*/
 .btn-logout {
     background-color: var(--accent-yellow);
-    color:#000000 !important;
+    color: #000000 !important;
     border: 2px solid transparent;
     padding: 0.3rem 0.8rem !important;
     border-radius: 0.625rem;
@@ -406,7 +410,7 @@ footer {
 /* bottone preferiti usato sia nella lista sia nel dettaglio */
 .btn-favorite {
     background-color: var(--accent-yellow);
-    color:#000000;
+    color: #000000;
     border-radius: 6px;
     border: none;
     cursor: pointer;
@@ -467,26 +471,27 @@ footer {
 
 /*toogle tema chiaro/scuro*/
 .btn-theme {
-    background-color: transparent; 
+    background-color: transparent;
     border: 2px solid transparent;
-    border-radius: 15%; 
+    border-radius: 15%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem; 
+    font-size: 1.25rem;
     cursor: pointer;
-    transition: all 0.3s ease; 
-    padding: 0; 
-    margin-left: 0.5rem; 
-    user-select: none; 
-    color: var(--text-white); 
+    transition: all 0.3s ease;
+    padding: 0;
+    margin-left: 0.5rem;
+    user-select: none;
+    color: var(--text-white);
 }
 
 /*hover del toggle chiaro/scuro*/
 .btn-theme:hover {
-    background-color: var(--primary-hover); 
-    border-color: var(--text-white); 
+    background-color: var(--primary-hover);
+    border-color: var(--text-white);
 }
+
 /* 
 ===============================================
     4.2 FORM
@@ -693,7 +698,8 @@ footer {
 }
 
 /* Rimuove il bordo all'ultima riga per estetica */
-.data-table tbody tr:last-child td {
+.data-table tbody tr:last-child td,
+.data-table tbody tr:last-child th {
     border-bottom: none;
 }
 
@@ -712,7 +718,7 @@ footer {
 
 /* Mette delle margini nel contenetore del breadcrumb*/
 .breadcrumb-nav {
-    margin: 0.5rem auto 0.5rem auto; 
+    margin: 0.5rem auto 0.5rem auto;
     font-size: 1rem;
     position: relative;
     z-index: 5;
@@ -1090,7 +1096,7 @@ fieldset.form-gray-box legend {
     color: var(--text-white);
     padding: 1.5rem 2rem;
     margin-bottom: 2rem;
-    border-radius: 6px; 
+    border-radius: 6px;
 }
 
 .issue-header h2 {
@@ -1102,7 +1108,8 @@ fieldset.form-gray-box legend {
 /* Struttura a griglia per dividere descrizione e info su schermi grandi */
 .issue-content-wrapper {
     display: grid;
-    grid-template-columns: 2fr 1fr; /* La descrizione occupa il doppio dello spazio delle info */
+    grid-template-columns: 2fr 1fr;
+    /* La descrizione occupa il doppio dello spazio delle info */
     gap: 3rem;
     margin-bottom: 3rem;
 }
@@ -1127,7 +1134,8 @@ fieldset.form-gray-box legend {
 
 /* Lista delle informazioni */
 .issue-info-card ul {
-    list-style-type: none; /* Rimuoviamo i pallini base noiosi */
+    list-style-type: none;
+    /* Rimuoviamo i pallini base noiosi */
     padding: 0;
     margin: 0 0 2rem 0;
 }
@@ -1161,9 +1169,12 @@ fieldset.form-gray-box legend {
 
 .issue-actions {
     display: flex;
-    flex-direction: column; /* Mette i bottoni uno sotto l'altro */
-    gap: 1rem; /* Crea lo spazio perfetto tra i bottoni (niente più collisioni!) */
-    margin-top: 2rem; /* Distanza dalle info testuali sopra */
+    flex-direction: column;
+    /* Mette i bottoni uno sotto l'altro */
+    gap: 1rem;
+    /* Crea lo spazio perfetto tra i bottoni (niente più collisioni!) */
+    margin-top: 2rem;
+    /* Distanza dalle info testuali sopra */
 }
 
 /* Rimuove la sottolineatura dal link e lo fa comportare come un vero bottone */
@@ -1188,7 +1199,8 @@ fieldset.form-gray-box legend {
 /* --- RESPONSIVITÀ MOBILE --- */
 @media (max-width: 768px) {
     .issue-content-wrapper {
-        grid-template-columns: 1fr; /* Impila la descrizione sopra le info */
+        grid-template-columns: 1fr;
+        /* Impila la descrizione sopra le info */
         gap: 1.5rem;
     }
 
@@ -1298,7 +1310,7 @@ fieldset.form-gray-box legend {
 }
 
 @media (max-width: 37.5rem) {
-    
+
     /* 1. Riduciamo il padding (spazio interno) del riquadro grigio */
     .hero {
         padding: 2rem 1rem;
@@ -1326,45 +1338,108 @@ fieldset.form-gray-box legend {
 
 
 /* =================================================================
-    Dashboard Tecnico (Home)
+    6. STILI PER LA STAMPA
 =================================================================
 */
+@media print {
+    /* Tipografia, unità di misura e colori per la carta */
+    body, main, .container {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        font-family: "Times New Roman", Times, serif !important;
+        font-size: 12pt !important;
+        line-height: 1.5em !important;
+    }
 
-.technician-dashboard {
-    margin-top: 3rem;
-    border-top: 2px solid var(--hero-bg-end);
-    padding-top: 2rem;
-}
+    /* Rimuove margini e padding superflui dal contenitore principale */
+    .container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
 
-/* Griglia per affiancare le due sezioni (Mie Task e Aperte) */
-.dashboard-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    margin-bottom: 2rem;
-}
+    /* Linearizzazione del layout */
+    .issue-content-wrapper, 
+    .room-content-wrapper, 
+    .dashboard-row,
+    .header-flex {
+        display: block !important;
+    }
 
-.dashboard-column h3 {
-    color: var(--text-blue);
-    font-size: 1.5rem;
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-}
+    /* Pulizia del layout: cosa NASCONDERE */
+    header nav, 
+    footer, 
+    .skip-link, 
+    #theme-toggle,
+    .search-form,
+    .search-box,
+    .status-filter-form,
+    .create-issue-banner,
+    .issue-actions,
+    .form-actions {
+        display: none !important;
+    }
 
-/* Allinea i bottoni delle scorciatoie */
-.dashboard-actions {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    justify-content: center;
-    margin-top: 3rem;
-    flex-wrap: wrap; /* Manda a capo i bottoni su schermi molto stretti */
-}
+    /* Nascondi i bottoni e i form operativi */
+    button, 
+    [class*="btn-"], /* Seleziona qualsiasi classe che contiene "btn-" */
+    form.delete-issue-form,
+    form.take-issue-form,
+    form.close-issue-form {
+        display: none !important;
+    }
 
-/* Modifica la visualizzazione su tablet/cellulari */
-@media (max-width: 768px) {
-    .dashboard-row {
-        grid-template-columns: 1fr; /* Le due colonne si impilano in verticale */
-        gap: 2rem;
+    /* Ripulisci ombre e bordi per non sprecare inchiostro */
+    * {
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    /* Esplicitazione dei Link (Raffinamento CSS) */
+    /* Aggiunge l'URL di destinazione dopo il testo del link */
+    main a[href]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.9em;
+        color: #333333 !important;
+        text-decoration: none !important;
+        word-wrap: break-word;
+    }
+
+    /* Evita che l'esplicitazione dell'URL rovini la breadcrumb */
+    .breadcrumb-nav a[href]::after {
+        content: ""; 
+    }
+    
+    .breadcrumb-nav {
+        background-color: transparent !important;
+        border-bottom: 1px solid #000 !important;
+        border-radius: 0 !important;
+        padding-left: 0 !important;
+        margin-bottom: 2rem !important;
+    }
+
+    .breadcrumb-nav li, 
+    .breadcrumb-nav li:not(:last-child)::after, 
+    .breadcrumb-nav a {
+        color: #000000 !important;
+    }
+
+    /* Gestione Tabelle */
+    table {
+        page-break-inside: auto;
+    }
+    
+    tr, td, th {
+        page-break-inside: avoid;
+    }
+    
+    /* Forza la ripetizione di thead su ogni nuovo foglio */
+    thead {
+        display: table-header-group !important;
+    }
+
+    .data-table tbody tr:last-child td,
+    .data-table tbody tr:last-child th {
+        border-bottom: 1px solid #000000 !important;
     }
 }
