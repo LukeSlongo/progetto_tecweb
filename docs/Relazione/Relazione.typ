@@ -296,33 +296,69 @@ Per garantire che lo stato del sistema rispecchi sempre le regole di business de
   che si attiva prima dell'eliminazione (BEFORE DELETE) di un record dalla tabella user. Se l'utente eliminato ha il ruolo di tecnico,
   il trigger interviene su tutte le segnalazioni a lui assegnate e attualmente "in lavorazione", rimuovendo l'assegnazione
   (technician_id = NULL) e riportando automaticamente lo stato della segnalazione su "Aperto" (status = 'open').
-  Questo automatismo procedurale garantisce che nessun guasto rimanga "orfano" o bloccato nel sistema a seguito della rimozione del personale.
-
-== Codifica
-
-=== Implementazione Back-End (PHP)
-
-==== Routing
-
-==== Autenticazione
-
-== Implementazione Front-End (HTML/CSS/JS)
+  Questo automatismo procedurale garantisce che nessun guasto rimanga "orfano" o bloccato nel sistema a seguito della rimozione del personale
 
 = Accessibilità
-aria, contrasti, tabelle mobile, responsive mobile, responsive print, tag aria, navigazione da tastiera, navigazione (submit con messaggio di ok), form con indicazioni corrette
+Garantire l'accesso universale alle informazioni è stato un requisito fondante per lo sviluppo di UniFix. L'intero applicativo è stato progettato nel rigoroso rispetto delle direttive WCAG (Web Content Accessibility Guidelines), assicurando che il sistema fosse pienamente fruibile da utenti con disabilità visive, motorie o cognitive, nonché ottimizzato per qualsiasi dispositivo e contesto di fruizione (inclusa la stampa).
 
-== Test manuali
+== Struttura semantica e supporto agli screen reader
+Il codice HTML e CSS è stato sottoposto a validazione rigorosa tramite il Nu Html Checker (W3C) per garantire l'assenza di errori sintattici che potessero compromettere il parsing da parte delle tecnologie assistive.
+Per facilitare la navigazione non visiva:
+- Tag ARIA: È stato fatto un uso mirato degli attributi aria-label per fornire un contesto esplicito agli screen reader laddove il testo visibile non fosse sufficientemente descrittivo (es. bottoni con sole icone o link contestuali come "Visualizza dettaglio: [Titolo Segnalazione]").
 
-== Pull Request
+- Navigazione da tastiera: È stato implementato correttamente un link "Salta al contenuto principale" (Skip-link), visibile solo quando riceve il focus, che permette agli utenti che navigano tramite tasto TAB di bypassare la navigazione globale (header/menu) e accedere direttamente al nucleo informativo della pagina.
 
-== Branch Per feature
+== Accessibilità visiva e mobile-first
+La palette cromatica dell'interfaccia è stata testata per garantire un rapporto di contrasto minimo conforme allo standard WCAG AA tra il testo e lo sfondo.
+In ottica Mobile-First, la User Experience su smartphone è stata curata nei minimi dettagli:
+- La tipografia è gestita con unità di misura relative (rem) per scalare fluidamente.
 
-== Analisi dei requisiti, progettazione, codifica + testing, testing manuale + controllo accessibilità
+- Le aree interattive (touch targets) dei pulsanti e dei link sono state dimensionate (tramite adeguati padding) per essere facilmente cliccabili con i polpastrelli, prevenendo tocchi accidentali e frustrazione nell'uso da mobile.
+
+== Visualizzazione dati tabellari
+Le tabelle risultano accessibili sia per gli screen reader sia per la fruizione da smartphone:
+- Semantica per Screen Reader: Ogni tabella è introdotta da una <caption> (visivamente nascosta tramite classe .visually-hidden) e da un 
+  paragrafo riassuntivo collegato tramite l'attributo aria-describedby applicato al tag <table>. Questo fornisce subito all'utente non 
+  vedente il contesto. Inoltre, l'uso combinato di <thead>, <tbody>, <th> e <td> con gli attributi scope="col" e scope="row" crea una 
+  griglia in cui la tecnologia assistiva può sempre associare correttamente il dato alla sua intestazione.
+
+- Linearizzazione Mobile (*Tecnica di Aaron Gustafson*): Anziché ripiegare su uno scroll orizzontale per le tabelle su 
+  schermi piccoli, è stata implementata una tecnica CSS avanzata per linearizzare i dati. Su mobile, l'intestazione principale viene 
+  nascosta e le singole righe (<tr>) diventano elementi a blocco (simili a "card"). Attraverso l'inserimento dell'attributo HTML data-title 
+  in ogni cella, una media query CSS si occupa di stampare a video il nome della colonna (tramite lo pseudo-elemento ::before e content: attr
+  (data-title)) direttamente prima del dato effettivo. Questo garantisce una lettura verticale comoda, naturale e perfettamente impaginata.
+
+== Stampa delle pagine
+Riconoscendo che i documenti amministrativi (come la lista degli interventi) necessitano spesso di essere stampati, è stato redatto un 
+foglio di stile specifico (`@media` print) per ottimizzare la resa su carta, massimizzando la leggibilità e risparmiando inchiostro:
+
+- Tipografia e Colori: Il background viene forzato al bianco e il testo al nero. Il font passa a una famiglia 
+  "Serif" (Times New Roman) con dimensione in punti tipografici (12pt), standard ideale per la lettura su carta.
+
+- Pulizia del Layout: Tutti gli elementi puramente interattivi o di navigazione (bottoni, menu, form di ricerca, shadow box, link di skip) 
+  vengono rimossi dal flusso della pagina (display: none). I layout affiancati vengono forzati a blocco (display: block)
+
+- Esplicitazione dei Link: Poiché su carta non è possibile cliccare, un'apposita regola CSS `(a[href]::after { content: " (" attr(href) ")
+  "; })` stampa automaticamente l'URL di destinazione di fianco al testo del link. Questa regola è stata disattivata selettivamente per le 
+  "breadcrumb" per non generare rumore visivo
+
+- Gestione Interruzioni di Pagina: È stata utilizzata la proprietà `page-break-inside: avoid` per impedire che le singole righe delle 
+  tabelle vengano tagliate a metà tra due fogli. Inoltre, la regola display: table-header-group sul tag <thead> assicura che l'intestazione 
+  della tabella venga ripetuta automaticamente all'inizio di ogni nuova pagina stampata.
+
+== Accessibilità dei Form e Inserimento Dati
+La progettazione dei form di autenticazione e segnalazione ha richiesto un'attenta strutturazione semantica, con l'obiettivo di agevolare l'inserimento dei dati e garantire una navigazione chiara, prevenendo il disorientamento dell'utente. Le soluzioni implementate sono state:
+
+- Etichettatura esplicita e raggruppamento: ogni campo di input è associato in modo univoco alla propria etichetta tramite l'attributo `<label for="...">` collegato all'id dell'elemento. Nei form più complessi (come la segnalazione di un guasto), i campi logicamente correlati sono stati racchiusi all'interno di un tag `<fieldset>` descritto da una `<legend>`, fornendo un contesto macroscopico fondamentale per la navigazione sequenziale.
+
+- Testi di Aiuto e aria-describedby: Le istruzioni per la compilazione sono state legate al campo di input corrispondente tramite l'attributo aria-describedby. In questo modo, quando il campo riceve il focus, lo screen reader legge automaticamente anche la regola di validazione, riducendo il carico cognitivo dell'utente
+
+- Gestione dei campi obbligatori: L'obbligatorietà dei campi è delegata all'attributo nativo HTML5 required. L'asterisco visivo (`*`) aggiunto per gli utenti normovedenti è stato isolato dai lettori di schermo utilizzando l'attributo `aria-hidden="true"`, evitando così che il software vocale legga fastidiosamente la parola "asterisco" a ogni campo.
+
+- Auto-completamento: Nei form di login e registrazione sono stati utilizzati gli attributi autocomplete (`autocomplete="username"`, `autocomplete="new-password"`). Questo facilita il riempimento automatico da parte del browser o dei password manager, un requisito di accessibilità molto importante per agevolare gli utenti.
+
+- Feedback e Gestione Errori: I messaggi di errore flash (es. credenziali errate) vengono stampati all'interno di un contenitore dotato dell'attributo role="alert". Questo Live Region ARIA impone alla tecnologia assistiva di interrompere la lettura corrente per notificare immediatamente all'utente l'avvenuto errore, garantendo un feedback tempestivo.
 
 == Suddivisione dei compiti
 
 = Conclusioni e Sviluppi Futuri
-
-== Competenze Acquisite
-
-== Prospettive Future
