@@ -659,7 +659,8 @@ footer {
     border-left: 0.25rem solid var(--success-green);
 }
 
-/* ===============================================
+/*
+===============================================
     4.5 TABELLE E LISTE
 ===============================================
 */
@@ -705,6 +706,52 @@ footer {
     margin: 0;
 }
 
+/* --- RESPONSIVITÀ TABELLE PER CELLULARI (Tecnica di Aaron Gustafson) --- */
+@media (max-width: 48rem) {
+    
+    /* 1. Nasconde l'intestazione classica */
+    .data-table thead, 
+    .data-table tfoot {
+        display: none;
+    }
+
+    /* 2. Trasforma ogni riga (tr) in una vera e propria "Card" distanziata */
+    .data-table tr {
+        display: block;
+        margin-bottom: 1.5rem; /* Spazio netto tra un'aula e l'altra */
+        border: 0.0625rem solid var(--border-color); /* Bordo esterno della card */
+        border-radius: 0.5rem;
+        background-color: var(--bg-card);
+        overflow: hidden; /* Mantiene gli angoli arrotondati puliti */
+    }
+
+    /* 3. Linearizza le celle e restituisce l'aria (padding) vitale per i click */
+    .data-table th, 
+    .data-table td {
+        display: block;
+        padding: 0.85rem 1rem; /* <-- IL FIX: Molto spazio per facilitare il tap! */
+        white-space: normal;
+        text-align: left;
+        border-bottom: 0.0625rem solid var(--border-color); /* Linea divisoria sottile tra i dati interni */
+        border-top: none;
+    }
+
+    /* Rimuove l'ultima riga divisoria all'interno della card per estetica */
+    .data-table td:last-child {
+        border-bottom: none;
+    }
+
+    /* 4. Formatta le etichette per non accavallarsi ai bottoni */
+    .data-table th[data-title]::before, 
+    .data-table td[data-title]::before {
+        content: attr(data-title);
+        font-weight: bold;
+        display: block; /* Manda il dato a capo sotto l'etichetta */
+        color: var(--text-gray);
+        font-size: 0.85rem;
+        margin-bottom: 0.4rem; /* Distanzia l'etichetta dal bottone o dal testo sottostante */
+    }
+}
 
 
 /* ===============================================
