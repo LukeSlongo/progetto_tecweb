@@ -1,4 +1,4 @@
-#let titolo-progetto = "EasyGuitar - Accordi accessibili"
+#let titolo-progetto = "UniFix"
 #let corso = "TECNOLOGIE WEB"
 #let anno-accademico = "2025/2026"
 #let universita = "UNIVERSITÀ DEGLI STUDI DI PADOVA"
@@ -73,7 +73,7 @@
   #v(0.5em)
   #line(length: 100%, stroke: 1pt)
 
-  #v(3fr) 
+  #v(3fr)
 
   // --- SEZIONE CREDENZIALI E CONTATTI (SOSTITUISCE IL GRUPPO) ---
   #text(size: 12pt, weight: "bold")[Informazioni di Accesso e Contatto:]
@@ -82,14 +82,15 @@
   #align(center)[
     #grid(
       columns: (auto, auto),
-      align: (right + horizon, left + horizon), // Allinea etichette a dx e valori a sx
+      align: (right + horizon, left + horizon),
+      // Allinea etichette a dx e valori a sx
       column-gutter: 1.5em,
       row-gutter: 1em,
 
       [*Utente Amministratore:*], [username: `admin`, password: `admin`],
-      [*Utente Base:*],           [username: `user`,  password: `user`],
-      [*Indirizzo Sito:*],        [#link("http://localhost:8000")[http://tecweb.studenti.math.unipd.it/msanguin]],
-      [*Referente:*],             [#link("mailto:aldo.bettega@studenti.unipd.it")[aldo.bettega\@studenti.unipd.it]]
+      [*Utente Base:*], [username: `user`,  password: `user`],
+      [*Indirizzo Sito:*], [#link("http://localhost:8000")[http://tecweb.studenti.math.unipd.it/msanguin]],
+      [*Referente:*], [#link("mailto:aldo.bettega@studenti.unipd.it")[aldo.bettega\@studenti.unipd.it]],
     )
   ]
   // ---------------------------------------------------------------
@@ -111,331 +112,253 @@
 
 = Introduzione
 
-Nel vasto panorama del web, la ricerca di risorse musicali — in particolare raccolte di testi e accordi per chitarra — è paradossalmente diventata un'esperienza spiacevole e poco accessibile. Le piattaforme esistenti, pur essendo ricche di contenuti, sono spesso caratterizzate da interfacce obsolete, sature di pubblicità invasiva, pop-up aggressivi e una scarsa attenzione alla leggibilità, rendendo la pratica strumentale davanti allo schermo un'operazione faticosa.
+== Contesto del problema
+La gestione e la manutenzione delle infrastrutture universitarie, in particolare delle aule didattiche e dei laboratori, rappresenta una sfida organizzativa complessa.
+Spesso, la comunicazione dei guasti (come strumentazione non funzionante, problemi di illuminazione o danni agli arredi) avviene in modo frammentato o tramite canali
+non ottimizzati.
+Questo genera non solo disagi per gli studenti e i docenti che vivono gli spazi, ma rallenta anche i tempi di intervento del personale tecnico,
+ostacolato dalla mancanza di un sistema centralizzato per la ricezione e la gestione delle priorità.
+Inoltre, molti degli strumenti digitali attualmente in uso peccano di scarsa inclusività, rendendo la segnalazione dei problemi non accessibile a tutti gli utenti.
 
-Da questa analisi critica nasce l'idea di *EasyGuitar*: un progetto sviluppato con l'intento preciso di offrire una valida alternativa, accessibile e tecnicamente curata, alle raccolte commerciali attuali.
+== Soluzione
+Per rispondere a questa esigenza nasce UniFix, una piattaforma web progettata con il duplice obiettivo di semplificare l'esposizione dei problemi
+da parte degli utenti e di fornire uno strumento di back-office efficiente per l'amministrazione.
+UniFix si propone come un ponte digitale tra chi vive gli spazi universitari e chi li gestisce, offrendo interfacce dedicate e ottimizzate per tre tipologie di attori:
+lo studente (utente base), il tecnico manutentore e l'amministratore di sistema.
 
-L'obiettivo primario è stato quello di riportare al centro l'esperienza dell'utente musicista. EasyGuitar è stato concepito non come un semplice archivio dati, ma come uno strumento pensato per chi suona: un "leggio digitale" pulito, immediato e privo di distrazioni.
+= Metodologia di lavoro
+Lo sviluppo di UniFix ha richiesto una rigorosa organizzazione metodologica, necessaria per coordinare efficacemente il lavoro di un team operante in modalità
+prevalentemente asincrona, a causa della concomitanza di altri impegni accademici e professionali (esami, tirocini).
+Per garantire produttività costante, prevedibilità dell'andamento e un prodotto finale di alta qualità, il ciclo di vita del progetto è stato gestito applicando
+principi mutuati dall'Ingegneria del Software, suddivisi nelle seguenti fasi chiave.
 
-Il sito si propone di rendere la pratica musicale non solo possibile, ma piacevole e inclusiva. Ogni scelta progettuale — dal contrasto cromatico ottimizzato per la lettura (con supporto alla Dark Mode per le esibizioni in ambienti poco illuminati) alla navigazione semplificata per l'uso con tecnologie assistive — è stata guidata dalla volontà di abbattere le barriere digitali.
+== Analisi e studio fattibilità
+Il lavoro è iniziato con una approfondita fase di analisi del dominio, finalizzata a circoscrivere il problema originale e a delineare una soluzione tecnologica adeguata.
+L'obiettivo primario è stato definire un perimetro di progetto che non solo rispettasse rigorosamente i requisiti accademici del corso,
+ma che risultasse anche realistico e sostenibile in termini di tempistiche ed energie del team, garantendo la consegna di un prodotto concretamente in grado di risolvere
+la problematica individuata.
 
-Sviluppato nell'ambito del corso di Tecnologie Web, EasyGuitar dimostra come l'applicazione rigorosa degli standard di accessibilità (WCAG) e una solida architettura tecnica possano convivere per creare un prodotto che risponde alle reali necessità di un appassionato di musica.
+== Progettazione e mockup visivo
+Per fornire una visione chiara e condivisa dell'applicativo prima ancora di scrivere codice, è stato realizzato un prototipo interattivo (Mockup) utilizzando Figma.
+Questa fase si è rivelata cruciale per:
+- Immaginare l'interfaccia utente (UI) finale e definire la User Experience (UX).
+- Identificare in anticipo le funzionalità necessarie e i dati che dovevano essere esposti a video, agevolando l'individuazione di potenziali barriere
+  di accessibilità fin dal design. Parallelamente, è stata creata una struttura documentale centralizzata.
+  Questa "Source of Truth" conteneva le specifiche di dominio, i diagrammi dei casi d'uso, i diagrammi delle classi e la mappa dei routing web.
+  L'approvazione di questa documentazione ha evitato fraintendimenti e limitato drasticamente la necessità di successivi rimaneggiamenti del codice.
 
-= Analisi dei Requisiti
+== Organizzazione del lavoro e gesitone dei task
+La scomposizione del lavoro e il tracciamento delle attività sono stati gestiti tramite l'ecosistema GitHub, sfruttando una Project Board dedicata.
+Tutte le funzionalità derivanti dall'analisi dei casi d'uso sono state tradotte a priori in specifiche "Issue" architetturali, contenenti il dettaglio delle classi,
+dei metodi e dei template HTML necessari al loro completamento.
+Questo approccio di pianificazione "up-front" ha permesso di:
+- Stabilire le priorità di implementazione (Core features prima delle funzionalità aggiuntive).
+- Parallelizzare lo sviluppo, evitando sovrapposizioni o conflitti sul codice ("pestarsi i piedi").
+- Fornire metriche quantitative costanti sull'avanzamento dei lavori, agevolando la ricalibrazione delle energie del team.
 
-== Overview
+== Flusso di lavoro e versioning
+Per il controllo di versione è stato adottato un approccio basato sul Feature Branching.
+- Ogni Issue è stata sviluppata all'interno di un branch isolato, mantenendo integro il branch principale di sviluppo (develop).
+- L'integrazione del nuovo codice in develop avveniva esclusivamente tramite Pull Request. L'obbligo di Code Review da parte di altri membri del team
+  ha garantito un controllo di qualità sistematico, elevando la stabilità e la completezza della baseline condivisa.
 
-L’analisi dei requisiti è stata condotta attraverso un confronto tra i componenti del gruppo, guidato in particolare da Marco Sanguin, ideatore del sito e chitarrista amatoriale. Grazie alla sua esperienza personale come musicista, è emersa l’importanza di progettare una pagina dedicata alle canzoni che fosse pulita, chiara e piacevole alla vista. Si è resa evidente anche la necessità di creare un sito con una attenzione particolare all'accessibilità in quanto molte pagine web simile la trascurano completamente.
- Sono stati individuati come requisiti fondamentali la presenza di un sistema di autoscroll regolabile e una modalità di visualizzazione degli accordi pensata per rispondere alle reali esigenze di un musicista durante l’esecuzione.
+== Qualità del Codice e Continuous Integration
+La fase di codifica è stata accompagnata dalla scrittura di test automatizzati (Unit Test). L'esecuzione di questi test è stata automatizzata tramite le GitHub Actions
+al momento della Push/Pull Request.
+Questo processo di integrazione continua (CI) ha permesso di monitorare il corretto funzionamento dei metodi chiave in modo rapido e autonomo,
+offrendo la garanzia che l'aggiunta di nuovo codice (o il refactoring di codice esistente) non generasse regressioni su funzionalità già validate.
+La sintesi di queste metodologie organizzative ha reso la fase di codifica rapida, efficiente e non dispersiva,
+consentendo di reinvestire le risorse risparmiate in ampie sessioni di testing finale, con particolare focus sulla verifica dell'accessibilità dell'applicativo.
 
+= Fasi del progetto
 
-== Analisi dell'Utenza (Target)
-L'analisi ha identificato come target primario non il neofita alla ricerca di tutorial didattici, bensì il *chitarrista appassionato*. Questo profilo di utenza possiede già alcune competenze tecniche per l'esecuzione e considera il sito web come un supporto strumentale (un "leggio digitale") piuttosto che educativo.
+== Analisi dei Requisiti
+La fase di analisi dei requisiti è stata fondamentale per definire il perimetro del progetto, identificare gli utenti target e stabilire le regole di business del dominio.
+Attraverso un processo di elicitazione e raffinamento, sono stati definiti gli attori del sistema, i casi d'uso principali e i vincoli di integrità sui dati.
 
-Le necessità fondamentali di questo utente sono:
+=== Attori del sistema
+Il sistema UniFix prevede interfacce e permessi differenziati per tre tipologie di utenti:
+- Studente (Utente Base): È il fruitore principale degli spazi universitari. Può navigare il sistema, cercare aule, monitorarne lo stato e aprire nuove segnalazioni
+  di guasto. Dispone inoltre di un'area personale per salvare le aule tra i preferiti.
+- Tecnico: È l'operatore incaricato della manutenzione. Ha il compito di supervisionare le segnalazioni aperte, prenderle in carico in totale autonomia
+  e portarle a risoluzione.
+- Amministratore (Admin): Ha un ruolo di supervisione globale. Gestisce le utenze del sistema (con facoltà di rimozione) e può intervenire in via eccezionale
+  sull'eliminazione delle segnalazioni. Per semplicità progettuale, i profili di livello superiore (Admin e Tecnico) vengono pre-caricati nel sistema (hardcoded),
+  mentre la registrazione è aperta solo agli utenti base.
+=== Casi d'uso principali
++ Autenticazione: Registrazione (solo per studenti), Login e Logout.
++ Esplorazione e Preferiti: Ricerca testuale delle aule e visualizzazione del dettaglio dell'aula (con indicazione chiara dell'edificio e dell'indirizzo).
+  Gli studenti possono aggiungere o rimuovere le aule da una propria lista di preferiti, visualizzabile direttamente in un carosello nella Home Page.
++ Apertura Segnalazione: Creazione di un nuovo ticket di guasto. Per ottimizzare la User Experience, la selezione del luogo del guasto è gestita
+  in modo dinamico lato client (tramite JavaScript): selezionando un edificio, la tendina delle aule si filtra istantaneamente, o viceversa,
+  selezionando un'aula viene auto-compilato l'edificio di appartenenza.
++ Gestione Interventi: I tecnici e gli admin accedono a una lista globale delle segnalazioni. Il tecnico può eseguire transizioni di stato del ticket
+  (da "Aperto" a "In lavorazione", fino a "Chiuso").
++ Pannello Amministratore: L'admin può visualizzare la lista completa degli utenti registrati e procedere alla loro rimozione in caso di necessità,
+  oltre a poter forzare l'eliminazione di qualsiasi issue.
 
-- *Immediatezza ("Suonare subito"):* L'utente desidera ridurre al minimo il tempo che intercorre tra il pensiero di una canzone e la sua esecuzione. La struttura del sito deve abbattere i tempi di caricamento e navigazione.
-- *Interfaccia "Smart":* La pagina deve essere intuitiva e priva di distrazioni cognitive. La navigazione deve fluire naturale, permettendo di trovare testi e accordi velocemente, anche durante una sessione di pratica o una performance informale.
+== Architettura e Progettazione
+La progettazione tecnica di UniFix è stata orientata alla creazione di un sistema robusto, manutenibile e performante.
+Per dimostrare la padronanza delle architetture web moderne, il sistema è stato sviluppato interamente in PHP nativo (Vanilla PHP),
+implementando da zero il design pattern Model-View-Controller (MVC), un sistema di routing avanzato e un motore di templating proprietario,
+senza ricorrere a framework esterni.
 
-In sintesi, EasyGuitar risponde all'esigenza di un utente che vuole concentrarsi sulla musica e non sulla tecnologia che la veicola.
+=== Pattern MVC (Model-View-Controller)
+L'applicativo è stato progettato secondo il principio della Separation of Concerns,
+riflettendosi direttamente nella struttura gerarchica delle directory:
 
-== Dettaglio delle Funzionalità
+- Model (src/Models/): Contiene le classi dedicate all'astrazione del database MySQL. Estendendo una classe base Model.php,
+  i modelli (es. IssueModel, UserModel) incapsulano le query SQL, garantendo la sicurezza contro le SQL Injection tramite
+  l'utilizzo esclusivo di istruzioni preparate (Prepared Statements) fornite dall'estensione PDO.
 
-Di seguito viene riportata la disamina delle funzionalità implementate, suddivise per tipologia di attore che interagisce con il sistema.
+- Controller (src/Controllers/): Ospita la logica di business. I controller (es. RoomController, IssueController)
+  ricevono le richieste dal router, interrogano i Modelli necessari, elaborano i dati formattandoli correttamente per la UI
+  e infine richiamano la View associata, iniettandovi i parametri.
 
-=== Funzionalità del Visitatore (Accesso Pubblico)
-Il sistema garantisce l'accesso immediato al catalogo anche agli utenti non autenticati. Questa scelta elimina le barriere all'ingresso, permettendo la consultazione rapida delle risorse musicali senza obbligo di registrazione.
+- View (src/Views/): La componente visuale è stata suddivisa per favorire il riuso del codice. Le pages rappresentano le singole schermate
+  (es. issueDetailPage.html), i layouts (main.html, auth.html) forniscono la struttura globale ricorrente, mentre i components
+  contengono i frammenti riutilizzabili (es. le card o gli elementi delle liste).
 
-+ *Consultazione del Catalogo*
-  - *Indice Artisti:* Elenco completo e ordinato alfabeticamente di tutti gli interpreti censiti in piattaforma.
-  - *Scheda Artista:* Pagina di dettaglio monografica (raggiungibile da Home, Ricerca o Indice) che aggrega la biografia dell'autore e presenta il carosello interattivo di tutti i brani correlati disponibili.
-  - *Indice Canzoni:* Repertorio completo dei brani ordinati alfabeticamente, che funge da punto di accesso diretto alle pagine di esecuzione.
-+ *Esperienza di Esecuzione (Player)*
-  - *Visualizzazione Ottimizzata:* Layout responsive studiato per garantire la massima leggibilità di testi e accordi su qualsiasi dispositivo (Desktop/Mobile), con supporto nativo alla Dark Mode per performance in ambienti scarsamente illuminati.
-  - *Autoscroll Adattivo:* Funzionalità di scorrimento automatico della pagina, con velocità regolabile millimetricamente dall'utente, progettata per consentire l'esecuzione strumentale senza la necessità di staccare le mani dallo strumento per scorrere la pagina.
+=== Diagrammi delle classi
+A monte della fase di implementazione vera e propria, l'architettura del software è stata rigorosamente modellata attraverso la stesura di diagrammi UML delle classi. Questa fase di progettazione a priori è stata fondamentale per mappare le responsabilità di ogni singolo componente, stabilire le relazioni tra di essi e definire un'interfaccia chiara per i metodi prima ancora di scrivere una singola riga di codice PHP.
+L'intera organizzazione delle classi sfrutta ampiamente i paradigmi della programmazione orientata agli oggetti (OOP), facendo un uso massiccio dell'ereditarietà per garantire il rispetto del principio DRY e centralizzare la logica di base.
 
-+ *Ricerca Avanzata*
-  - *Interfaccia a Tab:* Suddivisione logica dei risultati tra "Artisti" e "Canzoni" per disambiguare rapidamente l'intento di ricerca e migliorare l'usabilità.
-  - *Filtri per Competenza:* Sistema di filtraggio avanzato per Lingua e Accordi. In particolare, il filtro accordi permette all'utente di selezionare il proprio bagaglio di conoscenze (es. "Conosco solo DO, RE, SOL") e ottenere come risultato solo i brani eseguibili con quel set specifico, configurandosi come un potente strumento didattico.
+#image("images/diagramma_classi.png")
 
-+ *Strumenti di Navigazione*
-  - *Global Navigation Bar:* Menu principale situato nell'header, persistente e responsive, che evidenzia visivamente la sezione corrente.
-  - *Breadcrumb Dinamica:* Elemento di orientamento gerarchico che permette all'utente di comprendere la propria posizione nella struttura del sito e risalire facilmente ai livelli superiori.
-  - *Footer:* Area di navigazione secondaria contenente collegamenti rapidi alle sezioni di servizio e link di utilità.
+Nello specifico, la gerarchia è stata strutturata come segue:
+- Il layer dei Controller: È stata definita una superclasse base Controller che implementa tutti i metodi trasversali necessari alla
+  gestione delle richieste HTTP (come il recupero dei parametri get() e post()), le logiche di controllo degli accessi (es. requireLogin(),
+  abort()) e i metodi di output verso la UI (render() e redirect()). Da questa superclasse ereditano i controller specifici di dominio
+  (UserController, RoomController, IssueController), i quali si limitano a orchestrare le chiamate ai modelli e a definire la logica di
+  business specifica per le relative rotte.
+- Il layer dei Modelli: Analogamente, il livello di accesso ai dati è governato dalla superclasse base Model. Questa classe astratta
+  incapsula la logica complessa di connessione al database (PDO) e fornisce metodi generici per l'esecuzione sicura delle query (query(),
+  fetchOne(), fetchAll()) e le operazioni standard (come findById() o delete()). Le classi figlie (UserModel, RoomModel, IssueModel,
+  BuildingModel) ereditano questi strumenti e li utilizzano per comporre le query SQL specifiche richieste dai casi d'uso (ad esempio
+  getIssuesByRoom() o addFavorite())
+- Classi di Supporto (Core/Helpers): Parallelamente alle classi MVC, sono state progettate a monte classi Core per la gestione di servizi
+  trasversali, come la classe Auth, che centralizza la verifica dello stato della sessione e dei privilegi dell'utente (isLogged(),
+  isAdmin(), isTechnician()) in modo sicuro e riutilizzabile da qualsiasi punto dell'applicativo.
 
+=== Motore di tempalting
+Per mantenere pulite le viste e isolare il PHP dall'HTML (limitando al minimo la presenza di logica condizionale nei file di presentazione),
+è stata creata la classe core Template.php.
+Questo mini-motore di templating si occupa di caricare i file HTML e di sostituire specifici placeholder (es. `##ROOM_NAME##`)
+con i dati reali generati dal Controller, garantendo anche un corretto escaping dei caratteri (htmlspecialchars) per prevenire vulnerabilità XSS.
 
-=== Funzionalità dell'Utente Registrato
-L'utente registrato eredita tutte le funzionalità pubbliche e accede a strumenti di gestione personale. Questo profilo permette di salvare e organizzare i contenuti, trasformando la semplice consultazione in un'esperienza di studio personalizzata.
+=== Routing e sicurezza
+Il punto d'ingresso unico per l'intera applicazione (Front Controller) è il file public/index.php.
+Questo script inizializza l'ambiente, registra l'autoloader per le classi e passa il controllo alla classe Router.php.
+Il Router implementa un sistema avanzato di risoluzione delle URL basato su espressioni regolari (regex), permettendo la gestione
+di rotte dinamiche (es. /issues/{id:num}).
+Particolarmente rilevante è l'implementazione nativa di un sistema di Middleware per il controllo degli accessi a livello di rotta.
+Prima di invocare il Controller, il Router verifica stringhe di autorizzazione associate alla singola rotta, quali:
+- guest: Blocca l'accesso agli utenti già autenticati (es. pagina di login).
+- auth: Richiede l'autenticazione tramite la classe helper Auth.php.
+- admin / technician: Verifica il ruolo specifico dell'utente (RBAC - Role Based Access Control).
+- owner:issue: Esegue un controllo a database per assicurarsi che l'utente che sta tentando un'azione distruttiva
+  (es. l'eliminazione di una segnalazione) sia effettivamente il creatore (owner) della risorsa, a meno che non possieda privilegi di amministratore.
 
-+ *Accesso e Personalizzazione*
-  - *Autenticazione:* Sistema di registrazione e login sicuro tramite credenziali personali.
-  - *Gestione Profilo:* Personalizzazione dell'identità utente tramite selezione dell'avatar da un set predefinito di immagini tematiche.
-  - *Gestione Raccolte:* Creazione, modifica ed eliminazione di playlist personalizzate per organizzare le sessioni di studio o le scalette.
+=== Persistenza dati
 
-+ *Operatività sulle Playlist*
-  - *Consultazione:* Pagina dedicata per la visualizzazione e l'ordinamento dei brani contenuti nelle playlist.
-  - *Aggiunta Rapida:* Implementazione di un modale di ricerca interno alla pagina playlist che permette l'aggiunta immediata di nuovi contenuti tramite query testuale, senza ricaricare la pagina (AJAX).
-  - *Editing:* Rimozione intuitiva e immediata dei brani dalle liste.
+==== Progettazione del database e integrità dei dati
+La persistenza dei dati è affidata a un database relazionale MySQL.
+La progettazione dello schema concettuale (modello E/R) e logico è stata guidata dai principi di normalizzazione,
+con l'obiettivo di garantire la consistenza delle informazioni ed evitare ridondanze.
 
-+ *Sistema dei Preferiti*
-  - *Playlist Persistente:* Una raccolta speciale di sistema, non eliminabile, dedicata all'archiviazione rapida dei brani di maggiore interesse.
-  - *Accessibilità Trasversale:* L'azione di aggiunta/rimozione dai preferiti (icona "cuore") è disponibile in ogni punto dell'interfaccia: dalle card di anteprima (Home, Risultati di ricerca) alla pagina di dettaglio della singola canzone.
+#image("images/schema.png")
 
+Il database si articola su cinque entità principali:
+- Building e Room: Entità legate da una relazione uno-a-molti (1:N). Un edificio contiene più aule. Per evitare inconsistenze semantiche,
+  è stato applicato un vincolo UNIQUE(building_id, name) sulla tabella room, garantendo che non possano esistere due aule con lo stesso nome all'interno del medesimo edificio.
+- User: Tabella centralizzata per l'anagrafica, che distingue i privilegi tramite un attributo role di tipo ENUM ('student', 'technician', 'admin').
+  Le password sono salvate sotto forma di hash crittografico sicuro.
+- Issue: Entità centrale del sistema che traccia le segnalazioni. Mantiene relazioni in chiave esterna con room (l'aula guasta),
+  user (lo studente segnalatore) e, opzionalmente, un secondo user (il tecnico assegnato).
+- Favorite: Tabella di mapping per risolvere la relazione molti-a-molti (M:N) tra gli studenti e le aule preferite,
+  avente come chiave primaria composita l'unione di user_id e room_id.
 
-=== Funzionalità Amministratore (Back-office)
-L'amministratore è la figura garante della qualità e dell'integrità dei contenuti della piattaforma. A differenza dell'utente standard, dispone di un accesso privilegiato a una *Dashboard Gestionale* che centralizza le operazioni di manutenzione.
+==== Gestione delle dipendenze e vincoli referenziali
+Invece di demandare il controllo delle dipendenze alla logica applicativa (Backend PHP),
+si è scelto di sfruttare i vincoli nativi del motore relazionale:
+- Eliminazione in cascata (ON DELETE CASCADE): L'eliminazione di un edificio (building) comporta l'eliminazione automatica
+  di tutte le sue aule (room). A sua volta, l'eliminazione di un'aula innesca la cancellazione a cascata di tutte le segnalazioni (issue)
+  ad essa collegate e delle relative occorrenze nella tabella favorite.
+- Mantenimento dello storico (ON DELETE SET NULL): Qualora un utente (studente o tecnico) venga rimosso dal sistema,
+  i riferimenti testuali all'interno della tabella issue (user_id o technician_id) vengono impostati a NULL anziché eliminare
+  l'intero record. Questo garantisce che lo storico degli interventi e dei guasti dell'Ateneo non venga perso.
 
-+ *Gestione del Catalogo (CRUD)*
-  L'amministratore ha pieno controllo sulle entità Artista e Canzone attraverso operazioni di Create, Read, Update e Delete:
-  - *Cura degli Artisti:* Possibilità di inserire nuovi interpreti o aggiornare le biografie e i dettagli di quelli esistenti tramite form validati lato server.
-  - *Editing dei Brani:* Interfaccia avanzata per l'inserimento e la modifica di testi e accordi. Il form di creazione è progettato per strutturare i dati in modo che siano correttamente interpretabili dal player (es. riconoscimento automatico degli accordi).
-  - *Manutenzione:* Rimozione immediata di contenuti errati o non conformi agli standard qualitativi della piattaforma.
-
-+ *Moderazione dell'Utenza*
-  - *Monitoraggio:* Visualizzazione tabellare della lista completa degli iscritti alla piattaforma.
-  - *Revoca Accesso:* Funzionalità di eliminazione degli account utente.
-
-
-= Architettura e Progettazione
-
-L'architettura del sistema è stata definita con l'obiettivo di garantire modularità, manutenibilità e sicurezza. Questa decisione didattica ha permesso di avere il pieno controllo sul ciclo di vita della richiesta HTTP e di implementare manualmente i pattern architetturali fondamentali.
-
-== Pattern MVC (Model-View-Controller)
-Il cuore dell'applicazione è basato sul pattern architetturale MVC, che garantisce la netta separazione delle responsabilità:
-
-- *Model (Modello):* Gestisce la logica di business e l'interazione con il database. Ogni entità (es. `Utente`, `Canzone`, `Artista`, `Playlist`) possiede una classe dedicata che astrae le operazioni SQL, restituendo oggetti o array di dati pronti per l'elaborazione.
-- *View (Vista):* Si occupa esclusivamente della logica di presentazione. I file di vista ricevono i dati dal Controller e generano l'HTML finale da inviare al client. Non contengono logica di accesso ai dati, garantendo pulizia nel codice di frontend.
-- *Controller:* Agisce da intermediario. Riceve l'input dell'utente (tramite il Router), invoca i metodi del Model per recuperare o modificare i dati e seleziona la View appropriata per la risposta, costruendola adeguatamente tramite dei placeholder.
-
-Un componente fondamentale di questa architettura è il *Router Custom*. Invece di mappare ogni pagina a un singolo file PHP (es. `playlist.php`), tutte le richieste vengono convogliate a un unico *entry point* (`index.php`) che analizza l'URL, instanzia il Controller corretto ed esegue l'azione richiesta. Questo permette di avere URL "parlanti" (es. `/artista/nome-artista`) e una gestione centralizzata degli errori (404).
-
-== Struttura delle Directory
-La struttura del progetto riflette la separazione logica del pattern MVC, mantenendo isolato il codice sorgente (`src`) dalle risorse accessibili pubblicamente (`public`).
-
-#block(
-  fill: luma(245),
-  inset: 10pt,
-  radius: 4pt,
-  width: 100%,
-  [
-    ```text
-├── public
-│   ├── css
-│   ├── img
-│   ├── index.php
-│   └── js
-└── src
-    ├── Controllers
-    │   ├── Api
-    │   └── Base
-    ├── Core
-    ├── Exceptions
-    ├── Helpers
-    ├── Models
-    └── Views
-        ├── components
-        ├── layouts
-        └── pages 
-
-    ```
-  ]
-)
-
-== Database
-La persistenza dei dati è gestita tramite **MySQL**, configurato con il charset `utf8mb4` per garantire il pieno supporto ai caratteri internazionali e speciali, essenziali in un catalogo musicale multilingua.
-
-Lo schema è stato progettato per ottimizzare le relazioni e la navigazione:
-
-- *Gestione Utenti (`utente`):* I ruoli sono definiti tramite un flag booleano `is_admin` (0 per utenti, 1 per amministratori). La sicurezza è garantita dal campo `hash_password` e la personalizzazione avviene tramite `foto_profilo` (riferimento a un set predefinito di avatar).
-- *Contenuti e Routing (`artista`, `canzone`):* Entrambe le tabelle includono un campo `slug` (`slug_artista`, `slug_canzone`) utilizzato per generare URL leggibili ("SEO-friendly") e puliti, gestiti dal Router custom. La relazione tra canzoni e artisti prevede vincoli di integrità referenziale (`ON DELETE CASCADE`).
-- *Relazioni Molti-a-Molti:*
-  - *Playlist (`canzoni_playlist`):* Tabella di giunzione che collega `playlist` e `canzone`, permettendo a una canzone di appartenere a più raccolte e viceversa.
-  - *Filtri Accordi (`accordi_canzone`):* Gli accordi non sono salvati come semplice testo nella canzone, ma normalizzati in questa tabella. Ciò consente di eseguire query complesse per filtrare i brani in base agli accordi specifici che l'utente sa suonare.
-
-Di seguito viene mostrato lo schema relazionale del database:
-  //#image("/Relazione/img/schema_db.jpeg", width: 100%)
-
-
-== Design e UX (User Experience)
-Il design dell'interfaccia è stato guidato dal principio *"Mobile First"*, considerando che il caso d'uso tipico prevede l'utente con lo strumento in braccio e il dispositivo (spesso smartphone o tablet) posizionato su un leggio o sulle gambe.
-
-- *Dark Mode Funzionale:* La modalità scura non è solo una scelta estetica, ma un requisito funzionale per ridurre l'affaticamento visivo e il consumo energetico durante sessioni prolungate. La preferenza viene salvata nel `LocalStorage` del browser per garantire la persistenza tra le visite.
-- *Feedback Immediato:* Ogni azione critica (aggiunta ai preferiti, eliminazione playlist) è accompagnata da feedback visivi (toast notification o cambio di stato delle icone) e semantici (aggiornamenti ARIA) per confermare l'avvenuta operazione senza interrompere il flusso di navigazione.
-- *Performance Percepita:* L'uso di chiamate asincrone (AJAX) per la ricerca nei modali evita il ricaricamento completo della pagina, mantenendo l'interfaccia reattiva e "app-like".
-
-= Implementazione Back-End (PHP)
-
-L'infrastruttura di back-end è stata interamente realizzata in PHP "vanilla", senza l'utilizzo di framework esterni..
-
-== Routing
-La gestione delle richieste HTTP è centralizzata attraverso un router personalizzato.
-Attraverso il file `.htaccess` le configurazioni del server sono state riscritte per inviare tutte le richieste al file `public/index.php` (entry point unico) che agisce da Front Controller.
-Il router analizza l'URI della richiesta, identifica la risorsa desiderata (es. una pagina artista o una playlist) e delega l'elaborazione al Controller specifico.
-Questo approccio ha permesso di implementare URL semantici ("SEO-friendly") come `/artisti/nome-artista` invece di query string complesse, migliorando sia l'indicizzazione che la leggibilità per l'utente.
-Inoltre, il router gestisce centralmente le eccezioni, reindirizzando automaticamente verso pagine di errore 404 quando non trova un url valido.
-
-== Gestione dei dati
-L'accesso e la manipolazione dei dati persistenti avvengono attraverso il layer dei *Models*, secondo il pattern MVC adottato.
-Ogni entità del dominio (Utente, Artista, Canzone, Playlist) dispone di una classe dedicata (es. `CanzoneModel`) che astrae la complessità delle query SQL.
-Questa astrazione permette ai Controller di invocare metodi ad alto livello (come `get_all_songs()` o `get_canzone_by_id()`) senza dover scrivere SQL grezzo, garantendo un codice più pulito, sicuro e manutenibile.
-I dati recuperati vengono restituiti sotto forma di array associativi, pronti per essere iniettati nelle Viste.
-Particolare attenzione è stata posta nell'uso di *Prepared Statements* per prevenire vulnerabilità di tipo SQL Injection.
-
-== Autenticazione
-Il sistema di autenticazione gestisce l'identità degli utenti e la sicurezza delle sessioni.
-Le password degli utenti non vengono salvate in chiaro, ma vengono sottoposte a hashing prima di essere memorizzate nel database, garantendo la sicurezza delle credenziali.
-Il meccanismo di login verifica le credenziali fornite e, in caso di successo, inizializza una sessione PHP sicura, memorizzando l'identificativo dell'utente e il suo ruolo (amministratore o utente base).
-Questo sistema di ruoli permette di proteggere le rotte sensibili: il router verifica i permessi prima di concedere l'accesso alle pagine di amministrazione o di gestione del profilo, reindirizzando gli utenti non autorizzati alla pagina di login.
-
-== API Interne
-Per supportare le funzionalità dinamiche del front-end senza ricaricare l'intera pagina, sono state sviluppate delle API interne in php.
-Queste API, gestite da specifici Controller (es. `ApiUserController`), ricevono richieste asincrone (AJAX) e restituiscono dati in formato JSON.
-Un esempio chiave è l'API per la ricerca rapida: quando un utente digita nel modale di aggiunta brani a una playlist, una chiamata asincrona interroga il database e restituisce in tempo reale i risultati filtrati, migliorando drasticamente l'usabilità dell'applicazione.
-
-
-= Implementazione Front-End (HTML/CSS/JS)
-
-Il front-end di EasyGuitar è stato sviluppato con un approccio, utilizzando HTML5, CSS3 e JavaScript.
-
-== Validazione Form
-La validazione dei dati inseriti dagli utenti avviene su due livelli per garantire sicurezza e usabilità.
-Lato client, si sfrutta la validazione nativa HTML5 (attributi `required`, `type="email"`, ecc.) combinata con JavaScript per fornire un feedback immediato all'utente prima dell'invio dei dati.
-Questo previene errori banali e migliora l'esperienza d'uso.
-Tuttavia, per garantire la sicurezza e l'integrità dei dati, una seconda validazione rigorosa viene sempre eseguita lato server (PHP) dai Controller, assicurando che nessun dato malformato o malevolo possa raggiungere il database.
-In caso di errore, il sistema restituisce messaggi chiari e accessibili, associati ai campi errati.
-
-== AJAX e Fetch
-L'interattività dell'interfaccia è gestita tramite JavaScript asincrono, utilizzando principalmente l'API `Fetch`.
-Questa tecnologia è fondamentale per le operazioni che non richiedono un cambio di contesto, come:
-- L'aggiunta o rimozione di un brano dai preferiti direttamente dalle card e dalle playlist nella pagina dedicata.
-- La ricerca istantanea di canzoni all'interno del modale delle playlist.
-- La gestione dell'eliminazione dei contenuti da parte dell'amminstratore.
-- La modifica della foto profilo per l'utente autenticato.
-L'uso di AJAX permette di aggiornare solo porzioni specifiche della pagina, mantenendo l'applicazione reattiva e fluida, migliorando drasticamente l'usabilità del sito.
-
+==== Vincoli di dominio e logica procedurale
+Per garantire che lo stato del sistema rispecchi sempre le regole di business definite in fase di analisi, sono stati implementati:
+- Vincoli di Controllo (CHECK): Sulla tabella issue è attivo un vincolo che impedisce l'inserimento di una data di chiusura cronologicamente
+  antecedente alla data di apertura del guasto (CHECK (closed_at IS NULL OR closed_at >= opened_at)).
+- Trigger di transizione stato: È stato sviluppato un Trigger a livello di database (trg_remove_technician)
+  che si attiva prima dell'eliminazione (BEFORE DELETE) di un record dalla tabella user. Se l'utente eliminato ha il ruolo di tecnico,
+  il trigger interviene su tutte le segnalazioni a lui assegnate e attualmente "in lavorazione", rimuovendo l'assegnazione
+  (technician_id = NULL) e riportando automaticamente lo stato della segnalazione su "Aperto" (status = 'open').
+  Questo automatismo procedurale garantisce che nessun guasto rimanga "orfano" o bloccato nel sistema a seguito della rimozione del personale
 
 = Accessibilità
-Il progetto EasyGuitar è stato sviluppato ponendo l'accessibilità non come una funzionalità accessoria, ma come un requisito non funzionale primario. Il sito aderisce agli standard *WCAG 2.1* (Web Content Accessibility Guidelines) di livello *AA*, garantendo un'esperienza inclusiva per utenti con disabilità visive, motorie o cognitive.
+Garantire l'accesso universale alle informazioni è stato un requisito fondante per lo sviluppo di UniFix. L'intero applicativo è stato progettato nel rigoroso rispetto delle direttive WCAG (Web Content Accessibility Guidelines), assicurando che il sistema fosse pienamente fruibile da utenti con disabilità visive, motorie o cognitive, nonché ottimizzato per qualsiasi dispositivo e contesto di fruizione (inclusa la stampa).
 
-L'obiettivo è stato quello di creare un "leggio digitale" che fosse universalmente fruibile, indipendentemente dal dispositivo di input utilizzato (mouse, tastiera, touch o screen reader) o dalle condizioni ambientali (es. scarsa illuminazione su un palco).
+== Struttura semantica e supporto agli screen reader
+Il codice HTML e CSS è stato sottoposto a validazione rigorosa tramite il Nu Html Checker (W3C) per garantire l'assenza di errori sintattici che potessero compromettere il parsing da parte delle tecnologie assistive.
+Per facilitare la navigazione non visiva:
+- Tag ARIA: È stato fatto un uso mirato degli attributi aria-label per fornire un contesto esplicito agli screen reader laddove il testo visibile non fosse sufficientemente descrittivo (es. bottoni con sole icone o link contestuali come "Visualizza dettaglio: [Titolo Segnalazione]").
 
-== Navigazione
-La navigazione è stata progettata per essere intuitiva, prevedibile e completa, permettendo all'utente di orientarsi nel sistema con il minimo sforzo cognitivo.
+- Navigazione da tastiera: È stato implementato correttamente un link "Salta al contenuto principale" (Skip-link), visibile solo quando riceve il focus, che permette agli utenti che navigano tramite tasto TAB di bypassare la navigazione globale (header/menu) e accedere direttamente al nucleo informativo della pagina.
 
-- *Struttura Gerarchica e Breadcrumb:*
-  Per mitigare il rischio di disorientamento, ogni pagina interna (escluse Home e Landing Page) implementa un sistema di *Breadcrumb*. Questo elemento, marcato semanticamente con `nav` e `aria-label="Breadcrumb"`, permette all'utente di visualizzare istantaneamente la propria posizione nella gerarchia del sito (es. _Home > Artisti > Nome Artista_) e di risalire rapidamente ai livelli superiori.
+== Accessibilità visiva e mobile-first
+La palette cromatica dell'interfaccia è stata testata per garantire un rapporto di contrasto minimo conforme allo standard WCAG AA tra il testo e lo sfondo.
+In ottica Mobile-First, la User Experience su smartphone è stata curata nei minimi dettagli:
+- La tipografia è gestita con unità di misura relative (rem) per scalare fluidamente.
 
-- *Menu Responsive e Skip Links:*
-  In ottica *Mobile First*, la barra di navigazione si adatta dinamicamente: su desktop si presenta estesa, mentre su dispositivi mobili si adatta al dispositivo. Per gli utenti che navigano da tastiera, è stato implementato un link nascosto *"Salta al contenuto principale"* (Skip Link) all'inizio del `body`. Questo permette di bypassare i blocchi ripetitivi (come l'header) e accedere direttamente al `main`, migliorando drasticamente l'efficienza di navigazione tramite tasto `Tab`.
+- Le aree interattive (touch targets) dei pulsanti e dei link sono state dimensionate (tramite adeguati padding) per essere facilmente cliccabili con i polpastrelli, prevenendo tocchi accidentali e frustrazione nell'uso da mobile.
 
-- *Gestione del Focus e Modali (Focus Trap):*
-  Un'attenzione particolare è stata dedicata ai componenti interattivi sovrapposti, come il modale di ricerca nelle Playlist. All'apertura del modale:
-  1. Il focus viene spostato programmaticamente all'interno della finestra di dialogo.
-  2. Viene attivata una *"Focus Trap"* (trappola del focus): l'utente che naviga con `Tab` cicla esclusivamente tra gli elementi del modale, senza rischiare di interagire accidentalmente con la pagina sottostante oscurata.
-  3. Alla chiusura, il focus viene riportato all'elemento che aveva originato l'azione, preservando il contesto di navigazione.
-  Il modale è correttamente marcato con `role="dialog"` e `aria-modal="true"`.
+== Visualizzazione dati tabellari
+Le tabelle risultano accessibili sia per gli screen reader sia per la fruizione da smartphone:
+- Semantica per Screen Reader: Ogni tabella è introdotta da una <caption> (visivamente nascosta tramite classe .visually-hidden) e da un 
+  paragrafo riassuntivo collegato tramite l'attributo aria-describedby applicato al tag <table>. Questo fornisce subito all'utente non 
+  vedente il contesto. Inoltre, l'uso combinato di <thead>, <tbody>, <th> e <td> con gli attributi scope="col" e scope="row" crea una 
+  griglia in cui la tecnologia assistiva può sempre associare correttamente il dato alla sua intestazione.
 
-- *Attributi ARIA e Feedback Semantico:*
-  Per garantire la comprensione dello stato del sistema agli utenti non vedenti, sono stati impiegati attributi ARIA specifici:
-  - `aria-current="page"`: applicato al link del menu attivo per indicare la pagina corrente.
-  - `aria-live="polite"`: utilizzato nella ricerca AJAX per annunciare i risultati (o l'assenza di essi) agli screen reader senza interrompere la lettura corrente.
-  - `aria-expanded`: per comunicare lo stato (aperto/chiuso) del menu mobile e dei pannelli a soffietto.
+- Linearizzazione Mobile (*Tecnica di Aaron Gustafson*): Anziché ripiegare su uno scroll orizzontale per le tabelle su 
+  schermi piccoli, è stata implementata una tecnica CSS avanzata per linearizzare i dati. Su mobile, l'intestazione principale viene 
+  nascosta e le singole righe (<tr>) diventano elementi a blocco (simili a "card"). Attraverso l'inserimento dell'attributo HTML data-title 
+  in ogni cella, una media query CSS si occupa di stampare a video il nome della colonna (tramite lo pseudo-elemento ::before e content: attr
+  (data-title)) direttamente prima del dato effettivo. Questo garantisce una lettura verticale comoda, naturale e perfettamente impaginata.
 
-== Colori e Contrasto
-La gestione cromatica di EasyGuitar risponde a una doppia esigenza: estetica (identità visiva) e funzionale (leggibilità in contesti di performance).
+== Stampa delle pagine
+Riconoscendo che i documenti amministrativi (come la lista degli interventi) necessitano spesso di essere stampati, è stato redatto un 
+foglio di stile specifico (`@media` print) per ottimizzare la resa su carta, massimizzando la leggibilità e risparmiando inchiostro:
 
-- *Supporto Nativo alla Dark Mode:*
-  Considerando il caso d'uso tipico del musicista (spesso in ambienti con luci soffuse), è stata implementata una modalità scura attivabile tramite toggle globale. La preferenza viene salvata nel `LocalStorage` per garantire la persistenza. Questa modalità non è una semplice inversione di colori, ma una palette studiata *ad hoc* per ridurre l'affaticamento visivo mantenendo i rapporti di contrasto corretti.
+- Tipografia e Colori: Il background viene forzato al bianco e il testo al nero. Il font passa a una famiglia 
+  "Serif" (Times New Roman) con dimensione in punti tipografici (12pt), standard ideale per la lettura su carta.
 
-- *Rapporto di Contrasto (WCAG AA):*
-  Tutti i testi essenziali rispettano il rapporto di contrasto minimo di *4.5:1* rispetto allo sfondo, verificato tramite strumenti come *WebAIM Contrast Checker*. Questo vale sia per il tema chiaro (testo scuro su sfondo chiaro) che per il tema scuro (testo chiaro su sfondo scuro). Particolare attenzione è stata posta ai testi colorati sugli sfondi testurizzati (es. texture legno), dove è stato applicato un overlay semitrasparente o un'ombra (`text-shadow`) per garantire la leggibilità.
+- Pulizia del Layout: Tutti gli elementi puramente interattivi o di navigazione (bottoni, menu, form di ricerca, shadow box, link di skip) 
+  vengono rimossi dal flusso della pagina (display: none). I layout affiancati vengono forzati a blocco (display: block)
 
-- *Indipendenza dal Colore:*
-  Le informazioni non sono mai veicolate esclusivamente tramite il colore. Ad esempio, i messaggi di errore nei form non sono solo rossi, ma sono accompagnati da un'icona distintiva e da un messaggio testuale esplicito (associato via `aria-describedby`). I link all'interno del corpo del testo sono distinguibili non solo per il colore differente, ma anche per la sottolineatura o il grassetto, garantendo l'accessibilità anche a utenti affetti da daltonismo o discromatopsia.
+- Esplicitazione dei Link: Poiché su carta non è possibile cliccare, un'apposita regola CSS `(a[href]::after { content: " (" attr(href) ")
+  "; })` stampa automaticamente l'URL di destinazione di fianco al testo del link. Questa regola è stata disattivata selettivamente per le 
+  "breadcrumb" per non generare rumore visivo
 
-= Test e Validazione
-La fase di testing e validazione ha rappresentato uno step cruciale dell'intero ciclo di sviluppo. L'approccio adottato è stato ibrido: da una parte una verifica continua e manuale durante la stesura del codice, dall'altra una validazione automatica finale mediante strumenti dedicati.
-Questo doppio binario ha permesso di correggere tempestivamente errori strutturali e di garantire un buon livello di accessibilità e robustezza del prodotto finale.
+- Gestione Interruzioni di Pagina: È stata utilizzata la proprietà `page-break-inside: avoid` per impedire che le singole righe delle 
+  tabelle vengano tagliate a metà tra due fogli. Inoltre, la regola display: table-header-group sul tag <thead> assicura che l'intestazione 
+  della tabella venga ripetuta automaticamente all'inizio di ogni nuova pagina stampata.
 
-== Strumenti usati (Validazione Automatica)
-Per la validazione del codice e la verifica della conformità agli standard, sono stati impiegati i seguenti strumenti software:
+== Accessibilità dei Form e Inserimento Dati
+La progettazione dei form di autenticazione e segnalazione ha richiesto un'attenta strutturazione semantica, con l'obiettivo di agevolare l'inserimento dei dati e garantire una navigazione chiara, prevenendo il disorientamento dell'utente. Le soluzioni implementate sono state:
 
-- *Total Validator Base:*
-  Utilizzato per un'analisi complessiva delle pagine. Questo tool ha permesso di verificare simultaneamente la validità del markup HTML, la conformità agli standard CSS e il rispetto delle linee guida WCAG 2.1. È stato fondamentale per individuare errori di sintassi nidificati e attributi mancanti (come le etichette per i form). È stato principalmente usato nella fase finale, per un controllo accurato del sito.
+- Etichettatura esplicita e raggruppamento: ogni campo di input è associato in modo univoco alla propria etichetta tramite l'attributo `<label for="...">` collegato all'id dell'elemento. Nei form più complessi (come la segnalazione di un guasto), i campi logicamente correlati sono stati racchiusi all'interno di un tag `<fieldset>` descritto da una `<legend>`, fornendo un contesto macroscopico fondamentale per la navigazione sequenziale.
 
-- *Nu Html Checker (W3C):*
-  Lo strumento ufficiale del W3C è stato impiegato per garantire che il codice rispettasse rigorosamente la sintassi HTML5 e le regole XML-like richieste dal progetto (chiusura dei tag, annidamento corretto). È stato usato durante buona parte del progetto, verso la fase finale, utile per la sua semplicità di utilizzo.
+- Testi di Aiuto e aria-describedby: Le istruzioni per la compilazione sono state legate al campo di input corrispondente tramite l'attributo aria-describedby. In questo modo, quando il campo riceve il focus, lo screen reader legge automaticamente anche la regola di validazione, riducendo il carico cognitivo dell'utente
 
-- *Colour Contrast Analyser & Color Safe:*
-  Dati i requisiti stringenti di accessibilità visiva, questi strumenti sono stati essenziali per la definizione della palette cromatica.
-  - *Colour Contrast Analyser* è stato usato per verificare puntualmente il rapporto di contrasto (minimo 4.5:1 per il livello AA) tra testo e sfondo, specialmente nella modalità *Dark Mode*.
-  - *Color Safe* ha guidato la scelta di colori accessibili in fase di design, permettendo di bilanciare l'estetica con la leggibilità.
+- Gestione dei campi obbligatori: L'obbligatorietà dei campi è delegata all'attributo nativo HTML5 required. L'asterisco visivo (`*`) aggiunto per gli utenti normovedenti è stato isolato dai lettori di schermo utilizzando l'attributo `aria-hidden="true"`, evitando così che il software vocale legga fastidiosamente la parola "asterisco" a ogni campo.
 
-== Test manuali
-La validazione automatica, per quanto potente, non può sostituire il giudizio umano. Per questo motivo, sono stati condotti test manuali approfonditi per verificare la reale usabilità del sito.
+- Auto-completamento: Nei form di login e registrazione sono stati utilizzati gli attributi autocomplete (`autocomplete="username"`, `autocomplete="new-password"`). Questo facilita il riempimento automatico da parte del browser o dei password manager, un requisito di accessibilità molto importante per agevolare gli utenti.
 
-- *Navigazione tramite Screen Reader (NVDA):*
-  È stato utilizzato lo screen reader *NVDA* (NonVisual Desktop Access) per simulare l'esperienza di un utente affetto da disabilità visiva. Il test si è concentrato sulla verifica della semantica degli elementi e sul corretto funzionamento degli attributi ARIA implementati (come `aria-live` per la ricerca dinamica). Si è verificato che le notifiche di errore e i risultati della ricerca venissero annunciati correttamente senza sovrapposizioni audio.
-
-- *Navigazione da Tastiera:*
-  È stato verificato che tutte le funzionalità del sito fossero fruibili senza l'ausilio del mouse. In particolare:
-  - Il focus visibile è sempre presente e chiaro.
-  - L'ordine di tabulazione è logico e segue la struttura visiva della pagina.
-  - Le "Focus Trap" all'interno dei modali funzionano correttamente, impedendo al focus di uscire dalla finestra di dialogo attiva.
-  - Il link "Salta al contenuto principale" funziona come previsto.
-
-- *Compatibilità Browser (Cross-browser):*
-  Il sito è stato testato sui principali browser moderni (*Google Chrome, Mozilla Firefox, Brave Browser*) per garantire che il rendering grafico e le funzionalità JavaScript fossero consistenti indipendentemente dal motore di rendering utilizzato dall'utente.
-
-- *Responsive Design e Mobile:*
-  Oltre all'utilizzo di dispositivi fisici, è stata sfruttata intensivamente la *Modalità Ispeziona* dei browser desktop simulando diverse risoluzioni (smartphone, tablet, landscape).
-  Questo ha permesso di verificare:
-  - Il corretto collasso del menu di navigazione in formato "Hamburger".
-  - La leggibilità dei testi senza necessità di zoom.
-  - Il dimensionamento adeguato delle aree cliccabili (touch targets) per evitare errori di digitazione su schermi touch.
-
-= Organizzazione del gruppo
-Questa sezione illustra la metodologia adottata dal team per trasformare l'idea progettuale iniziale in un prodotto software finito. Il gruppo ha operato seguendo una logica di suddivisione funzionale, che ha permesso di parallelizzare lo sviluppo e ottimizzare le competenze individuali.
+- Feedback e Gestione Errori: I messaggi di errore flash (es. credenziali errate) vengono stampati all'interno di un contenitore dotato dell'attributo role="alert". Questo Live Region ARIA impone alla tecnologia assistiva di interrompere la lettura corrente per notificare immediatamente all'utente l'avvenuto errore, garantendo un feedback tempestivo.
 
 == Suddivisione dei compiti
-Per garantire una copertura completa di tutti gli aspetti dell'ingegneria web, ogni componente si è focalizzato su una specifica area di competenza, assumendone la responsabilità tecnica dall'analisi alla realizzazione.
-
-- *Enrique Hernandez Gris:*
-  Ha curato l'architettura strutturale delle viste (HTML5 semantico) e la logica di presentazione del catalogo. Si è occupato dell'integrazione dei dati nelle pagine principali e dello sviluppo dell'interfaccia di ricerca, garantendo la coerenza visiva tra le varie sezioni del sito.
-
-- *Luca Slongo:*
-  Si è specializzato nell'esperienza utente (User Experience) e nel design dell'interfaccia. Ha definito la palette cromatica in ottica di accessibilità, ha curato la responsività del sito per i dispositivi mobili e ha sviluppato componenti chiave per la navigazione come la Breadcrumb, l'Homepage e la gestione del Profilo Utente.
-
-- *Marco Sanguin:*
-  Ha gestito la logica dinamica lato client e l'interazione asincrona (API). Sfruttando le sue competenze musicali, ha ingegnerizzato il sistema di *Chord Parsing* per la visualizzazione intelligente degli accordi nella pagina Canzone. Si è inoltre occupato del deployment finale dell'applicazione sul server di produzione.
-
-- *Aldo Bettega:*
-  Ha progettato l'architettura del database e il layer di astrazione dei dati (Models), ottimizzando le query SQL. Ha sviluppato la logica di backend per la ricerca avanzata e ha realizzato l'intero ecosistema del Pannello di Amministrazione, gestendo la sicurezza e la manipolazione dei contenuti.
-
-== Metodologia di Lavoro
-L'organizzazione del team è stata improntata alla flessibilità, adottando un approccio agile che ha permesso di conciliare lo sviluppo incrementale del software con gli impegni accademici paralleli.
-
-Per garantire un flusso di lavoro efficiente, sono stati utilizzati strumenti specifici per la gestione della comunicazione e del codice:
-
-- *Comunicazione Sincrona:* La piattaforma *Discord* è stata il punto di riferimento per le riunioni periodiche di allineamento. Questi incontri sono stati fondamentali per monitorare i progressi, risolvere blocchi bloccanti e pianificare le attività successive.
-- *Gestione Asincrona:* Il versionamento del codice è stato affidato a *Git* tramite un repository *GitHub* condiviso. Questo ha permesso di lavorare in parallelo sulle diverse feature, mantenendo uno storico delle modifiche e facilitando l'integrazione del codice (merge).
-
-Nonostante la netta suddivisione dei compiti illustrata in precedenza, il gruppo ha mantenuto un approccio fortemente collaborativo. La specializzazione dei singoli membri non ha creato compartimenti stagni; al contrario, è stato costante il supporto trasversale (peer review e debugging congiunto), garantendo che ogni componente del team acquisisse una conoscenza approfondita dell'intero ecosistema del progetto.
 
 = Conclusioni e Sviluppi Futuri
-La realizzazione di EasyGuitar ha rappresentato per il gruppo di lavoro un'opportunità fondamentale per declinare le conoscenze teoriche in un progetto software completo. L'esperienza ha permesso di affrontare le complessità reali dello sviluppo web, ponendo l'accento non solo sulla correttezza formale del codice, ma sull'impatto sociale della tecnologia attraverso l'accessibilità.
-
-== Competenze Acquisite
-Il percorso di sviluppo ha permesso di consolidare competenze trasversali, unendo l'ingegneria del software alla sensibilità per la User Experience (UX):
-
-- *Dominio Tecnologico:* La scelta didattica di operare senza l'ausilio di framework ha imposto una comprensione profonda del linguaggio PHP e del pattern architetturale MVC. È stata inoltre affinata la capacità di gestire l'interattività lato client (JavaScript, manipolazione del DOM) e di progettare schemi di base di dati relazionali efficienti.
-- *Sensibilità Inclusiva:* Al di là degli aspetti tecnici, il progetto ha radicato nel team la filosofia dello "User-Centered Design". Si è compreso come l'aderenza agli standard WCAG non sia un mero adempimento formale, ma un requisito etico necessario per garantire il diritto all'accesso alle informazioni a ogni categoria di utente.
-
-== Prospettive Future
-L'analisi dei risultati ottenuti evidenzia come EasyGuitar, pur essendo un prodotto completo nelle sue funzionalità core, presenti ampi margini di evoluzione.
-Guardando al futuro, l'obiettivo non risiede tanto nell'espansione indiscriminata delle funzionalità, quanto nel consolidamento della qualità del software esistente.
-
-Sarebbe auspicabile dare continuità al progetto focalizzandosi su tre direttrici principali:
-- *Evoluzione del Codice:* Un'attività costante di *refactoring* e ottimizzazione della codebase per garantire performance sempre più elevate e una maggiore manutenibilità nel tempo.
-- *Accessibilità Incrementale:* L'accessibilità non è un traguardo statico ma un processo in divenire. L'intento è quello di affinare ulteriormente l'interfaccia utente, recependo i feedback reali per abbattere ogni residua barriera tecnologica.
-- *Filosofia del Progetto:* Mantenere inalterata la visione originale di uno strumento essenziale e privo di distrazioni, continuando a sviluppare soluzioni che mettano la musica e l'esecutore al centro dell'esperienza digitale.
