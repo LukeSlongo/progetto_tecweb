@@ -71,6 +71,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    const takeForms = document.querySelectorAll('.take-issue-form');
+    takeForms.forEach(function (takeForm) {
+        takeForm.addEventListener('submit', function (event) {
+            if (!confirm('Confermi di voler prendere in carico questa segnalazione?')) {
+                event.preventDefault(); // Ferma l'invio
+            }
+        });
+    });
+
     const closeForms = document.querySelectorAll('.close-issue-form');
     closeForms.forEach(function (closeForm) {
         closeForm.addEventListener('submit', function (event) {
