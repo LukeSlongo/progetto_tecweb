@@ -125,9 +125,13 @@ class UserController extends Controller
 
         $this->page_title = "Gestione Utenti - UniFix";
         $this->page_description = "Visualizza l'elenco degli utenti registrati al sistema UniFix e i loro ruoli.";
+
         BreadcrumbHelper::reset();
         BreadcrumbHelper::add('Home', '/');
         BreadcrumbHelper::add('Utenti');
+
+        $this->scriptPathList[] = 'user';
+
         $this->render('userListPage', [
             'USER_LIST_ITEMS' => $items_html
         ]);
@@ -286,8 +290,14 @@ class UserController extends Controller
 
     public function deleteUser($user_id)
     {
+        if($user_id == Auth::getUser()['id']) {
+            $_SESSION['flash_error'] = "Non puoi eliminare il tuo account.";
+            $this->redirect('/users');
+            return;
+        }
         $user_model = new UserModel();
         $user_model->delete($user_id);
+        $_SESSION['flash_success'] = "Utente eliminato con successo.";
         $this->redirect('/users');
     }
 }
