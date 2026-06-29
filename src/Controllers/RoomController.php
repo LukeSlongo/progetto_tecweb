@@ -113,14 +113,20 @@ class RoomController extends Controller
             $issues_html = ComponentHelper::renderList('issueListItemRoomPage', $issues_of_room);
         }
 
+        // creazione del tasto preferiti, visibile solo agli user base e con iniettato room id
         $role = $_SESSION['user']['role'] ?? '';
-        $add_to_favorites_button = ($role === 'student') ? 
-            '<form action="/api/favorites/##ROOM_ID##/add" method="POST" class="favorite-form" data-room-id="##ROOM_ID##" data-is-favorite="false">
-                <button type="submit" id="btn-favorite-##ROOM_ID##" class="btn-favorite" title="Aggiungi ai preferiti" aria-label="Azione preferiti aula: ##ROOM_NAME##">
+        $add_to_favorites_button = '';
+        if ($role === 'student') {
+            $r_id = htmlspecialchars($room_data['room_id'], ENT_QUOTES, 'UTF-8');
+            $r_name = htmlspecialchars($room_data['room_name'], ENT_QUOTES, 'UTF-8');
+
+            $add_to_favorites_button = '
+            <form action="/api/favorites/' . $r_id . '/add" method="POST" class="favorite-form" data-room-id="' . $r_id . '" data-room-name="' . $r_name . '" data-is-favorite="false">
+                <button type="submit" id="btn-favorite-' . $r_id . '" class="btn-favorite" title="Aggiungi ai preferiti" aria-label="Azione preferiti aula: ' . $r_name . '">
                     Preferiti
                 </button>
-            </form>' : 
-        '';
+            </form>';
+        }
 
         $this->scriptPathList[] = 'room';
         BreadcrumbHelper::add('Aule', '/rooms');

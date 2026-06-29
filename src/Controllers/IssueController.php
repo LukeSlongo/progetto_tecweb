@@ -204,7 +204,7 @@ class IssueController extends Controller
         $has_privileges = $role === 'admin' || $role === 'technician';
         $is_owner = Auth::isLogged() && Auth::isOwner($issue['reporter_id']);
 
-        $delete_issue_button = (Auth::isAdmin() || $is_owner)
+        $delete_issue_button = (Auth::isAdmin() || ($is_owner && $issue['issue_status'] === 'open'))
             ? '<form action="/issues/' . $issue['issue_id'] . '/delete" method="POST" class="delete-issue-form">'
             . '<button class="btn-danger" type="submit">Elimina segnalazione</button>'
             . '</form>'
