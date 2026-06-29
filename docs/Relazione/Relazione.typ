@@ -381,7 +381,7 @@ Nonostante la natura asincrona del lavoro e l'adozione di una metodologia basata
   - Accessibilità e Testing: Ha curato le fasi critiche dell'accessibilità, implementando la Dark Mode nativa, linearizzando le tabelle per il mobile, configurando il foglio di stile per la stampa accessibile e garantendo il superamento dei test del Nu Html Checker. Ha parallelamente implementato gran parte degli Unit Test (PHPUnit). Ha curato la stesura finale della documentazione e della relazione.
 
 
-  = Conclusioni e Sviluppi futuri
+= Conclusioni e Sviluppi futuri
 
 == Conclusioni
 Il progetto UniFix ha raggiunto con successo gli obiettivi prefissati in fase di analisi. È stata consegnata una piattaforma web robusta, sicura e pienamente accessibile, capace di snellire e centralizzare la gestione dei guasti all'interno degli spazi universitari. 
