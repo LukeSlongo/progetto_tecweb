@@ -74,7 +74,11 @@ DELIMITER ;
 INSERT INTO `user` (username, password, role) VALUES 
 ('admin', '$2y$10$rTwKpKUBtWUq6QQKjVS/FuhEzFASXCpuekO2jsrY16wbaibHU0wtK', 'admin'),
 ('tecnico', '$2y$10$7nnn3YJsSpqn1O7VnWO50.n/CRCHlMagJEyhQ5TQe9m3J5vh3ihAO', 'technician'),
+<<<<<<< Updated upstream
 ('studente', '$2y$10$Fk53wBPCRiF3pt7GIhcWMe3UvgEbUsrJ/JqwLe4cDx9VYnnn/lzmO', 'student'),
+=======
+('user', '$2y$10$0ohPSf5slNV84wOdxVXhK.wqhkr7N9MGd3ReXCDLh1MKlGHnw2/O2', 'student'),
+>>>>>>> Stashed changes
 
 -- Inserimento di edifici di esempio
 INSERT INTO building (name, address) VALUES 
