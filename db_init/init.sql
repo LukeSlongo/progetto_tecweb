@@ -74,12 +74,7 @@ DELIMITER ;
 INSERT INTO `user` (username, password, role) VALUES 
 ('admin', '$2y$10$rTwKpKUBtWUq6QQKjVS/FuhEzFASXCpuekO2jsrY16wbaibHU0wtK', 'admin'),
 ('tecnico', '$2y$10$7nnn3YJsSpqn1O7VnWO50.n/CRCHlMagJEyhQ5TQe9m3J5vh3ihAO', 'technician'),
-('tecnico1', '$2y$10$7nnn3YJsSpqn1O7VnWO50.n/CRCHlMagJEyhQ5TQe9m3J5vh3ihAO', 'technician'),
 ('studente', '$2y$10$Fk53wBPCRiF3pt7GIhcWMe3UvgEbUsrJ/JqwLe4cDx9VYnnn/lzmO', 'student'),
-('studente1', '$2y$10$Fk53wBPCRiF3pt7GIhcWMe3UvgEbUsrJ/JqwLe4cDx9VYnnn/lzmO', 'student'),
-('studente2', '$2y$10$Fk53wBPCRiF3pt7GIhcWMe3UvgEbUsrJ/JqwLe4cDx9VYnnn/lzmO', 'student'),
-('studente3', '$2y$10$Fk53wBPCRiF3pt7GIhcWMe3UvgEbUsrJ/JqwLe4cDx9VYnnn/lzmO', 'student'),
-('studente4', '$2y$10$Fk53wBPCRiF3pt7GIhcWMe3UvgEbUsrJ/JqwLe4cDx9VYnnn/lzmO', 'student');
 
 -- Inserimento di edifici di esempio
 INSERT INTO building (name, address) VALUES 

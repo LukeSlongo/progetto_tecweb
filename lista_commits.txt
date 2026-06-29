@@ -1,0 +1,184 @@
+[2026-06-29] enriquehernandezgris: Merge pull request #66 from LukeSlongo/f/daltonismo
+[2026-06-29] lukeslongo: Tolto tabindex che non serviva
+[2026-06-29] lukeslongo: Risolti piccoli bug e imperfezioni
+[2026-06-29] lukeslongo: cambiato legend con h2
+[2026-06-28] enriquehernandezgris: Merge pull request #63 from LukeSlongo/mobile_table_and_fix
+[2026-06-28] aldobettega: Merge branch 'develop' into mobile_table_and_fix
+[2026-06-28] enriquehernandezgris: Merge pull request #65 from LukeSlongo/f/relazione
+[2026-06-28] enriquehernandezgris: Merge pull request #62 from LukeSlongo/f/cambiati_px_in_em
+[2026-06-28] aldobettega: sezione accessibilità
+[2026-06-28] aldobettega: Merge branch 'develop' into f/cambiati_px_in_em
+[2026-06-27] CCaco4: Merge pull request #64 from LukeSlongo/f/relazione
+[2026-06-27] enriquehernandezgris: Merge pull request #61 from LukeSlongo/f/stampa_accessibile
+[2026-06-27] aldobettega: arrivato fino a progettazione compresa.
+[2026-06-27] aldobettega: schema relazione
+[2026-06-27] aldobettega: Tabelle rese accessibili da mobile e fixato bottone preferiti in room detail page
+[2026-06-26] aldobettega: tolti px da css, aggiunta dark mode in auth pages
+[2026-06-25] aldobettega: media css per stampa
+[2026-06-25] aldobettega-unipd: Merge pull request #60 from LukeSlongo/f/icona-scheda
+[2026-06-25] Marco Sanguin: immagine favicon locale fix
+[2026-06-25] Marco Sanguin: immagine favicon locale
+[2026-06-25] enriquehernandezgris: ho dimenticato fare branch e pr per questo mi dispiace, ma solamente ho cambiato la icona e che utente studente puo vedere issue List
+[2026-06-25] enriquehernandezgris: fatto che il utente puo vedere le issue List tramite breadcrumb e la icona scheda browser
+[2026-06-24] aldobettega-unipd: Merge pull request #59 from LukeSlongo/test/deploy-smoke
+[2026-06-24] Marco Sanguin: Merge branch 'develop' into test/deploy-smoke
+[2026-06-24] Marco Sanguin: Merge branch 'develop' into test/deploy-smoke
+[2026-06-24] aldobettega-unipd: Merge pull request #58 from LukeSlongo/feature/deploy-action
+[2026-06-24] aldobettega: fix issue model
+[2026-06-24] Marco Sanguin: Merge branch 'develop' into feature/deploy-action
+[2026-06-24] aldobettega: fix
+[2026-06-24] aldobettega-unipd: Merge pull request #56 from LukeSlongo/feature/server-deploy-action
+[2026-06-24] Marco Sanguin: Merge branch 'feature/server-deploy-action' into feature/deploy-action
+[2026-06-24] aldobettega: resolved conflict
+[2026-06-24] enriquehernandezgris: Merge pull request #57 from LukeSlongo/f/fix_develop
+[2026-06-24] aldobettega: fixato issue model
+[2026-06-24] Marco Sanguin: Merge branch 'develop' into feature/deploy-action
+[2026-06-24] Marco Sanguin: Merge branch 'develop' into feature/server-deploy-action
+[2026-06-24] LukeSlongo: Merge pull request #54 from LukeSlongo/f/dark-mode
+[2026-06-24] lukeslongo: Cambiato colore breadcrumb
+[2026-06-24] Marco Sanguin: Add deploy smoke test note
+[2026-06-24] Marco Sanguin: Add TecWeb GitHub Actions deploy
+[2026-06-24] Marco Sanguin: Merge remote-tracking branch 'origin/develop' into feature/server-deploy-action
+[2026-06-24] LukeSlongo: Merge pull request #53 from LukeSlongo/f/fix_tecnico
+[2026-06-24] LukeSlongo: Merge pull request #51 from LukeSlongo/f/update_issue
+[2026-06-24] LukeSlongo: Merge branch 'develop' into f/update_issue
+[2026-06-24] Marco Sanguin: Complete TecWeb deploy support
+[2026-06-24] Marco Sanguin: Merge remote-tracking branch 'origin/develop' into feature/server-deploy-action
+[2026-06-24] enriquehernandezgris: Merge pull request #52 from LukeSlongo/f/home_tecnico
+[2026-06-24] enriquehernandezgris: fatto dark mode (da rivedere se e tutto benne implementato) ma funziona bene, anche rivedere se vuoi colori di dark mode ma mi sembrano bene
+[2026-06-23] aldobettega: fixato che se ci sono più tecnici, un tecnico non può risolvere issue di un altro tecnico
+[2026-06-23] aldobettega: implementata home personalizzata per il tecnico
+[2026-06-23] aldobettega: implementato update issue
+[2026-06-23] enriquehernandezgris: Merge pull request #50 from LukeSlongo/f/accessibilita_login
+[2026-06-23] aldobettega: resolved conflicts
+[2026-06-23] LukeSlongo: Merge pull request #49 from LukeSlongo/f/lista-aule_accesibilita-colori
+[2026-06-23] lukeslongo: Risolte diverse cose
+[2026-06-23] enriquehernandezgris: sistemato colori breadcrumb, rimosso tasto preferiti per users non studenti, e anche lista utenti nella navbar degli utenti admin
+[2026-06-22] enriquehernandezgris: Merge pull request #47 from LukeSlongo/accessibilita_lista_aule
+[2026-06-22] aldobettega-unipd: Merge pull request #48 from LukeSlongo/f/accessibilita_issue_list
+[2026-06-22] aldobettega-unipd: Merge branch 'develop' into f/accessibilita_issue_list
+[2026-06-22] aldobettega-unipd: Merge branch 'develop' into accessibilita_lista_aule
+[2026-06-22] enriquehernandezgris: Merge pull request #46 from LukeSlongo/f/accessibilita_room_detail
+[2026-06-22] enriquehernandezgris: Merge pull request #33 from LukeSlongo/f/prendi-segnalazione
+[2026-06-21] aldobettega: accessibilità issue detail page
+[2026-06-21] aldobettega: Merge branch 'develop' into f/accessibilita_issue_list
+[2026-06-21] aldobettega: rivista accessibilità issue list page
+[2026-06-21] aldobettega: Merge branch 'f/prendi-segnalazione' of https://github.com/LukeSlongo/progetto_tecweb into f/prendi-segnalazione
+[2026-06-21] aldobettega: risolti conflitti
+[2026-06-21] aldobettega-unipd: Merge branch 'develop' into f/prendi-segnalazione
+[2026-06-21] aldobettega: Merge branch 'develop' into accessibilita_lista_aule
+[2026-06-21] aldobettega: Merge branch 'develop' of https://github.com/LukeSlongo/progetto_tecweb into f/accessibilita_room_detail
+[2026-06-21] aldobettega-unipd: Merge pull request #45 from LukeSlongo/f/breadcrumb
+[2026-06-21] aldobettega-unipd: Merge branch 'develop' into f/breadcrumb
+[2026-06-21] aldobettega: fixata breadcrumb e resa accessibile
+[2026-06-21] aldobettega: risolti conflitti
+[2026-06-21] aldobettega: resolved conflicts
+[2026-06-21] aldobettega: rivista accessibilità room detail page
+[2026-06-20] enriquehernandezgris: added reset breadcrumb
+[2026-06-20] enriquehernandezgris: fatto breadcrumb (piu o meno uguale che nel sito vecchio)  non so se é completamente accessibile, da rivederele quello
+[2026-06-20] LukeSlongo: Merge pull request #42 from LukeSlongo/f/accessibilita_lista_utenti
+[2026-06-20] lukeslongo: minor fix
+[2026-06-20] aldobettega: resolved conflicts
+[2026-06-20] lukeslongo: Merge
+[2026-06-20] aldobettega: Rivista accessibilità lista rooms
+[2026-06-20] LukeSlongo: Merge pull request #39 from LukeSlongo/f/accessibilita_issue_form
+[2026-06-20] lukeslongo: Merge ok
+[2026-06-20] lukeslongo: Merge
+[2026-06-20] LukeSlongo: Merge pull request #38 from LukeSlongo/f/accessibilita_home
+[2026-06-20] aldobettega: risolti conflitti
+[2026-06-20] aldobettega: Rivista accessibilità userListPage
+[2026-06-18] aldobettega: Rivista accessibilità issue form, passa da nu html checker, aggiunti campi obbligatori, type hint e vista mobile
+[2026-06-18] aldobettega: Rivista accessibilità generale home. passa nu html checker
+[2026-06-18] CCaco4: Merge pull request #36 from LukeSlongo/f/home
+[2026-06-18] Marco Sanguin: minor fix
+[2026-06-17] Marco Sanguin: deploy
+[2026-06-17] aldobettega: Rivisti aspetti di accessibilità per la pagina di autenticazione: aria inutili, check password lunghezza, check colori, aggiunta media query per mobile
+[2026-06-17] aldobettega-unipd: Merge branch 'develop' into f/home
+[2026-06-17] lukeslongo: Minor fix
+[2026-06-16] aldobettega: Aggiustate cose del layout generale e della home (andrà mergiata la feat/home e verificato che il contenuto vada bene), aggiornato footer. Nu Html Checker da test passati
+[2026-06-16] LukeSlongo: Merge pull request #32 from LukeSlongo/f/issue-form
+[2026-06-16] lukeslongo: Merge risolto
+[2026-06-15] aldobettega: Feat: creata home
+[2026-06-12] aldobettega: Feat: implementato take/close issue e rivisto layot dettaglio issue
+[2026-06-12] lukeslongo: Minor fix
+[2026-06-12] LukeSlongo: Merge pull request #31 from LukeSlongo/f/delete-issue
+[2026-06-12] lukeslongo: Merge branch 'develop' into f/delete-issue
+[2026-06-11] aldobettega: implementato issue form + tests
+[2026-06-11] aldobettega-unipd: Merge pull request #30 from LukeSlongo/f/add-favourites
+[2026-06-11] aldobettega: aggiunti test
+[2026-06-11] aldobettega: correzione issue detail
+[2026-06-11] lukeslongo: Finita feature
+[2026-06-11] LukeSlongo: Merge pull request #28 from LukeSlongo/f/delete-issue
+[2026-06-09] lukeslongo: Fatta feature
+[2026-06-08] lukeslongo: Eliminato coverage report pushato erroneamente
+[2026-06-08] LukeSlongo: Merge pull request #27 from LukeSlongo/f/issue-details
+[2026-06-08] enriquehernandezgris: fatto issueDetailPage, viewIssueDetails e GetIssueDetails, checkare come sempre
+[2026-06-07] aldobettega: aggiunti test
+[2026-06-07] aldobettega-unipd: Merge pull request #26 from LukeSlongo/f/issue-list
+[2026-06-07] aldobettega-unipd: Merge branch 'develop' into f/issue-list
+[2026-06-07] aldobettega: Merge branch 'f/issue-list' of https://github.com/LukeSlongo/progetto_tecweb into f/issue-list
+[2026-06-07] aldobettega: corretto issue list page
+[2026-06-07] aldobettega: corretto issue list page
+[2026-06-07] enriquehernandezgris: error with function isLogged sistemato
+[2026-06-07] aldobettega-unipd: Merge pull request #25 from LukeSlongo/f/dettaglio-room
+[2026-06-06] aldobettega: Feat: pagina di dettaglio room con test
+[2026-06-06] enriquehernandezgris: fatto issueListPage e issueListItem, anche funzioni di controller e model viewIssueList e getActiveIssues
+[2026-06-06] aldobettega: sistemata la ricerca
+[2026-06-06] aldobettega-unipd: Merge pull request #22 from LukeSlongo/f/list-aule
+[2026-06-06] aldobettega: rivisto roomlistpage e aggiutni test
+[2026-06-05] aldobettega: Merge branch 'develop' into f/list-aule
+[2026-06-05] aldobettega: redirect dopo aver eliminato utente
+[2026-06-05] aldobettega: Merge branch 'f/lista-utenti' into develop
+[2026-06-05] aldobettega: resolved conflicts
+[2026-06-05] aldobettega: Merge branch 'f/lista-utenti' of https://github.com/LukeSlongo/progetto_tecweb into f/lista-utenti
+[2026-06-05] aldobettega-unipd: Merge pull request #23 from LukeSlongo/develop
+[2026-06-05] aldobettega: correzioni develop
+[2026-06-05] aldobettega-unipd: Merge pull request #20 from LukeSlongo/f/lista-utenti
+[2026-06-05] aldobettega-unipd: Merge branch 'develop' into f/lista-utenti
+[2026-06-05] aldobettega-unipd: Merge pull request #19 from LukeSlongo/f/login-logout
+[2026-06-05] aldobettega: Implementata eliminazione utente
+[2026-06-05] enriquehernandezgris: fatto roomListPage.html e roomListItem.html, anche funzioni per renderizare e cercare le aule
+[2026-06-04] aldobettega: Feat: implementata pagina lista utenti di admin
+[2026-06-04] aldobettega: modificato gitignore
+[2026-06-04] aldobettega: corretta view di pagine di auth
+[2026-06-04] aldobettega: Feat: creato login e logout, prova di pagina home per vedere se login funziona
+[2026-06-04] aldobettega-unipd: Merge pull request #18 from LukeSlongo/develop
+[2026-06-04] aldobettega: scritti test
+[2026-06-04] enriquehernandezgris: aggiunto bottone nel navbar (dobbiamo vedere cosa si vede nel navbar quando si entra nella pagina) e funzione logout()
+[2026-06-04] aldobettega: Rivisto stile home
+[2026-06-04] aldobettega: Stile auth page
+[2026-06-04] aldobettega: prima indicizzazione del css
+[2026-06-03] aldobettega: modifiche al db e bozza register. #3
+[2026-06-03] enriquehernandezgris: modificato login.html e aggiunto un stylo per il homepage (quando é logged il usuario)
+[2026-06-03] aldobettega: rivista infrastruttura
+[2026-06-03] aldobettega: resolved conflicts
+[2026-06-03] aldobettega: correzioni rotte_web
+[2026-06-03] aldobettega: progettazione classi
+[2026-06-03] aldobettega: Corretti requisiti
+[2026-05-31] aldobettega: rivisitazione requisiti con tecnico, modifica init.sql
+[2026-05-29] CCaco4: a
+[2026-05-29] aldobettega: Merge branch 'f/use_case' of https://github.com/LukeSlongo/progetto_tecweb into f/use_case
+[2026-05-29] aldobettega: naming convention e rimozione tecnico
+[2026-05-28] CCaco4: modifica use case
+[2026-05-28] aldobettega: modifiche
+[2026-05-28] aldobettega: nuovo branch
+[2026-05-28] aldobettega: .
+[2026-05-28] aldobettega: creazione progettazione.txt
+[2026-05-27] aldobettega: aggiornati requisiti
+[2026-05-27] aldobettega: aggiunta domanda 6
+[2026-05-27] LukeSlongo: risposta a domanda 5
+[2026-05-27] aldobettega: aggiornamneto docs
+[2026-05-27] aldobettega: aggiunta lista pagine
+[2026-05-26] aldobettega: rivisti requisiti
+[2026-05-26] LukeSlongo: Risposto a domande.txt
+[2026-05-26] aldobettega: aggiornamento requisiti
+[2026-05-25] LukeSlongo: piccolo fix su requisiti
+[2026-05-24] aldobettega: aggiornati requisiti
+[2026-05-23] aldobettega: Creazione cartella docs
+[2026-05-21] lukeslongo: Quasi finita pagina nuova segnalazione
+[2026-05-20] lukeslongo: Continuo pagina nuova segnalazione
+[2026-05-19] lukeslongo: Ulteriori modifiche
+[2026-05-19] lukeslongo: Aggiunto un po di logica e fatto db
+[2026-05-14] lukeslongo: Fatta un po di struttura riciclando da robe vecchie
+[2026-05-14] lukeslongo: Ordinato un po
+[2026-05-12] lukeslongo: Primo
