@@ -89,6 +89,7 @@
 
       [*Utente Amministratore:*], [username: `admin`, password: `admin`],
       [*Utente Base:*], [username: `user`,  password: `user`],
+      [*Utente Tecnico:*], [username: `tecnico`,  password: `tecnico`],
       [*Indirizzo Sito:*], [#link("http://localhost:8000")[http://tecweb.studenti.math.unipd.it/msanguin]],
       [*Referente:*], [#link("mailto:aldo.bettega@studenti.unipd.it")[aldo.bettega\@studenti.unipd.it]],
     )
@@ -147,7 +148,7 @@ Questa fase si è rivelata cruciale per:
   Questa "Source of Truth" conteneva le specifiche di dominio, i diagrammi dei casi d'uso, i diagrammi delle classi e la mappa dei routing web.
   L'approvazione di questa documentazione ha evitato fraintendimenti e limitato drasticamente la necessità di successivi rimaneggiamenti del codice.
 
-== Organizzazione del lavoro e gesitone dei task
+== Organizzazione del lavoro e gestione dei task
 La scomposizione del lavoro e il tracciamento delle attività sono stati gestiti tramite l'ecosistema GitHub, sfruttando una Project Board dedicata.
 Tutte le funzionalità derivanti dall'analisi dei casi d'uso sono state tradotte a priori in specifiche "Issue" architetturali, contenenti il dettaglio delle classi,
 dei metodi e dei template HTML necessari al loro completamento.
@@ -240,7 +241,7 @@ Nello specifico, la gerarchia è stata strutturata come segue:
   trasversali, come la classe Auth, che centralizza la verifica dello stato della sessione e dei privilegi dell'utente (isLogged(),
   isAdmin(), isTechnician()) in modo sicuro e riutilizzabile da qualsiasi punto dell'applicativo.
 
-=== Motore di tempalting
+=== Motore di templating
 Per mantenere pulite le viste e isolare il PHP dall'HTML (limitando al minimo la presenza di logica condizionale nei file di presentazione),
 è stata creata la classe core Template.php.
 Questo mini-motore di templating si occupa di caricare i file HTML e di sostituire specifici placeholder (es. `##ROOM_NAME##`)
@@ -359,6 +360,37 @@ La progettazione dei form di autenticazione e segnalazione ha richiesto un'atten
 
 - Feedback e Gestione Errori: I messaggi di errore flash (es. credenziali errate) vengono stampati all'interno di un contenitore dotato dell'attributo role="alert". Questo Live Region ARIA impone alla tecnologia assistiva di interrompere la lettura corrente per notificare immediatamente all'utente l'avvenuto errore, garantendo un feedback tempestivo.
 
-== Suddivisione dei compiti
+= Suddivisione dei compiti
+Nonostante la natura asincrona del lavoro e l'adozione di una metodologia basata sulla revisione collettiva (Code Review tramite Pull Request), l'architettura modulare del progetto ha permesso di parallelizzare efficacemente lo sviluppo. Ogni membro del team ha preso in carico la responsabilità (ownership) di specifici verticali applicativi o layer strutturali, garantendo un avanzamento costante e ordinato.
 
-= Conclusioni e Sviluppi Futuri
+- Marco Sanguin:
+  - Analisi dei Requisiti: Ha partecipato attivamente alle fasi preliminari del progetto, contribuendo alla definizione, scrittura e raffinamento del documento di Use Case (Casi d'Uso) e operando sulle relative Pull Request
+  - DevOps e Continuous Integration: Si è focalizzato sul layer di deployment e automazione. Ha configurato la pipeline di Continuous Integration tramite GitHub Actions, automatizzando i processi di test (Smoke Test) e di rilascio del codice sul server (Deploy). Ha inoltre curato asset globali come la configurazione e il routing delle favicon locali
+
+- Enrique Hernandez Gris:
+  - Visualizzazione Dati e Navigazione: Ha sviluppato un'ampia porzione delle interfacce di consultazione, occupandosi in modalità full-stack (Model, Controller e View) delle pagine di Lista Aule, Dettaglio Aula, Lista Segnalazioni e Dettaglio Segnalazione
+  - Componenti UI Avanzati: Ha implementato la logica di ricerca delle aule, il sistema di navigazione Breadcrumb e ha contribuito in modo significativo all'integrazione della UI per la Dark Mode globale, ottimizzando i colori dei link e la coerenza visiva del tema
+
+- Luca Slongo:
+  - Setup e Funzionalità Chiave: Ha avviato il repository curando il setup iniziale della struttura. Ha sviluppato interamente funzionalità core come il motore di aggiunta/rimozione delle aule dai preferiti e le logiche di eliminazione delle segnalazioni (Delete Issue)
+  - Refactoring e UI: Si è dedicato a un massiccio lavoro di "finitura" e bug fixing dell'interfaccia utente, risolvendo imperfezioni visive, sistemando i contrasti cromatici, ripulendo l'HTML da attributi non necessari (es. tabindex superflui) e consolidando l'accessibilità generale delle pagine.
+
+- Aldo Bettega:
+  - Infrastruttura e Core: Ha definito la progettazione iniziale delle classi e l'infrastruttura MVC di base.
+  - Backend e Funzionalità: Si è occupato dello sviluppo dell'autenticazione (Login/Logout), della gestione utenti lato Admin, del form di creazione delle segnalazioni (Issue form) e della logica di gestione stato delle segnalazioni (Take/Close issue). Ha inoltre sviluppato la Home Page personalizzata per ruolo.
+  - Accessibilità e Testing: Ha curato le fasi critiche dell'accessibilità, implementando la Dark Mode nativa, linearizzando le tabelle per il mobile, configurando il foglio di stile per la stampa accessibile e garantendo il superamento dei test del Nu Html Checker. Ha parallelamente implementato gran parte degli Unit Test (PHPUnit). Ha curato la stesura finale della documentazione e della relazione.
+
+
+= Conclusioni e Sviluppi futuri
+
+== Conclusioni
+Il progetto UniFix ha raggiunto con successo gli obiettivi prefissati in fase di analisi. È stata consegnata una piattaforma web robusta, sicura e pienamente accessibile, capace di snellire e centralizzare la gestione dei guasti all'interno degli spazi universitari. 
+
+Lo sviluppo interamente "Vanilla" (senza l'ausilio di framework esterni) ha permesso di consolidare e dimostrare sul campo una profonda comprensione delle architetture web moderne. L'implementazione da zero del design pattern MVC, unita allo sviluppo di un sistema di routing con middleware e alla gestione sicura del database (Prepared Statements, Trigger e vincoli relazionali), testimonia la solidità ingegneristica dell'applicativo. 
+Inoltre, la rigorosa attenzione all'accessibilità (W3C, WCAG AA, navigazione semantica) e l'adozione di un approccio Mobile-First assicurano che il prodotto finale sia un ambiente inclusivo e facilmente fruibile da chiunque.
+
+== Sviluppi futuri
+Nonostante il sistema sia completo e funzionale rispetto alle specifiche richieste, l'architettura modulare su cui si fonda si presta a diverse e agili espansioni future, tra cui:
+
+- *Allegati Multimediali:* Estensione del form di segnalazione con la possibilità di caricare file immagine (foto del guasto). Questo agevolerebbe notevolmente la diagnosi a distanza da parte del team di manutenzione.
+- *Dashboard Analitica:* Sviluppo di un pannello di controllo avanzato per gli amministratori, dotato di grafici e statistiche (es. edifici con il maggior numero di guasti, tempi medi di presa in carico e risoluzione dei ticket), che risulterebbe uno strumento prezioso per la pianificazione della manutenzione preventiva.
