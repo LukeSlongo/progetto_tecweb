@@ -167,7 +167,6 @@ main {
 =========================================
 */
 
-/*Crea il recinto per il testo, in modo che questo non si sparpagli, utilizzabile con <div class="container">*/
 .container {
     max-width: 50rem;
     margin: auto;
@@ -717,7 +716,7 @@ footer {
     margin: 0;
 }
 
-/* --- RESPONSIVITÀ TABELLE PER CELLULARI (Tecnica di Aaron Gustafson) --- */
+/* --- RESPONSIVITÀ TABELLE PER CELLULARI  --- */
 @media (max-width: 48rem) {
     
     /* 1. Nasconde l'intestazione classica */
@@ -729,21 +728,21 @@ footer {
     /* 2. Trasforma ogni riga (tr) in una vera e propria "Card" distanziata */
     .data-table tr {
         display: block;
-        margin-bottom: 1.5rem; /* Spazio netto tra un'aula e l'altra */
-        border: 0.0625rem solid var(--border-color); /* Bordo esterno della card */
+        margin-bottom: 1.5rem;
+        border: 0.0625rem solid var(--border-color);
         border-radius: 0.5rem;
         background-color: var(--bg-card);
-        overflow: hidden; /* Mantiene gli angoli arrotondati puliti */
+        overflow: hidden;
     }
 
     /* 3. Linearizza le celle e restituisce l'aria (padding) vitale per i click */
     .data-table th, 
     .data-table td {
         display: block;
-        padding: 0.85rem 1rem; /* <-- IL FIX: Molto spazio per facilitare il tap! */
+        padding: 0.85rem 1rem;
         white-space: normal;
         text-align: left;
-        border-bottom: 0.0625rem solid var(--border-color); /* Linea divisoria sottile tra i dati interni */
+        border-bottom: 0.0625rem solid var(--border-color);
         border-top: none;
     }
 
@@ -757,10 +756,10 @@ footer {
     .data-table td[data-title]::before {
         content: attr(data-title);
         font-weight: bold;
-        display: block; /* Manda il dato a capo sotto l'etichetta */
+        display: block;
         color: var(--text-gray);
         font-size: 0.85rem;
-        margin-bottom: 0.4rem; /* Distanzia l'etichetta dal bottone o dal testo sottostante */
+        margin-bottom: 0.4rem;
     }
 }
 
@@ -1078,11 +1077,11 @@ footer {
     max-width: 100%;
 }
 
-/* Ripristina lo stile visivo del fieldset per farlo sembrare un normale blocco */
+/* Ripristina lo stile visivo del fieldset per farlo sembrare un normale blocco, 
+padding e background già ereditati da .form-gray-box*/
 fieldset.form-gray-box {
     border: none;
     margin: 0;
-    /* padding e background sono già ereditati dalla tua classe .form-gray-box! */
 }
 
 
@@ -1129,7 +1128,6 @@ fieldset.form-gray-box {
 
     .form-horizontal-group {
         flex-direction: column;
-        /* Impila etichetta e campo uno sull'altro */
         align-items: flex-start;
     }
 
@@ -1180,7 +1178,6 @@ fieldset.form-gray-box {
 .issue-content-wrapper {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    /* La descrizione occupa il doppio dello spazio delle info */
     gap: 3rem;
     margin-bottom: 3rem;
 }
@@ -1206,7 +1203,6 @@ fieldset.form-gray-box {
 /* Lista delle informazioni */
 .issue-info-card ul {
     list-style-type: none;
-    /* Rimuoviamo i pallini base noiosi */
     padding: 0;
     margin: 0 0 2rem 0;
 }
@@ -1241,11 +1237,8 @@ fieldset.form-gray-box {
 .issue-actions {
     display: flex;
     flex-direction: column;
-    /* Mette i bottoni uno sotto l'altro */
     gap: 1rem;
-    /* Crea lo spazio perfetto tra i bottoni (niente più collisioni!) */
     margin-top: 2rem;
-    /* Distanza dalle info testuali sopra */
 }
 
 /* Rimuove la sottolineatura dal link e lo fa comportare come un vero bottone */
@@ -1271,7 +1264,6 @@ fieldset.form-gray-box {
 @media (max-width: 48rem) {
     .issue-content-wrapper {
         grid-template-columns: 1fr;
-        /* Impila la descrizione sopra le info */
         gap: 1.5rem;
     }
 

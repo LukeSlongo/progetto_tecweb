@@ -30,10 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const roomName = form.dataset.roomName;
         const button = form.querySelector('.btn-favorite');
 
-        // ---------------------------------------------------------
-        // 1. CARICAMENTO INIZIALE: Controlla se l'aula è tra i preferiti
-        // (Chiama la funzione isFavorite del tuo UserController)
-        // ---------------------------------------------------------
         fetch(apiUrl(`/api/favorites/${roomId}/check`))
             .then(response => response.json())
             .then(data => {
@@ -44,9 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .catch(err => console.error(`Errore nel check preferiti per aula ${roomId}:`, err));
 
-        // ---------------------------------------------------------
-        // 2. GESTIONE DEL CLICK: Aggiunge o Rimuove il preferito
-        // ---------------------------------------------------------
         form.addEventListener('submit', async function(event) {
             event.preventDefault();
             
@@ -63,10 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     const data = await response.json();
                     
                     if (data.success) {
-                        // Invertiamo lo stato del bottone
                         setButtonState(this, button, !isCurrentlyFavorite, roomId, roomName);
                     } else {
-                        // Es: utente non loggato
                         alert(data.error || "Impossibile aggiornare i preferiti.");
                     }
                 } else {
