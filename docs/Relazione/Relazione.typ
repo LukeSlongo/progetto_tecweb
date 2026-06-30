@@ -360,6 +360,30 @@ La progettazione dei form di autenticazione e segnalazione ha richiesto un'atten
 
 - Feedback e Gestione Errori: I messaggi di errore flash (es. credenziali errate) vengono stampati all'interno di un contenitore dotato dell'attributo role="alert". Questo Live Region ARIA impone alla tecnologia assistiva di interrompere la lettura corrente per notificare immediatamente all'utente l'avvenuto errore, garantendo un feedback tempestivo.
 
+= Analisi dell'Utenza e Strategia SEO
+
+== Caratteristiche degli Utenti Target
+In fase di progettazione, è stata condotta un'analisi preliminare per definire il profilo e i bisogni degli utenti che la piattaforma si propone di raggiungere. Il bacino d'utenza si divide in tre macro-categorie con esigenze di navigazione profondamente diverse:
+- *Studenti (Utenti Base):* essendo in gran parte nativi digitali, richiedono un'interfaccia immediata, rapida e fruibile prevalentemente da dispositivi mobili (smartphone). Il loro bisogno principale è scoprire se l'aula in cui devono recarsi è agibile o segnalare un disservizio nel minor tempo possibile.
+- *Tecnici Manutentori:* necessitano di un'interfaccia utilitaristica, focalizzata sulla leggibilità dei dati (tabelle, stati, date) per poter gestire il proprio carico di lavoro in modo efficiente.
+- *Amministratori:* richiedono strumenti di supervisione e controllo (es. lista utenti e cancellazione) accessibili da un'interfaccia chiara e sicura.
+
+== Possibili Ricerche sui Motori di Ricerca
+Trattandosi di un portale di servizio, la strategia SEO non cerca di competere su parole generiche come "aule" o "università". L'obiettivo è farsi trovare tramite ricerche molto specifiche, intercettando quegli utenti che hanno riscontrato un guasto e stanno cercando su Google lo strumento ufficiale dell'Ateneo per segnalarlo.
+Le possibili query di ricerca individuate includono:
+- "Segnalazione guasti aule Unipd"
+- "Portale manutenzione aule dipartimento informatica"
+- "Assistenza tecnica aule universitarie Padova"
+- "UniFix login segnalazioni"
+
+== Azioni Intraprese per Migliorare il Ranking (SEO On-Page)
+Per migliorare il posizionamento e l'indicizzazione della landing page pubblica sui motori di ricerca, sono state applicate le migliori pratiche di SEO On-Page (Search Engine Optimization), allontanandosi da tecniche obsolete (come l'abuso del tag `meta keywords`) a favore della SEO Semantica:
+
+- *Tag Title e Meta Description Dinamici:* Ogni pagina espone un tag `<title>` descrittivo (es. "Home - UniFix - Portale Segnalazioni") e un tag `<meta name="description">` esplicito che riassume lo scopo della pagina contenendo organicamente le parole chiave individuate (es. "Portale ufficiale per la segnalazione, il monitoraggio e la risoluzione dei guasti").
+- *Gerarchia Semantica (Heading Tags):* I contenuti testuali sono stati strutturati rispettando la rigida gerarchia dei tag `<h1>`, `<h2>` e `<h3>`. L'utilizzo di un unico tag `<h1>` per pagina chiarisce ai web crawler l'argomento principale del documento.
+- *Accessibilità:* L'implementazione di un HTML validato (W3C), l'uso sistematico di tag semantici (`<main>`, `<header>`, `<nav>`) e degli attributi ARIA non solo ha abbattuto le barriere architettoniche digitali, ma ha fornito ai motori di ricerca una struttura dati estremamente facile da scansionare.
+- *Mobile-Friendliness:* Poiché i moderni algoritmi di indicizzazione utilizzano un approccio *Mobile-First Indexing*, la scelta  di rendere l'intero sito responsive e di linearizzare visivamente le tabelle di dati su smartphone rappresenta un forte segnale di posizionamento positivo.
+
 = Suddivisione dei compiti
 Nonostante la natura asincrona del lavoro e l'adozione di una metodologia basata sulla revisione collettiva (Code Review tramite Pull Request), l'architettura modulare del progetto ha permesso di parallelizzare efficacemente lo sviluppo. Ogni membro del team ha preso in carico la responsabilità (ownership) di specifici verticali applicativi o layer strutturali, garantendo un avanzamento costante e ordinato.
 
